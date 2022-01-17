@@ -3,45 +3,44 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
-import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
-import ShoppingCartTwoToneIcon from '@mui/icons-material/ShoppingCartTwoTone';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import CalendarTodayTwoToneIcon from '@mui/icons-material/CalendarTodayTwoTone';
+import { Link } from 'react-router-dom';
 
 export const mainListItems = (
     <div>
-        <ListItem button>
+        <ListItem button component={Link} to='/courses' selected={'/courses' === location.pathname}>
             <ListItemIcon>
-                <AccountCircleTwoToneIcon />
+                <CalendarTodayTwoToneIcon />
             </ListItemIcon>
-            <ListItemText primary='Dashboard' />
+            <ListItemText primary='Test1' />
         </ListItem>
-        <ListItem button>
+        <ListItem button component={Link} to='/' selected={true}>
             <ListItemIcon>
-                <ShoppingCartTwoToneIcon />
+                <PeopleIcon />
             </ListItemIcon>
-            <ListItemText primary='Orders' />
+            <ListItemText primary='Test3423' />
         </ListItem>
         <ListItem button>
             <ListItemIcon>
                 <PeopleIcon />
             </ListItemIcon>
-            <ListItemText primary='Customers' />
+            <ListItemText primary='Test2' />
         </ListItem>
         <ListItem button>
             <ListItemIcon>
                 <BarChartIcon />
             </ListItemIcon>
-            <ListItemText primary='Reports' />
+            <ListItemText primary='Test' />
         </ListItem>
         <ListItem button>
             <ListItemIcon>
                 <LayersIcon />
             </ListItemIcon>
-            <ListItemText primary='Integrations' />
+            <ListItemText primary='Test' />
         </ListItem>
     </div>
 );

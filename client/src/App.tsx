@@ -1,13 +1,21 @@
 import React from 'react';
 import './App.css';
-import Dashboard from './Dashboard';
 import { ThemeProvider } from '@mui/material';
-import theme from './theme/theme';
+import { themeCreator } from './theme/base';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import { useRoutes } from 'react-router-dom';
+import { routes } from './router';
 
 function App() {
+    const theme = themeCreator('DefaultTheme');
+    const content = useRoutes(routes);
     return (
         <ThemeProvider theme={theme}>
-            <Dashboard />
+            <Box sx={{ display: 'flex' }}>
+                <CssBaseline />
+                {content}
+            </Box>
         </ThemeProvider>
     );
 }

@@ -118,7 +118,7 @@ const colors = {
 };
 
 // A custom theme for this app
-const theme = createTheme({
+export const DefaultTheme = createTheme({
     status: {
         danger: orange[500],
     },
@@ -151,5 +151,3 @@ const theme = createTheme({
         },
     },
 });
-
-export default theme;
