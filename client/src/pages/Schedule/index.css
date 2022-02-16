@@ -1,0 +1,136 @@
+/* custom code start*/
+
+#EventLog b {
+    color: #388e3c;
+}
+
+hr {
+    margin: 1px 10px 1px 0px;
+    border-top: 1px solid #eee;
+}
+
+.year-property-panel td {
+    padding-bottom: 1rem;
+}
+
+/* custom code end*/
+
+.e-schedule .e-schedule-toolbar .e-icon-schedule-print::before {
+    content: '\e973';
+}
+
+.e-schedule .e-schedule-toolbar .e-icon-schedule-pdf::before {
+    content: '\e7c8';
+}
+
+.custom-field-row {
+    margin-bottom: 20px;
+}
+
+.multi-prop div {
+    padding-left: 0;
+    padding-top: 0;
+}
+
+.year-view.e-schedule .e-timeline-year-view .e-resource-column-table, .year-view.e-schedule .e-timeline-year-view .e-resource-left-td {
+    width: 120px;
+}
+
+.inline-edit.e-schedule .e-timeline-view .e-resource-left-td, .inline-edit.e-schedule .e-timeline-month-view .e-resource-left-td {
+    width: 150px;
+}
+
+.e-location-container,
+.e-time-zone-container,
+.e-description-row{
+    display: none;
+}
+
+.quick-info-template .quick-info-header {
+    background-color: white;
+    padding: 8px 18px;
+}
+
+.quick-info-template .quick-info-header-content {
+    justify-content: flex-end;
+    display: flex;
+    flex-direction: column;
+    padding: 5px 10px 5px;
+}
+
+.quick-info-template .quick-info-title {
+    font-weight: 500;
+    font-size: 16px;
+    letter-spacing: 0.48px;
+    height: 22px;
+}
+
+.quick-info-template .duration-text {
+    font-size: 11px;
+    letter-spacing: 0.33px;
+    height: 14px;
+}
+
+.quick-info-template .content-area {
+    margin: 0;
+    padding: 10px;
+    width: auto;
+}
+
+.quick-info-template .event-content {
+    height: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 15px;
+}
+
+.quick-info-template .meeting-type-wrap,
+.quick-info-template .meeting-subject-wrap,
+.quick-info-template .notes-wrap {
+    font-size: 11px;
+    color: #666;
+    letter-spacing: 0.33px;
+    height: 24px;
+    padding: 5px;
+}
+
+.quick-info-template .event-content div label {
+    display: inline-block;
+    min-width: 45px;
+    color: #666;
+}
+
+.quick-info-template .event-content div span {
+    font-size: 11px;
+    color: #151515;
+    letter-spacing: 0.33px;
+    line-height: 14px;
+    padding-left: 8px;
+}
+
+.quick-info-template .cell-footer.e-btn {
+    background-color: #ffffff;
+    border-color: #878787;
+    color: #878787;
+}
+
+.quick-info-template .cell-footer {
+    padding-top: 10px;
+}
+
+.quick-info-template .e-quick-popup-wrapper .e-cell-popup .e-popup-content {
+    padding: 0 14px;
+}
+
+.quick-info-template .e-quick-popup-wrapper .e-event-popup .e-popup-footer {
+    display: block;
+}
+
+.quick-info-template .e-quick-popup-wrapper .e-popup-footer button:first-child {
+    margin-right: 5px;
+}
+
+.e-control {
+    font-family: 'Nunito', sans-serif !important;
+}
