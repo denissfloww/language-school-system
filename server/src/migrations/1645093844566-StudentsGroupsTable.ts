@@ -38,7 +38,7 @@ export class StudentsGroupsTable1645093844566 implements MigrationInterface {
     await queryRunner.addColumn(
       'student_group',
       new TableColumn({
-        name: 'userId',
+        name: 'studentId',
         type: 'int',
       }),
     );
@@ -53,9 +53,9 @@ export class StudentsGroupsTable1645093844566 implements MigrationInterface {
     await queryRunner.createForeignKey(
       'student_group',
       new TableForeignKey({
-        columnNames: ['userId'],
+        columnNames: ['studentId'],
         referencedColumnNames: ['id'],
-        referencedTableName: 'users',
+        referencedTableName: 'students',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       }),
