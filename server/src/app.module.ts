@@ -1,19 +1,25 @@
-import { Module } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import * as ormconfig from './ormconfig';
 import { ConfigModule } from '@nestjs/config';
 import { RolesModule } from './roles/roles.module';
+
+import DatabaseConfig from './config/database.config';
+
+export function DatabaseOrmModule(): DynamicModule {
+  return TypeOrmModule.forRoot({ ...DatabaseConfig, autoLoadEntities: true });
+}
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env',
+      isGlobal: true,
+      envFilePath: `.${process.env.NODE_ENV}.env`,
     }),
-    TypeOrmModule.forRoot(ormconfig),
+    DatabaseOrmModule(),
     UsersModule,
     AuthModule,
     RolesModule,

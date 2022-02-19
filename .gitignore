@@ -3,3 +3,6 @@
 /**/build
 /**/.env
 /**/.idea
+**/*.env
+!config/env/development.env
+/server/dist/
