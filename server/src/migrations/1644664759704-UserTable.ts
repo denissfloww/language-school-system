@@ -10,7 +10,9 @@ export class UserTable1644664759704 implements MigrationInterface {
                    primary key,
            login       varchar                 not null,
            password    varchar                 not null,
-           full_name   varchar                 not null,
+           firstName   varchar                 not null,
+           lastName   varchar                 not null,
+           middleName   varchar                 ,
            "updatedAt" timestamp default now() not null,
            "createdAt" timestamp default now() not null
        );

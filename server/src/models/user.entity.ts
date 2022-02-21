@@ -16,8 +16,14 @@ export class User extends BaseModel {
   @Column()
   login: string;
 
-  @Column()
-  full_name: string;
+  @Column({ name: 'firstname' })
+  firstName: string;
+
+  @Column({ name: 'lastname' })
+  lastName: string;
+
+  @Column({ name: 'middlename' })
+  middleName: string;
 
   @Column()
   password: string;

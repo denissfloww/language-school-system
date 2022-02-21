@@ -17,16 +17,7 @@ export class Student extends BaseModel {
   id: string;
 
   @Column()
-  firstName: string;
-
-  @Column()
-  middleName: string;
-
-  @Column()
-  lastName: string;
-
-  @Column()
-  shortName: string;
+  userId: number;
 
   @OneToOne(() => User)
   @JoinColumn()

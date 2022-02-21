@@ -19,21 +19,6 @@ export class StudentsTable1645092806064 implements MigrationInterface {
             isGenerated: true,
           },
           {
-            name: 'firstName',
-            type: 'varchar',
-            isNullable: true,
-          },
-          {
-            name: 'middleName',
-            type: 'varchar',
-            isNullable: true,
-          },
-          {
-            name: 'lastName',
-            type: 'varchar',
-            isNullable: true,
-          },
-          {
             name: 'shortName',
             type: 'varchar',
             isNullable: true,
