@@ -2,8 +2,8 @@ import { alpha, createTheme, lighten, darken } from '@mui/material';
 import { orange } from '@mui/material/colors';
 
 const themeColors = {
-    primary: '#5569ff',
-    secondary: '#6E759F',
+    primary: '#e5ac00',
+    secondary: '#719f6e',
     success: '#44D600',
     warning: '#FFA319',
     error: '#FF1943',
@@ -44,10 +44,10 @@ const colors = {
             background: themeColors.white,
             textColor: themeColors.secondary,
             dividerBg: '#f2f5f9',
-            menuItemColor: '#242E6F',
+            menuItemColor: '#9f916e',
             menuItemColorActive: themeColors.primary,
             menuItemBg: 'transparent',
-            menuItemBgActive: '#e4eaff',
+            menuItemBgActive: lighten(themeColors.primary, 0.9),
             menuItemIconColor: lighten(themeColors.secondary, 0.3),
             menuItemIconColorActive: themeColors.primary,
             menuItemHeadingColor: darken(themeColors.secondary, 0.3),

@@ -16,4 +16,8 @@ export class StudentsService {
       userId: dto.userId,
     });
   }
+
+  async getStudentById(id: number) {
+    return await this.studentsRepository.findOne(id);
+  }
 }

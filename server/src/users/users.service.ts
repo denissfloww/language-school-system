@@ -2,14 +2,14 @@ import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { User } from '../models/user.entity';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user-dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import { Role } from '../models/role.entity';
 import * as bcrypt from 'bcryptjs';
 import { RolesEnum } from '../auth/roles.enum';
 import { StudentsService } from '../students/students.service';
 import { CreateStudentDto } from '../students/dto/create-student.dto';
 import CyrillicToTranslit from 'cyrillic-to-translit-js';
-import { CreatedUserDto } from './dto/created-user-dto';
+import { CreatedUserDto } from './dto/created-user.dto';
 
 @Injectable()
 export class UsersService {

@@ -16,7 +16,7 @@ const initialState: InitialState = {
 };
 
 const scheduleSlice = createSlice({
-    name: 'car',
+    name: 'schedule',
     initialState,
     reducers: {
         setScheduleEvents: (state, action: PayloadAction<string[]>) => {

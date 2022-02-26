@@ -2,16 +2,17 @@ import {
   Body,
   Controller,
   Delete,
-  Get, HttpCode,
+  Get,
+  HttpCode,
   Logger,
   Post,
-  UseGuards
-} from "@nestjs/common";
-import { CreateUserDto } from './dto/create-user-dto';
+  UseGuards,
+} from '@nestjs/common';
+import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { Roles } from '../auth/roles-auth.decorator';
 import { RolesGuard } from '../auth/roles.guard';
-import { DeleteUserDto } from './dto/delete-user-dto';
+import { DeleteUserDto } from './dto/delete-user.dto';
 
 @Controller('users')
 export class UsersController {

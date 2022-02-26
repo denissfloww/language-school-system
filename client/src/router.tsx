@@ -8,6 +8,7 @@ import Schedule from './pages/Schedule';
 import { Routes, Route } from 'react-router-dom';
 import GroupSettings from './pages/GroupSettings';
 import StudentsSettings from './pages/StudentsSettings';
+import CreateUserPage from './pages/CreateUserPage';
 
 // @ts-ignore
 // eslint-disable-next-line react/display-name
@@ -23,11 +24,12 @@ const Router = () => {
         <Routes>
             <Route path='/' element={<Navigate to='/dashboard/schedule' />} />
             <Route path='dashboard' element={<SidebarLayout />}>
-                <Route path='*' element={<Navigate to='/dashboard/schedule' replace />}  />
+                <Route path='*' element={<Navigate to='/dashboard/schedule' replace />} />
                 <Route path='schedule' element={<Schedule />} />
                 <Route path='settings'>
                     <Route path='groups' element={<GroupSettings />} />
                     <Route path='students' element={<StudentsSettings />} />
+                    <Route path='user/create' element={<CreateUserPage />} />
                 </Route>
             </Route>
             <Route path='/login' element={<Login />} />
