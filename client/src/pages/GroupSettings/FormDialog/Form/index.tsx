@@ -49,8 +49,8 @@ const GroupForm = (props: IGroupFormProps) => {
                         multiple
                     />
                 </Grid>
-                <TextField name={id.name} type='hidden' />
             </Grid>
+            <TextField name={id.name} type='hidden' style={{ display: 'none' }} />
         </>
     );
 };
