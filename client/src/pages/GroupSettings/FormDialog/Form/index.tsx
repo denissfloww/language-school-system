@@ -3,15 +3,26 @@ import Grid from '@mui/material/Grid';
 import InputField from '../../../../components/FormFields/InputField';
 import AutocompleteField from '../../../../components/FormFields/AutocompleteField';
 import { Field } from 'formik';
+import { useEffect } from 'react';
+import { fetchStudentsForForm, selectGroupsState } from '../../../../redux/reducers/groups/groupsReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { TextField } from '@mui/material';
 
-interface IAddGroupFormProps {
+interface IGroupFormProps {
     formField?: any;
 }
 
-const AddGroupForm = (props: IAddGroupFormProps) => {
+const GroupForm = (props: IGroupFormProps) => {
     const {
-        formField: { name, desc, students },
+        formField: { name, desc, students, id },
     } = props;
+
+    const dispatch = useDispatch();
+    const { studentsAutocompleteValues } = useSelector(selectGroupsState);
+
+    useEffect(() => {
+        dispatch(fetchStudentsForForm());
+    }, []);
 
     return (
         <>
@@ -27,7 +38,7 @@ const AddGroupForm = (props: IAddGroupFormProps) => {
                         margin='dense'
                         name={students.name}
                         component={AutocompleteField}
-                        options={skills}
+                        options={studentsAutocompleteValues}
                         groupBy={(option: any) => option.label[0]}
                         textFieldProps={{
                             fullWidth: true,
@@ -38,36 +49,10 @@ const AddGroupForm = (props: IAddGroupFormProps) => {
                         multiple
                     />
                 </Grid>
+                <TextField name={id.name} type='hidden' />
             </Grid>
         </>
     );
 };
 
-const skills = [
-    {
-        label: 'Бугаков Денис',
-        value: '1',
-    },
-    {
-        label: 'Петров Петр',
-        value: '2',
-    },
-    {
-        label: 'Иванов Иван',
-        value: '3',
-    },
-    {
-        label: 'Сидоров Сидр',
-        value: '4',
-    },
-    {
-        label: 'Пивной пиво',
-        value: '5',
-    },
-    {
-        label: 'Хороший Петр',
-        value: '6',
-    },
-];
-
-export default AddGroupForm;
+export default GroupForm;

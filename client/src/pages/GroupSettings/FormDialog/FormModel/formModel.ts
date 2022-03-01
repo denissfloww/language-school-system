@@ -10,10 +10,13 @@ export default {
             name: 'desc',
             label: 'Описание',
         },
-        students:{
+        students: {
             name: 'students',
-            label: 'Ученики*',
+            label: 'Ученики',
             requiredErrorMsg: 'Необходимо выыбрать учеников!',
-        }
+        },
+        id: {
+            name: 'id',
+        },
     },
 };

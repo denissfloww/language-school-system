@@ -5,17 +5,17 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import GroupGrid from './GroupGrid';
 import { APP_NAME } from '../../settings';
-import { useSelector } from "react-redux";
-import { selectGroupsState } from "../../redux/reducers/groupsReducer";
-import { Backdrop, CircularProgress } from "@mui/material";
-import SuspenseLoader from "../../components/SuspenseLoader";
+import { useSelector } from 'react-redux';
+import { selectGroupsState } from '../../redux/reducers/groups/groupsReducer';
+import { Backdrop, CircularProgress } from '@mui/material';
+import SuspenseLoader from '../../components/SuspenseLoader';
+import GroupGrid from "./Grid";
 
 const GroupSettings = () => {
-  const { loading } = useSelector(selectGroupsState);
+    const { loading } = useSelector(selectGroupsState);
 
-  return (
+    return (
         <>
             <Helmet>
                 <meta charSet='utf-8' />
@@ -26,7 +26,7 @@ const GroupSettings = () => {
                 <CircularProgress color='inherit' />
             </Backdrop>
 
-          {/*<SuspenseLoader/>*/}
+            {/*<SuspenseLoader/>*/}
 
             <Container maxWidth='lg' sx={{ mt: 10, mb: 4 }}>
                 <Typography variant='h4'>Управление группами</Typography>

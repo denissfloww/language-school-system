@@ -1,7 +1,7 @@
 import { Action, configureStore } from '@reduxjs/toolkit';
 import { ThunkAction } from 'redux-thunk';
 import scheduleReducer from './reducers/scheduleReducer';
-import groupsReducer from "./reducers/groupsReducer";
+import groupsReducer from "./reducers/groups/groupsReducer";
 
 const store = configureStore({
     reducer: {
