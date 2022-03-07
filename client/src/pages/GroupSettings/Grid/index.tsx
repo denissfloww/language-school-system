@@ -10,9 +10,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchGroups, selectGroupsState } from '../../../redux/reducers/groups/groupsReducer';
 import { useEffect } from 'react';
 import { IGroup } from '../../../interfaces/IGroup';
-import GridToolbar from './GridToolbar';
+import GroupGridToolbar from './GroupGridToolbar';
 import DeleteButton from './Buttons/DeleteButton';
-import UpdateButton from './Buttons/UpdateButton';
+import UpdateGroupButton from './Buttons/UpdateGroupButton';
+import TablePagination from "@mui/material/TablePagination";
+import * as React from "react";
 
 const GroupGrid = () => {
     const dispatch = useDispatch();
@@ -22,11 +24,23 @@ const GroupGrid = () => {
         dispatch(fetchGroups());
     }, []);
 
+    const [rowsPerPage, setRowsPerPage] = React.useState(25);
+
+    const handleChangePage = (event: unknown, newPage: number) => {
+        console.log(event)
+    };
+
+    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+        console.log(event)
+    };
+
+    const [page, setPage] = React.useState(0);
+
     return (
         <>
             <Box sx={{ width: '100%' }}>
                 <Paper sx={{ width: '100%', mb: 2 }}>
-                    <GridToolbar />
+                    <GroupGridToolbar />
                     <TableContainer component={Paper}>
                         <Table sx={{ minWidth: 1000 }} aria-labelledby='tableTitle' size='medium'>
                             <TableHead>
@@ -47,17 +61,27 @@ const GroupGrid = () => {
                                         <TableCell component='th' scope='row' align='center'>
                                             {group.name}
                                         </TableCell>
-                                        <TableCell align='center'>{group.name}</TableCell>
-                                        <TableCell align='center'>{group.desc}</TableCell>
-                                        <TableCell align='right'>
-                                            <UpdateButton groupId={group.id} />
+                                        <TableCell component='th' scope='row' align='center'>{group.name}</TableCell>
+                                        <TableCell component='th' scope='row' align='center'>{group.desc}</TableCell>
+                                        <TableCell component='th' scope='row' align='right'>
+                                            <UpdateGroupButton groupId={group.id} />
                                             <DeleteButton groupId={group.id} />
                                         </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
                         </Table>
+                        <TablePagination
+                          rowsPerPageOptions={[5, 10, 25]}
+                          component='div'
+                          count={groups.length}
+                          rowsPerPage={rowsPerPage}
+                          page={page}
+                          onPageChange={handleChangePage}
+                          onRowsPerPageChange={handleChangeRowsPerPage}
+                        />
                     </TableContainer>
+
                 </Paper>
             </Box>
         </>

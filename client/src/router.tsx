@@ -9,6 +9,7 @@ import { Routes, Route } from 'react-router-dom';
 import GroupSettings from './pages/GroupSettings';
 import StudentsSettings from './pages/StudentsSettings';
 import CreateUserPage from './pages/CreateUserPage';
+import UserSettings from './pages/UsersSettings';
 
 // @ts-ignore
 // eslint-disable-next-line react/display-name
@@ -30,6 +31,7 @@ const Router = () => {
                     <Route path='groups' element={<GroupSettings />} />
                     <Route path='students' element={<StudentsSettings />} />
                     <Route path='user/create' element={<CreateUserPage />} />
+                    <Route path='users' element={<UserSettings />} />
                 </Route>
             </Route>
             <Route path='/login' element={<Login />} />

@@ -4,26 +4,26 @@ import EditIcon from '@mui/icons-material/Edit';
 import GroupDialogForm from '../../FormDialog';
 import { useState } from 'react';
 
-const UpdateButton = (props: { groupId: number }) => {
+const UpdateGroupButton = (props: { groupId: number }) => {
     const { groupId } = props;
 
-    const [openAddDialog, setOpenAddDialog] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
 
-    const showAddGroupDialog = () => {
-        setOpenAddDialog(true);
+    const showGroupDialog = () => {
+        setOpenDialog(true);
     };
 
-    const closeAddGroupDialog = () => {
-        setOpenAddDialog(false);
+    const closeGroupDialog = () => {
+        setOpenDialog(false);
     };
 
     return (
         <>
-            <GroupDialogForm open={openAddDialog} close={closeAddGroupDialog} groupId={groupId} />
+            <GroupDialogForm open={openDialog} close={closeGroupDialog} groupId={groupId} />
             <Tooltip title='Изменить'>
                 <IconButton
                     onClick={() => {
-                        showAddGroupDialog();
+                        showGroupDialog();
                     }}
                 >
                     <EditIcon />
@@ -33,4 +33,4 @@ const UpdateButton = (props: { groupId: number }) => {
     );
 };
 
-export default UpdateButton;
+export default UpdateGroupButton;

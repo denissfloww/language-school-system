@@ -2,7 +2,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import AddButton from './Buttons/AddButton';
 
-const GridToolbar = () => {
+const GroupGridToolbar = () => {
     return (
         <>
             <Toolbar>
@@ -15,4 +15,4 @@ const GridToolbar = () => {
     );
 };
 
-export default GridToolbar;
+export default GroupGridToolbar;

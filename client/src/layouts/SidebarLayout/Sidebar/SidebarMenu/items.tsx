@@ -35,6 +35,11 @@ export const menu: IMenuItem[] = [
             },
             {
                 icon: <GroupIcon />,
+                title: 'Пользователи',
+                link: '/dashboard/settings/users',
+            },
+            {
+                icon: <GroupIcon />,
                 title: 'Ученики',
                 link: '/dashboard/settings/students',
             },

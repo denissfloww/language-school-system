@@ -27,7 +27,7 @@ const GroupDialogForm = (props: IGroupDialogFormProps) => {
     const dispatch = useDispatch();
 
     function _handleSubmit(values: any, actions: any) {
-        console.log(values)
+        console.log(values);
         dispatch(createOrUpdateGroup(values));
         dispatch(fetchGroups());
         close();
@@ -44,7 +44,12 @@ const GroupDialogForm = (props: IGroupDialogFormProps) => {
         const studentsViews = currentGroup?.students?.map((student: IStudent) => {
             return { label: student.firstName, value: student.id };
         });
-        initVal = { name: currentGroup?.name.toString(), desc: currentGroup?.desc?.toString(), students: studentsViews, id: currentGroup?.id };
+        initVal = {
+            name: currentGroup?.name.toString(),
+            desc: currentGroup?.desc?.toString(),
+            students: studentsViews,
+            id: currentGroup?.id,
+        };
     };
 
     const { currentGroup } = useSelector(selectGroupsState);
@@ -58,7 +63,7 @@ const GroupDialogForm = (props: IGroupDialogFormProps) => {
 
     return (
         <Dialog open={open} onClose={close} fullWidth={true} maxWidth='sm'>
-            <DialogTitle>{'Добавление новой группы'}</DialogTitle>
+            <DialogTitle>{groupId ? 'Изменение данных группы' : 'Добавление новой группы'}</DialogTitle>
             <Formik onSubmit={_handleSubmit} initialValues={initVal} validationSchema={validationSchema} validateOnChange>
                 {({ isSubmitting }) => (
                     <Form id={formId}>

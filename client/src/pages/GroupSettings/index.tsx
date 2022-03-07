@@ -9,7 +9,6 @@ import { APP_NAME } from '../../settings';
 import { useSelector } from 'react-redux';
 import { selectGroupsState } from '../../redux/reducers/groups/groupsReducer';
 import { Backdrop, CircularProgress } from '@mui/material';
-import SuspenseLoader from '../../components/SuspenseLoader';
 import GroupGrid from "./Grid";
 
 const GroupSettings = () => {
