@@ -3,11 +3,11 @@ import { IGroup } from '../../../interfaces/IGroup';
 import { AppThunk, RootState } from '../../store';
 import GroupsService from '../../../services/GroupsService';
 import StudentsService from '../../../services/StudentsService';
-import { IGroupCreateUpdateValues, IStudentAutoCompleteValue } from './types';
+import { IStudentAutoCompleteValue } from './types';
+import { setLoading } from '../global/globalReducer';
 
 interface InitialState {
     groups: IGroup[];
-    loading: boolean;
     studentsAutocompleteValues: IStudentAutoCompleteValue[];
     currentGroup: IGroup | null;
 }
@@ -15,7 +15,6 @@ interface InitialState {
 const initialState: InitialState = {
     groups: [],
     studentsAutocompleteValues: [],
-    loading: false,
     currentGroup: null,
 };
 
@@ -23,9 +22,6 @@ const groupsSlice = createSlice({
     name: 'groups',
     initialState,
     reducers: {
-        setLoading: (state, action: PayloadAction<boolean>) => {
-            state.loading = action.payload;
-        },
         setGroups: (state, action: PayloadAction<IGroup[]>) => {
             state.groups = action.payload;
         },
@@ -38,7 +34,7 @@ const groupsSlice = createSlice({
     },
 });
 
-export const { setGroups, setLoading, setStudentsAutocompleteValues, setCurrentGroup } = groupsSlice.actions;
+export const { setGroups, setStudentsAutocompleteValues, setCurrentGroup } = groupsSlice.actions;
 
 export const fetchGroups = (): AppThunk => {
     return async dispatch => {

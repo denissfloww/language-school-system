@@ -8,13 +8,12 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Router from './router';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useDispatch } from "react-redux";
-import { autoLogin } from "./redux/reducers/auth/authReducer";
+import { useDispatch } from 'react-redux';
+import { autoLogin } from './redux/reducers/auth/authReducer';
 
 function App() {
     const theme = themeCreator('DefaultTheme');
     const dispatch = useDispatch();
-
     useEffect(() => {
         dispatch(autoLogin());
     }, []);
@@ -23,8 +22,8 @@ function App() {
             <ThemeProvider theme={theme}>
                 <ToastContainer />
                 <Box sx={{ display: 'flex' }}>
-                    <CssBaseline />
                     <Router />
+                    <CssBaseline />
                 </Box>
             </ThemeProvider>
         </>

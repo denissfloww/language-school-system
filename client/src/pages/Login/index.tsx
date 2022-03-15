@@ -20,6 +20,9 @@ import { loginAction, selectAuthState } from '../../redux/reducers/auth/authRedu
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import { Navigate } from 'react-router-dom';
+import { CircularProgress } from '@mui/material';
+import { CheckboxWithLabel } from 'formik-mui';
+import CheckBoxField from '../../components/FormFields/CheckBoxField';
 
 const sectionStyle = {
     height: '100vh',
@@ -37,7 +40,7 @@ const Login = () => {
         isRemember: true,
     };
 
-    const { error, user } = useSelector(selectAuthState);
+    const { error, user, isLoading } = useSelector(selectAuthState);
 
     if (user) {
         return (
@@ -107,27 +110,29 @@ const Login = () => {
                                             id='password'
                                             autoComplete='current-password'
                                         />
-                                        <FormControlLabel
-                                            control={
-                                                <Field
-                                                    color='primary'
-                                                    value='three'
-                                                    type='checkbox'
-                                                    component={Checkbox}
-                                                    name={isRemember.name}
-                                                />
-                                            }
-                                            label={isRemember.label}
-                                        />
+                                        <CheckBoxField name={isRemember.name} label={isRemember.label} />
                                         {error ? (
                                             <Alert severity='error'>
                                                 <AlertTitle>Ошибка</AlertTitle>
                                                 {error}
                                             </Alert>
                                         ) : null}
-                                        <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
-                                            Войти
-                                        </Button>
+
+                                        {isLoading ? (
+                                            <Button
+                                                disabled={isLoading}
+                                                fullWidth
+                                                variant='contained'
+                                                sx={{ mt: 3, mb: 2, textAlign: 'center' }}
+                                            >
+                                                <CircularProgress size={20} sx={{ mr: 1 }} />
+                                                Войти
+                                            </Button>
+                                        ) : (
+                                            <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
+                                                Войти
+                                            </Button>
+                                        )}
                                     </Form>
                                 )}
                             </Formik>

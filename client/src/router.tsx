@@ -1,15 +1,10 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import SidebarLayout from './layouts/SidebarLayout';
-import React from 'react';
+import React, { lazy } from 'react';
 import Login from './pages/Login';
 import { Suspense } from 'react';
 import SuspenseLoader from './components/SuspenseLoader';
-import Schedule from './pages/Schedule';
 import { Routes, Route } from 'react-router-dom';
-import GroupSettings from './pages/GroupSettings';
-import StudentsSettings from './pages/StudentsSettings';
-import CreateUserPage from './pages/CreateUserPage';
-import UserSettings from './pages/UsersSettings';
 import { useSelector } from 'react-redux';
 import { selectAuthState } from './redux/reducers/auth/authReducer';
 
@@ -21,6 +16,12 @@ const Loader = Component => props =>
             <Component {...props} />
         </Suspense>
     );
+
+const Schedule = Loader(lazy(() => import('./pages/Schedule')));
+const GroupSettings = Loader(lazy(() => import('./pages/GroupSettings')));
+const StudentsSettings = Loader(lazy(() => import('./pages/StudentsSettings')));
+const CreateUserPage = Loader(lazy(() => import('./pages/CreateUserPage')));
+const UserSettings = Loader(lazy(() => import('./pages/UsersSettings')));
 
 const Router = () => {
     return (

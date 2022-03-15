@@ -8,10 +8,12 @@ import { ICurrentUser } from '../../../interfaces/ICurrentUser';
 interface InitialState {
     user: ICurrentUser | null;
     error?: string;
+    isLoading: boolean;
 }
 
 const initialState: InitialState = {
     user: null,
+    isLoading: false,
 };
 
 const authSlice = createSlice({
@@ -27,6 +29,9 @@ const authSlice = createSlice({
         },
         removeUser: state => {
             state.user = null;
+        },
+        setLoading: (state, action: PayloadAction<boolean>) => {
+            state.isLoading = action.payload;
         },
     },
 });

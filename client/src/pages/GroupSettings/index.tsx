@@ -10,9 +10,10 @@ import { useSelector } from 'react-redux';
 import { selectGroupsState } from '../../redux/reducers/groups/groupsReducer';
 import { Backdrop, CircularProgress } from '@mui/material';
 import GroupGrid from "./Grid";
+import { selectGlobalState } from "../../redux/reducers/global/globalReducer";
 
 const GroupSettings = () => {
-    const { loading } = useSelector(selectGroupsState);
+    const { isLoading } = useSelector(selectGlobalState);
 
     return (
         <>
@@ -21,7 +22,7 @@ const GroupSettings = () => {
                 <title>Управление группами - {APP_NAME}</title>
             </Helmet>
 
-            <Backdrop open={loading}>
+            <Backdrop open={isLoading}>
                 <CircularProgress color='inherit' />
             </Backdrop>
 
