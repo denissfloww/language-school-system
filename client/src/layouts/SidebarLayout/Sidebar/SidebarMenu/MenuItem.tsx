@@ -6,7 +6,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useState } from 'react';
-import { hasChildren } from '../../../../helpers/helperFunc';
+import { hasChildren } from '../../../../utils/helperFunc';
 import { IMenuItem } from './items';
 import { Link, matchPath, useLocation } from 'react-router-dom';
 

@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import { Formik, Form } from 'formik';
 import formModel from '../FormDialog/FormModel/formModel';
 import UserForm from './Form';
+import validationSchema from './FormModel/validationSchema';
 
 interface IUserDialogFormProps {
     open: boolean;
@@ -34,7 +35,7 @@ const UserDialogForm = (props: IUserDialogFormProps) => {
     return (
         <Dialog open={open} onClose={close} fullWidth={true} maxWidth='sm'>
             <DialogTitle>{'Изменение данных пользователя'}</DialogTitle>
-            <Formik onSubmit={_handleSubmit} validateOnChange initialValues={initialValues}>
+            <Formik onSubmit={_handleSubmit} validationSchema={validationSchema} validateOnChange initialValues={initialValues}>
                 {({ isSubmitting }) => (
                     <Form id={formId}>
                         <DialogContent>

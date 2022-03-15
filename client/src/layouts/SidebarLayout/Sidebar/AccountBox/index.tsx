@@ -1,27 +1,30 @@
 import Avatar from '@mui/material/Avatar';
-import { stringAvatar } from '../../../../helpers/helperFunc';
+import { stringAvatar } from '../../../../utils/helperFunc';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
-import { styled } from "@mui/material/styles";
+import { styled } from '@mui/material/styles';
+import { useSelector } from 'react-redux';
+import { selectAuthState } from '../../../../redux/reducers/auth/authReducer';
 
 const AccountStyle = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  marginTop: '10px',
-  padding: theme.spacing(2, 2.5),
-  margin: theme.spacing(2, 2.0),
-  borderRadius: '10px',
-  backgroundColor: theme.palette.grey[200],
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: '10px',
+    padding: theme.spacing(2, 2.5),
+    margin: theme.spacing(2, 2.0),
+    borderRadius: '10px',
+    backgroundColor: theme.palette.grey[200],
 }));
 
 const AccountBox = () => {
+    const { user } = useSelector(selectAuthState);
     return (
         <AccountStyle>
-            <Avatar {...stringAvatar('Тестовый тест', 40)} />
+            <Avatar {...stringAvatar(`${user?.firstName} ${user?.lastName}`, 40)} />
             <Box sx={{ ml: 2 }}>
                 <Typography variant='subtitle2' sx={{ color: 'text.primary' }}>
-                    Тестовый тест
+                  {user?.firstName} {user?.lastName}
                 </Typography>
                 <Typography variant='body2' sx={{ color: 'text.secondary' }}>
                     Администратор

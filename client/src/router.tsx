@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import SidebarLayout from './layouts/SidebarLayout';
 import React from 'react';
 import Login from './pages/Login';
@@ -10,6 +10,8 @@ import GroupSettings from './pages/GroupSettings';
 import StudentsSettings from './pages/StudentsSettings';
 import CreateUserPage from './pages/CreateUserPage';
 import UserSettings from './pages/UsersSettings';
+import { useSelector } from 'react-redux';
+import { selectAuthState } from './redux/reducers/auth/authReducer';
 
 // @ts-ignore
 // eslint-disable-next-line react/display-name
@@ -23,23 +25,37 @@ const Loader = Component => props =>
 const Router = () => {
     return (
         <Routes>
-            <Route path='/' element={<Navigate to='/dashboard/schedule' />} />
-            <Route path='dashboard' element={<SidebarLayout />}>
-                <Route path='*' element={<Navigate to='/dashboard/schedule' replace />} />
-                <Route path='schedule' element={<Schedule />} />
-                <Route path='settings'>
-                    <Route path='groups' element={<GroupSettings />} />
-                    <Route path='students' element={<StudentsSettings />} />
-                    <Route path='user/create' element={<CreateUserPage />} />
-                    <Route path='users' element={<UserSettings />} />
+            <Route path='/login' element={<Login />} />
+            <Route element={<RequireAuth />}>
+                <Route path='/' element={<Navigate to='/dashboard/schedule' />} />
+                <Route path='dashboard' element={<SidebarLayout />}>
+                    <Route path='*' element={<Navigate to='/dashboard/schedule' replace />} />
+                    <Route path='schedule' element={<Schedule />} />
+                    <Route path='settings'>
+                        <Route path='groups' element={<GroupSettings />} />
+                        <Route path='students' element={<StudentsSettings />} />
+                        <Route path='user/create' element={<CreateUserPage />} />
+                        <Route path='users' element={<UserSettings />} />
+                    </Route>
                 </Route>
             </Route>
-            <Route path='/login' element={<Login />} />
         </Routes>
     );
 };
 
 export default Router;
+
+function RequireAuth() {
+    const { user } = useSelector(selectAuthState);
+    const isAuth = !!user;
+    let location = useLocation();
+
+    if (!isAuth) {
+        return <Navigate to='/login' state={{ from: location }} />;
+    }
+
+    return <Outlet />;
+}
 
 // export const routes: RouteObject[] = [
 //     {
@@ -57,7 +73,7 @@ export default Router;
 //         ],
 //     },
 //     {
-//         path: '/login',
+//         path: '/signIn',
 //         element: <Login />,
 //     },
 // ];

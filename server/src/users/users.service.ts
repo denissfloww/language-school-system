@@ -25,7 +25,7 @@ export class UsersService {
   async createUser(dto: CreateUserDto) {
     const cyrillicToTranslit = new CyrillicToTranslit();
     const login = cyrillicToTranslit.transform(
-      `${dto.lastName[0]}.${dto.firstName}`,
+      `${dto.firstName[0]}.${dto.lastName}`,
     );
 
     const existUser = await this.usersRepository.find({
@@ -81,7 +81,10 @@ export class UsersService {
   }
 
   async getUserByLogin(login: string) {
-    const user = await this.usersRepository.findOne({ login: login });
+    const user = await this.usersRepository.findOne(
+      { login: login },
+      { relations: ['roles'] },
+    );
     if (!user) {
       throw new HttpException(
         'Пользователь с данным логином не найден!',
