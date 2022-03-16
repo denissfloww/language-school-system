@@ -20,6 +20,7 @@ const login = async (creditionals: ICreditionals) => {
         firstName: decoded.firstName,
         lastName: decoded.lastName,
         token: token,
+        roles: decoded.roles,
     };
     if (isRemember) {
         localStorage.setItem(localStorageUserKey, JSON.stringify(user));

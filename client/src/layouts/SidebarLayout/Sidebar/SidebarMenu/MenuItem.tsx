@@ -9,14 +9,24 @@ import { useState } from 'react';
 import { hasChildren } from '../../../../utils/helperFunc';
 import { IMenuItem } from './items';
 import { Link, matchPath, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectAuthState } from '../../../../redux/reducers/auth/authReducer';
 
 interface IProps {
     item: IMenuItem;
 }
 
 export const MenuItem = ({ item }: IProps) => {
-    const Component = hasChildren(item) ? MultiLevel : SingleLevel;
-    return <Component item={item} />;
+    const { user } = useSelector(selectAuthState);
+    let userHasRole: boolean | undefined = true;
+    if (item.availableRoles) {
+        userHasRole = user?.roles.every(val => item.availableRoles?.includes(val.name));
+    }
+    if (userHasRole) {
+        const Component = hasChildren(item) ? MultiLevel : SingleLevel;
+        return <Component item={item} />;
+    }
+    return <></>;
 };
 
 const SingleLevel = ({ item }: IProps) => {
@@ -41,7 +51,7 @@ const SingleLevel = ({ item }: IProps) => {
 
 const MultiLevel = ({ item }: IProps) => {
     const { items: children } = item;
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(!!item.defaultOpen);
 
     const handleClick = () => {
         setOpen(prev => !prev);

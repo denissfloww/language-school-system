@@ -7,6 +7,7 @@ import SuspenseLoader from './components/SuspenseLoader';
 import { Routes, Route } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectAuthState } from './redux/reducers/auth/authReducer';
+import { RoleTypes } from './interfaces/IUser';
 
 // @ts-ignore
 // eslint-disable-next-line react/display-name
@@ -36,7 +37,14 @@ const Router = () => {
                         <Route path='groups' element={<GroupSettings />} />
                         <Route path='students' element={<StudentsSettings />} />
                         <Route path='user/create' element={<CreateUserPage />} />
-                        <Route path='users' element={<UserSettings />} />
+                        <Route
+                            path='users'
+                            element={
+                                <RoleGuardRouter roles={[RoleTypes.Admin, RoleTypes.student]}>
+                                    <UserSettings />
+                                </RoleGuardRouter>
+                            }
+                        />
                     </Route>
                 </Route>
             </Route>
@@ -58,23 +66,15 @@ function RequireAuth() {
     return <Outlet />;
 }
 
-// export const routes: RouteObject[] = [
-//     {
-//         path: '/',
-//         element: <SidebarLayout />,
-//         children: [
-//             {
-//                 path: '/schedule',
-//                 element: <Schedule />,
-//             },
-//             {
-//                 path: 'settings',
-//                 children: []
-//             }
-//         ],
-//     },
-//     {
-//         path: '/signIn',
-//         element: <Login />,
-//     },
-// ];
+
+// eslint-disable-next-line no-undef
+const RoleGuardRouter = ({ children, roles }: { children: JSX.Element; roles: Array<RoleTypes> }) => {
+    const { user } = useSelector(selectAuthState);
+    const userHasRole = user?.roles.every(val => roles.includes(val.name));
+
+    if (!userHasRole) {
+        return <></>;
+    }
+
+    return children;
+};

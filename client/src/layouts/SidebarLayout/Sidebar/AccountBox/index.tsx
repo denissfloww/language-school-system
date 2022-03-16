@@ -6,6 +6,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 import { selectAuthState } from '../../../../redux/reducers/auth/authReducer';
+import { IRole, RoleTypes, RoleTypesDisplay } from '../../../../interfaces/IUser';
 
 const AccountStyle = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -24,10 +25,17 @@ const AccountBox = () => {
             <Avatar {...stringAvatar(`${user?.firstName} ${user?.lastName}`, 40)} />
             <Box sx={{ ml: 2 }}>
                 <Typography variant='subtitle2' sx={{ color: 'text.primary' }}>
-                  {user?.firstName} {user?.lastName}
+                    {user?.firstName} {user?.lastName}
                 </Typography>
                 <Typography variant='body2' sx={{ color: 'text.secondary' }}>
-                    Администратор
+                    {/*{user?.roles?.map((role: IRole) => {*/}
+                    {/*    return RoleTypesDisplay[role.name];*/}
+                    {/*})}*/}
+                    {user?.roles? (
+                      RoleTypesDisplay[user.roles[0].name]
+                    ) : (
+                      RoleTypesDisplay[RoleTypes.None]
+                    )}
                 </Typography>
             </Box>
         </AccountStyle>

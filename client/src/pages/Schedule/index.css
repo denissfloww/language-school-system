@@ -134,3 +134,29 @@ hr {
 .e-control {
     font-family: 'Nunito', sans-serif !important;
 }
+
+/*.e-schedule .e-schedule-toolbar .e-active-view .e-tbar-btn-text,*/
+/*.e-schedule .e-schedule-toolbar .e-active-view .e-icons,*/
+/*.e-schedule .e-vertical-view .e-header-cells.e-current-day,*/
+/*.e-schedule .e-vertical-view .e-clone-time-indicator,*/
+/*.e-schedule .e-vertical-view .e-current-time {*/
+/*    color: #e5ac00;*/
+/*}*/
+
+/*.e-schedule .e-vertical-view .e-current-timeline {*/
+/*    border-top: 1px solid #e5ac00;*/
+/*}*/
+
+/*.e-schedule .e-vertical-view .e-previous-timeline {*/
+/*    border-top: 1px dotted #e5ac00;*/
+/*}*/
+
+/*.e-schedule .e-month-view .e-current-date .e-date-header,*/
+/*.e-schedule .e-month-agenda-view .e-current-date .e-date-header {*/
+/*    background-color: #e5ac00;*/
+/*}*/
+
+/*.e-schedule .e-month-view .e-date-header-wrap table td.e-current-day,*/
+/*.e-schedule .e-month-agenda-view .e-date-header-wrap table td.e-current-day {*/
+/*    color: #e5ac00;*/
+/*}*/

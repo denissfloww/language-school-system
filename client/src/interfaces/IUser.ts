@@ -6,15 +6,20 @@ export interface IUser {
     role: RoleTypes;
 }
 
-export enum RoleTypes {
-    None,
-    Admin,
-    Student,
-    Teacher,
+export interface IRole {
+    name: RoleTypes;
+    desc: string;
 }
 
-export let RoleTypesDisplay: { [index: number]: string } = {};
+export enum RoleTypes {
+    None,
+    Admin = 'Admin',
+    student = 'student',
+    Teacher = 'Teacher',
+}
+
+export let RoleTypesDisplay: { [index: string]: string } = {};
 RoleTypesDisplay[RoleTypes.None] = 'None';
 RoleTypesDisplay[RoleTypes.Admin] = 'Администратор';
-RoleTypesDisplay[RoleTypes.Student] = 'Ученик';
+RoleTypesDisplay[RoleTypes.student] = 'Ученик';
 RoleTypesDisplay[RoleTypes.Teacher] = 'Учитель';
