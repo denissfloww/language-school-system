@@ -5,6 +5,7 @@ const {
         lastName,
         middleName,
         role,
+        phone,
         address1,
         city,
         zipcode,
@@ -20,6 +21,7 @@ const {
 export default {
     [firstName.name]: '',
     [lastName.name]: '',
+    [phone.name]: '',
     [address1.name]: '',
     [city.name]: '',
     [zipcode.name]: '',
@@ -30,5 +32,5 @@ export default {
     [expiryDate.name]: '',
     [cvv.name]: '',
     [middleName.name]: '',
-    [role.name]: '',
+    [role.name]: [],
 };

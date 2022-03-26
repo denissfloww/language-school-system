@@ -9,6 +9,8 @@ import Button from '@mui/material/Button';
 import UserInformationForm from './Forms/UserInformationForm';
 import UserRolesForm from './Forms/UserRolesForm';
 import CheckoutSuccess from './CreateSuccess/CreateSuccess';
+import { useDispatch } from 'react-redux';
+import { createUserAction } from '../../redux/reducers/users/usersReducer';
 
 const steps = ['Основная информация', 'Роли'];
 const { formId, formField } = formModel;
@@ -30,6 +32,7 @@ const CreateUserForm = () => {
     const [activeStep, setActiveStep] = useState(0);
     const currentValidationSchema = validationSchema[activeStep];
     const isLastStep = activeStep === steps.length - 1;
+    const dispatch = useDispatch();
     const theme = useTheme();
     function _sleep(ms: number) {
         return new Promise(resolve => setTimeout(resolve, ms));
@@ -37,6 +40,18 @@ const CreateUserForm = () => {
 
     async function _submitForm(values: any, actions: any) {
         await _sleep(1000);
+        const roles = values?.roles?.map((role: { label: string; value: string }) => {
+            return role.value;
+        });
+        dispatch(
+            createUserAction({
+                firstName: values.firstName,
+                lastName: values.lastName,
+                middleName: values.middleName,
+                roles: roles,
+                phone: values.phone
+            }),
+        );
         alert(JSON.stringify(values, null, 2));
         actions.setSubmitting(false);
 
@@ -57,6 +72,10 @@ const CreateUserForm = () => {
         setActiveStep(activeStep - 1);
     }
 
+    const backToFirstForm = () => {
+        setActiveStep(0);
+    };
+
     return (
         <>
             <Stepper activeStep={activeStep}>
@@ -68,7 +87,7 @@ const CreateUserForm = () => {
             </Stepper>
             <div style={{ marginTop: '3%' }} />
             {activeStep === steps.length ? (
-                <CheckoutSuccess />
+                <CheckoutSuccess handleBack={backToFirstForm} />
             ) : (
                 <Formik initialValues={formInitialValues} validationSchema={currentValidationSchema} onSubmit={_handleSubmit}>
                     {({ isSubmitting }) => (

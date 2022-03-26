@@ -4,7 +4,8 @@ import scheduleReducer from './reducers/scheduleReducer';
 import groupsReducer from './reducers/groups/groupsReducer';
 import usersReducer from './reducers/users/usersReducer';
 import authReducer from './reducers/auth/authReducer';
-import globalReducer from "./reducers/global/globalReducer";
+import globalReducer from './reducers/global/globalReducer';
+import rolesReducer from './reducers/roles/rolesReducer';
 
 const store = configureStore({
     reducer: {
@@ -12,7 +13,8 @@ const store = configureStore({
         groups: groupsReducer,
         users: usersReducer,
         auth: authReducer,
-        global: globalReducer
+        global: globalReducer,
+        roles: rolesReducer,
     },
 });
 

@@ -19,9 +19,12 @@ export class Role extends BaseModel {
   @Column()
   description: string;
 
+  @Column()
+  label: string;
+
   @ManyToMany(() => User)
   @JoinTable({
-    name: 'users_roles',
+    name: 'user_role',
     joinColumns: [{ name: 'roleId' }],
     inverseJoinColumns: [{ name: 'userId' }],
   })

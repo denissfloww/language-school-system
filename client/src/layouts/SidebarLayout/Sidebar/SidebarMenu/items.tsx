@@ -3,8 +3,9 @@ import GroupIcon from '@mui/icons-material/Group';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import GroupsIcon from '@mui/icons-material/Groups';
 import PersonAddAltSharpIcon from '@mui/icons-material/PersonAddAltSharp';
+import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 import React, { ReactNode } from 'react';
-import { RoleTypes } from '../../../../interfaces/IUser';
+import { RoleTypes } from '../../../../interfaces/IRole';
 
 export interface IMenuItem {
     icon: ReactNode;
@@ -21,7 +22,13 @@ export const menu: IMenuItem[] = [
         title: 'Расписание',
         link: '/dashboard/schedule',
         items: [],
-        availableRoles: [RoleTypes.Admin, RoleTypes.None, RoleTypes.student],
+        // availableRoles: [RoleTypes.Admin, RoleTypes.None, RoleTypes.Student],
+    },
+    {
+        icon: <ImportContactsIcon />,
+        title: 'Журнал',
+        link: '/dashboard/journal',
+        items: [],
     },
     {
         icon: <SettingsIcon />,

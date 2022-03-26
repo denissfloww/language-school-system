@@ -29,5 +29,5 @@ export class Student extends BaseModel {
     joinColumns: [{ name: 'studentId' }],
     inverseJoinColumns: [{ name: 'groupId' }],
   })
-  students: Group[];
+  groups: Group[];
 }

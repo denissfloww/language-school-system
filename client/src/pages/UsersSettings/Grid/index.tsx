@@ -11,9 +11,10 @@ import TableContainer from '@mui/material/TableContainer';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUsers, selectUsersState } from '../../../redux/reducers/users/usersReducer';
-import { IUser, RoleTypesDisplay } from '../../../interfaces/IUser';
+import { IUser } from '../../../interfaces/IUser';
 import DeleteGroupButton from './Buttons/DeleteGroupButton';
 import UpdateUserButton from './Buttons/UpdateButton';
+import { RoleTypesDisplay } from "../../../interfaces/IRole";
 
 const UsersGrid = () => {
     const dispatch = useDispatch();

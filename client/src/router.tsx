@@ -7,7 +7,8 @@ import SuspenseLoader from './components/SuspenseLoader';
 import { Routes, Route } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectAuthState } from './redux/reducers/auth/authReducer';
-import { RoleTypes } from './interfaces/IUser';
+import { RoleTypes } from './interfaces/IRole';
+import Journal from './pages/Journal';
 
 // @ts-ignore
 // eslint-disable-next-line react/display-name
@@ -40,12 +41,13 @@ const Router = () => {
                         <Route
                             path='users'
                             element={
-                                <RoleGuardRouter roles={[RoleTypes.Admin, RoleTypes.student]}>
+                                <RoleGuardRouter roles={[RoleTypes.Admin, RoleTypes.Student]}>
                                     <UserSettings />
                                 </RoleGuardRouter>
                             }
                         />
                     </Route>
+                    <Route path='journal' element={<Journal />} />
                 </Route>
             </Route>
         </Routes>
@@ -65,7 +67,6 @@ function RequireAuth() {
 
     return <Outlet />;
 }
-
 
 // eslint-disable-next-line no-undef
 const RoleGuardRouter = ({ children, roles }: { children: JSX.Element; roles: Array<RoleTypes> }) => {

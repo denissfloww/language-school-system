@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import './App.css';
-import 'react-toastify/dist/ReactToastify.css';
 import { ThemeProvider } from '@mui/material';
 import { themeCreator } from './theme/base';
 import Box from '@mui/material/Box';

@@ -28,9 +28,12 @@ export class User extends BaseModel {
   @Column()
   password: string;
 
+  @Column()
+  phone: string;
+
   @ManyToMany(() => Role)
   @JoinTable({
-    name: 'users_roles',
+    name: 'user_role',
     joinColumns: [{ name: 'userId' }],
     inverseJoinColumns: [{ name: 'roleId' }],
   })

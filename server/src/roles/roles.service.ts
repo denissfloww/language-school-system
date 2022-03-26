@@ -6,5 +6,12 @@ import { Role } from '../models/role.entity';
 
 @Injectable()
 export class RolesService {
-  constructor() {}
+  constructor(
+    @InjectRepository(Role)
+    private rolesRepository: Repository<Role>,
+  ) {}
+
+  async getRoles() {
+    return this.rolesRepository.find();
+  }
 }

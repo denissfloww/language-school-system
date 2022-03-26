@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { User } from '../models/user.entity';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
@@ -10,6 +10,7 @@ import { StudentsService } from '../students/students.service';
 import { CreateStudentDto } from '../students/dto/create-student.dto';
 import CyrillicToTranslit from 'cyrillic-to-translit-js';
 import { CreatedUserDto } from './dto/created-user.dto';
+import { TeacherService } from '../teacher/teacher.service';
 
 @Injectable()
 export class UsersService {
@@ -19,6 +20,7 @@ export class UsersService {
     @InjectRepository(Role)
     private rolesRepository: Repository<Role>,
     private studentsService: StudentsService,
+    private teacherService: TeacherService,
     @InjectConnection() private connection: Connection,
   ) {}
 
@@ -41,19 +43,35 @@ export class UsersService {
     }
 
     const randomPassword = Math.random().toString(36).slice(-8);
-
     const hashPassword = await bcrypt.hash(randomPassword, 5);
+
+    const roles: Role[] = [];
+    for (const roleName of dto.roles) {
+      const role = await this.rolesRepository.findOne({
+        where: { name: roleName },
+      });
+
+      roles.push(role);
+    }
+
     const user = await this.usersRepository.save({
-      ...dto,
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+      middleName: dto.middleName,
       login: login,
       password: hashPassword,
+      roles: roles,
     });
 
-    if (dto.role == RolesEnum.Student) {
+    if (dto.roles.includes(RolesEnum.Student)) {
       const studentDto: CreateStudentDto = {
         userId: parseInt(user.id),
       };
       await this.studentsService.createStudent(studentDto);
+    }
+
+    if (dto.roles.includes(RolesEnum.Teacher)) {
+      await this.teacherService.createTeacher(parseInt(user.id));
     }
 
     const createdUser: CreatedUserDto = {
@@ -63,7 +81,7 @@ export class UsersService {
       lastName: user.lastName,
       middleName: user.middleName,
       password: randomPassword,
-      role: user.role,
+      roles: dto.roles,
     };
 
     return createdUser;

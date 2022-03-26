@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { RolesModule } from './roles/roles.module';
 import { StudentsModule } from './students/students.module';
 import { GroupModule } from './group/group.module';
+import { TeacherModule } from './teacher/teacher.module';
 
 import DatabaseConfig from './config/database.config';
 
@@ -27,6 +28,7 @@ export function DatabaseOrmModule(): DynamicModule {
     RolesModule,
     StudentsModule,
     GroupModule,
+    TeacherModule,
   ],
   controllers: [AppController],
   providers: [AppService],

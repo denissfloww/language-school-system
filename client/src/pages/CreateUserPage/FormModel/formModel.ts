@@ -16,9 +16,15 @@ export default {
       requiredErrorMsg: 'Фамилия обязательна для заполнения'
     },
     role:{
-      name: 'role',
+      name: 'roles',
       label: 'Роль*',
       requiredErrorMsg: 'Выберите роль'
+    },
+    phone:{
+      name: 'phone',
+      label: 'Номер телефона*',
+      requiredErrorMsg: 'Введите номер телефона',
+      validateErrorMsg: 'Введите корректный формат телефона'
     },
     address1: {
       name: 'address1',

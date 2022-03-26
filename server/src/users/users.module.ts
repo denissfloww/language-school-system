@@ -7,6 +7,7 @@ import { RolesModule } from '../roles/roles.module';
 import { Role } from '../models/role.entity';
 import { AuthModule } from '../auth/auth.module';
 import { StudentsModule } from '../students/students.module';
+import { TeacherModule } from '../teacher/teacher.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { StudentsModule } from '../students/students.module';
     RolesModule,
     forwardRef(() => AuthModule),
     StudentsModule,
+    TeacherModule,
   ],
   controllers: [UsersController],
   providers: [UsersService],

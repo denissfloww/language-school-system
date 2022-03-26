@@ -2,6 +2,7 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import InputField from '../../../components/FormFields/InputField';
 import * as React from 'react';
+import PhoneMask from '../../../components/InputMasks/PhoneMask';
 
 interface IProps {
     formField?: any;
@@ -9,7 +10,7 @@ interface IProps {
 
 export const UserInformationForm = (props: IProps) => {
     const {
-        formField: { firstName, middleName, lastName },
+        formField: { firstName, middleName, lastName, phone },
     } = props;
 
     return (
@@ -26,6 +27,15 @@ export const UserInformationForm = (props: IProps) => {
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <InputField name={lastName.name} label={lastName.label} fullWidth />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <InputField
+                        name={phone.name}
+                        fullWidth
+                        InputProps={{
+                            inputComponent: PhoneMask as any,
+                        }}
+                    />
                 </Grid>
             </Grid>
         </React.Fragment>

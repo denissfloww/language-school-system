@@ -1,4 +1,11 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableColumn,
+  TableForeignKey,
+  TableIndex,
+} from 'typeorm';
 
 export class GroupsTable1645092727060 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -37,6 +44,14 @@ export class GroupsTable1645092727060 implements MigrationInterface {
         ],
       }),
       true,
+    );
+
+    await queryRunner.createIndex(
+      'groups',
+      new TableIndex({
+        name: 'IDX_GROUPS_NAME',
+        columnNames: ['name'],
+      }),
     );
   }
 

@@ -10,6 +10,6 @@ export class CreatedUserDto {
 
   readonly password: string;
 
-  readonly role: RolesEnum;
+  readonly roles: RolesEnum[];
   readonly login: string;
 }

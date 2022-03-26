@@ -1,30 +1,27 @@
 import {
   Entity,
+  Column,
   PrimaryGeneratedColumn,
   OneToOne,
-  PrimaryColumn,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import BaseModel from './base';
 import { User } from './user.entity';
-import { Role } from './role.entity';
+import { Group } from './group.entity';
 
-@Entity('users_roles')
-export class UsersRolesEntity extends BaseModel {
+@Entity('teachers')
+export class Teacher extends BaseModel {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @PrimaryColumn('int')
+  @Column()
   userId: number;
-
-  @PrimaryColumn('int')
-  roleId: number;
 
   @OneToOne(() => User)
   @JoinColumn()
   user: User;
 
-  @OneToOne(() => Role)
-  @JoinColumn()
-  role: Role;
+  @OneToMany(() => Group, (group) => group.teacher)
+  groups: Group[];
 }

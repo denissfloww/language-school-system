@@ -4,9 +4,12 @@ import {
   PrimaryGeneratedColumn,
   ManyToMany,
   JoinTable,
+  ManyToOne,
 } from 'typeorm';
 import BaseModel from './base';
 import { Student } from './student.entity';
+import { User } from './user.entity';
+import { Teacher } from './teacher.entity';
 
 @Entity('groups')
 export class Group extends BaseModel {
@@ -26,4 +29,10 @@ export class Group extends BaseModel {
     inverseJoinColumns: [{ name: 'studentId' }],
   })
   students: Student[];
+
+  @Column()
+  teacherId: number;
+
+  @ManyToOne(() => Teacher, (teacher) => teacher.groups)
+  teacher: Teacher;
 }

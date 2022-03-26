@@ -11,5 +11,5 @@ export class CreateUserDto {
   readonly lastName: string;
 
   @IsNotEmpty()
-  readonly role: RolesEnum;
+  readonly roles: RolesEnum[];
 }

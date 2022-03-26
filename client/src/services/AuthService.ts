@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { API_URL } from '../urls';
 import jwt_decode from 'jwt-decode';
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { LOCAL_STORAGE_NAME } from '../settings';
 import { ICreditionals } from '../redux/reducers/auth/types';

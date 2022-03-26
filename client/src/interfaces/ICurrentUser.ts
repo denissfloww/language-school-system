@@ -1,4 +1,4 @@
-import { IRole } from './IUser';
+import { IRole } from "./IRole";
 
 export interface ICurrentUser {
     id: number;

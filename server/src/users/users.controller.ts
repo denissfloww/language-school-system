@@ -6,6 +6,9 @@ import {
   HttpCode,
   Logger,
   Post,
+  Req,
+  StreamableFile,
+  Response,
   UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -13,10 +16,29 @@ import { UsersService } from './users.service';
 import { Roles } from '../auth/roles-auth.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 import { DeleteUserDto } from './dto/delete-user.dto';
+import * as stream from 'stream';
+import { createReadStream } from 'fs';
+import { join } from 'path';
+import { doc } from 'prettier';
 
 @Controller('users')
 export class UsersController {
   constructor(private userService: UsersService) {}
+
+  // // @UseGuards(JwtAuthGuard)
+  // @Post()
+  // create(
+  //   @Body() createUserDto: CreateUserDto,
+  //   @Response({ passthrough: true }) res,
+  // ): StreamableFile {
+  //   const file = createReadStream(join(process.cwd(), 'package.json'));
+  //   res.set({
+  //     'Content-Type': 'application/json',
+  //     'Content-Disposition': 'attachment; filename="package.json"',
+  //   });
+  //   return new StreamableFile(file);
+  //   //return this.userService.createUser(createUserDto);
+  // }
 
   // @UseGuards(JwtAuthGuard)
   @Post()

@@ -1,16 +1,54 @@
+import { Button } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { selectUsersState } from '../../../redux/reducers/users/usersReducer';
 
-const CheckoutSuccess = () => {
+const CheckoutSuccess = (props: { handleBack: () => void }) => {
+    const { handleBack } = props;
+    const c = document.createElement('a');
+    c.download = 'user-text.txt';
+
+    const t = new Blob(['dfgdf'], {
+        type: 'text/plain',
+    });
+    c.href = window.URL.createObjectURL(t);
+
+    const { createdUser } = useSelector(selectUsersState);
+
+    const handleClick = () => {
+        c.click();
+    };
+
     return (
         <React.Fragment>
-            <Typography variant='h5' gutterBottom>
-                Thank you for your order.
-            </Typography>
-            <Typography variant='subtitle1'>
-                Your order number is #2001539. We have emailed your order confirmation, and will send you an update when your order has
-                shipped.
-            </Typography>
+            {createdUser ? (
+                <>
+                    <Typography variant='h5' gutterBottom>
+                        Пользователь успешно создан!
+                    </Typography>
+                    <Typography variant='h5' gutterBottom>
+                        {createdUser.login}
+                    </Typography>
+                    <p>
+                        <Button onClick={handleClick} variant='contained'>
+                            Скачать данные
+                        </Button>
+                    </p>
+                </>
+            ) : (
+                <>
+                    <Typography variant='h5' gutterBottom>
+                        Произошла ошибка
+                    </Typography>
+
+                    <p>
+                        <Button variant='contained' onClick={handleBack}>
+                            Попробовать заново
+                        </Button>
+                    </p>
+                </>
+            )}
         </React.Fragment>
     );
 };

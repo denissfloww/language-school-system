@@ -6,7 +6,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 import { selectAuthState } from '../../../../redux/reducers/auth/authReducer';
-import { IRole, RoleTypes, RoleTypesDisplay } from '../../../../interfaces/IUser';
+import { RoleTypes, RoleTypesDisplay } from "../../../../interfaces/IRole";
 
 const AccountStyle = styled('div')(({ theme }) => ({
     display: 'flex',
