@@ -1,8 +1,15 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { LoginUserDto } from './dto/login.dto';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
+import { JwtPayload } from './interface/JwtPayload';
+import { jwtConstants } from './constants';
+import { User } from '../models/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -13,21 +20,52 @@ export class AuthService {
 
   async login(loginDto: LoginUserDto) {
     const user = await this.validateUser(loginDto);
+    const payload = AuthService.getUserPayloadData(user);
+
+    return this.getTokens(payload);
+  }
+
+  async getNewAccessAndRefreshToken(refreshToken: string) {
+    const decode = this.jwtService.verify(refreshToken, {
+      secret: jwtConstants.refreshTokenSecret,
+    });
+    if (!decode) throw new ForbiddenException('Access Denied');
+
+    const user = await this.usersService.getUserByLogin(decode.login);
+    const payload = AuthService.getUserPayloadData(user);
+
+    return this.getTokens(payload);
+  }
+
+  private static getUserPayloadData(user: User) {
     const roles = user.roles.map((role) => {
       return {
         name: role.name,
         desc: role.description,
       };
     });
-    const payload = {
+
+    const payload: JwtPayload = {
       id: user.id,
       login: user.login,
       firstName: user.firstName,
       lastName: user.lastName,
       roles: roles,
     };
+
+    return payload;
+  }
+
+  private getTokens(payload: JwtPayload) {
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: this.jwtService.sign(payload, {
+        secret: jwtConstants.accessTokenSecret,
+        expiresIn: '30s',
+      }),
+      refresh_token: this.jwtService.sign(payload, {
+        secret: jwtConstants.refreshTokenSecret,
+        expiresIn: '360d',
+      }),
     };
   }
 

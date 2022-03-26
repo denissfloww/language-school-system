@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { LOCAL_STORAGE_NAME } from '../settings';
 import { ICreditionals } from '../redux/reducers/auth/types';
 import { ICurrentUser } from '../interfaces/ICurrentUser';
+import TokenService from './TokenService';
 
 const localStorageUserKey = `${LOCAL_STORAGE_NAME}User`;
 
@@ -18,10 +19,11 @@ const login = async (creditionals: ICreditionals) => {
         login: decoded.login,
         firstName: decoded.firstName,
         lastName: decoded.lastName,
-        token: token,
         roles: decoded.roles,
     };
     if (isRemember) {
+        TokenService.saveAccessToken(token);
+        TokenService.saveRefreshToken(response.data.refresh_token);
         localStorage.setItem(localStorageUserKey, JSON.stringify(user));
     }
     return user;

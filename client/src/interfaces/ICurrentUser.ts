@@ -5,6 +5,5 @@ export interface ICurrentUser {
     login: string;
     firstName?: string;
     lastName?: string;
-    token: string;
     roles: IRole[];
 }

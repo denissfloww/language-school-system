@@ -1,14 +1,12 @@
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import SidebarLayout from './layouts/SidebarLayout';
-import React, { lazy } from 'react';
-import Login from './pages/Login';
-import { Suspense } from 'react';
-import SuspenseLoader from './components/SuspenseLoader';
-import { Routes, Route } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectAuthState } from './redux/reducers/auth/authReducer';
-import { RoleTypes } from './interfaces/IRole';
-import Journal from './pages/Journal';
+import { Navigate, Outlet, Route, Routes, useLocation } from "react-router-dom";
+import SidebarLayout from "./layouts/SidebarLayout";
+import React, { lazy, Suspense } from "react";
+import Login from "./pages/Login";
+import SuspenseLoader from "./components/SuspenseLoader";
+import { useSelector } from "react-redux";
+import { selectAuthState } from "./redux/reducers/auth/authReducer";
+import { RoleTypes } from "./interfaces/IRole";
+import Journal from "./pages/Journal";
 
 // @ts-ignore
 // eslint-disable-next-line react/display-name
@@ -41,7 +39,7 @@ const Router = () => {
                         <Route
                             path='users'
                             element={
-                                <RoleGuardRouter roles={[RoleTypes.Admin, RoleTypes.Student]}>
+                                <RoleGuardRouter roles={[RoleTypes.Admin, RoleTypes.Teacher]}>
                                     <UserSettings />
                                 </RoleGuardRouter>
                             }
@@ -71,7 +69,7 @@ function RequireAuth() {
 // eslint-disable-next-line no-undef
 const RoleGuardRouter = ({ children, roles }: { children: JSX.Element; roles: Array<RoleTypes> }) => {
     const { user } = useSelector(selectAuthState);
-    const userHasRole = user?.roles.every(val => roles.includes(val.name));
+    const userHasRole = user?.roles.some(val => roles.includes(val.name));
 
     if (!userHasRole) {
         return <></>;

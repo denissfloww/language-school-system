@@ -3,6 +3,7 @@ import axios from 'axios';
 import { API_URL } from '../urls';
 import { ICreatedUser, ICreateUserData } from '../redux/reducers/users/types';
 import { RoleTypes } from '../interfaces/IRole';
+import $api from './http';
 
 const getUsers = () => {
     const users: IUser[] = [
@@ -19,9 +20,9 @@ const getUsers = () => {
 };
 
 const createUser = async (user: ICreateUserData) => {
-    console.log(user)
+    console.log(user);
 
-    const response = await axios.post(API_URL + '/users', {
+    const response = await $api.post('/users', {
         ...user,
     });
 
