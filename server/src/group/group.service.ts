@@ -13,6 +13,7 @@ import { PageMetaDto } from '../common/dtos/page-meta.dto';
 import { Student } from '../models/student.entity';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { NotFoundException } from '../exceptions/not-found.exception';
+import { AlreadyExistException } from '../exceptions/already-exist.exception';
 
 @Injectable()
 export class GroupService {
@@ -90,7 +91,7 @@ export class GroupService {
       name: createGroupDto.name,
     });
 
-    if (existGroup) {
+    if (!existGroup) {
       return await this.groupsRepository.save({
         name: createGroupDto.name,
         description: createGroupDto.description,
@@ -100,6 +101,7 @@ export class GroupService {
         ),
       });
     }
+    throw new AlreadyExistException();
   }
 
   async deleteGroup(id: number) {
