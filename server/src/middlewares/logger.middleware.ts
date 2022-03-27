@@ -1,4 +1,4 @@
-import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
+import { HttpStatus, Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 
 @Injectable()
@@ -12,10 +12,19 @@ export class LoggerMiddleware implements NestMiddleware {
     response.on('finish', () => {
       const { statusCode } = response;
       const contentLength = response.get('content-length');
-
-      this.logger.log(
-        `${method} ${originalUrl} ${statusCode} ${contentLength} - ${userAgent} ${ip}`,
-      );
+      if (
+        statusCode == HttpStatus.NOT_FOUND ||
+        statusCode == HttpStatus.BAD_REQUEST ||
+        statusCode == HttpStatus.UNAUTHORIZED
+      ) {
+        this.logger.error(
+          `${method} ${originalUrl} ${statusCode} ${contentLength} - ${userAgent} ${ip}`,
+        );
+      } else {
+        this.logger.log(
+          `${method} ${originalUrl} ${statusCode} ${contentLength} - ${userAgent} ${ip}`,
+        );
+      }
     });
 
     next();

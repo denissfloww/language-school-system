@@ -12,6 +12,7 @@ import { GroupDto } from './dto/group.dto';
 import { PageMetaDto } from '../common/dtos/page-meta.dto';
 import { Student } from '../models/student.entity';
 import { UpdateGroupDto } from './dto/update-group.dto';
+import { NotFoundException } from '../exceptions/not-found.exception';
 
 @Injectable()
 export class GroupService {
@@ -64,31 +65,41 @@ export class GroupService {
       .where('group.id = :id', { id: id })
       .getOne();
 
-    const groupDto: GroupDto = {
-      id: group.id,
-      name: group.name,
-      desc: group.description,
-      teacher: {
-        id: group.teacher.id,
-        firstName: group.teacher.user.firstName,
-        middleName: group.teacher.user.middleName,
-        lastName: group.teacher.user.lastName,
-        userId: group.teacher.user.id,
-      },
-    };
+    if (group) {
+      const groupDto: GroupDto = {
+        id: group.id,
+        name: group.name,
+        desc: group.description,
+        teacher: {
+          id: group.teacher.id,
+          firstName: group.teacher.user.firstName,
+          middleName: group.teacher.user.middleName,
+          lastName: group.teacher.user.lastName,
+          userId: group.teacher.user.id,
+        },
+      };
 
-    return groupDto;
+      return groupDto;
+    }
+
+    throw new NotFoundException();
   }
 
   async createGroup(createGroupDto: CreateGroupDto) {
-    return await this.groupsRepository.save({
+    const existGroup = await this.groupsRepository.find({
       name: createGroupDto.name,
-      description: createGroupDto.description,
-      teacherId: createGroupDto.teacherId,
-      students: createGroupDto.studentsIds.map(
-        (id) => ({ id } as unknown as Student),
-      ),
     });
+
+    if (existGroup) {
+      return await this.groupsRepository.save({
+        name: createGroupDto.name,
+        description: createGroupDto.description,
+        teacherId: createGroupDto.teacherId,
+        students: createGroupDto.studentsIds.map(
+          (id) => ({ id } as unknown as Student),
+        ),
+      });
+    }
   }
 
   async deleteGroup(id: number) {
