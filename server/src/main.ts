@@ -14,9 +14,11 @@ dotenv.config(dotEnvOptions);
 
 async function bootstrap() {
   const PORT = process.env.PORT || 5000;
-  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+    bodyParser: true,
+  });
   app.enableCors();
-
   app.setGlobalPrefix('api/v1');
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(PORT, () => {

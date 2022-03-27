@@ -4,6 +4,7 @@ import AuthService from '../../../services/AuthService';
 import { ICreditionals } from './types';
 import { getErrorMsg } from '../../../utils/helperFunc';
 import { ICurrentUser } from '../../../interfaces/ICurrentUser';
+import TokenService from '../../../services/TokenService';
 
 interface InitialState {
     user: ICurrentUser | null;
@@ -54,7 +55,9 @@ export const loginAction = (creditionals: ICreditionals): AppThunk => {
 export const autoLogin = (): AppThunk => {
     return async dispatch => {
         const loggedUser = await AuthService.getLocalStorageUserData();
-        if (loggedUser) {
+        const refreshToken = TokenService.getRefreshToken();
+        const accessToken = TokenService.getAccessToken();
+        if (loggedUser && refreshToken && accessToken) {
             dispatch(setUser(loggedUser));
         }
     };

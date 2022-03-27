@@ -60,7 +60,7 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload, {
         secret: jwtConstants.accessTokenSecret,
-        expiresIn: '30s',
+        expiresIn: '10h',
       }),
       refresh_token: this.jwtService.sign(payload, {
         secret: jwtConstants.refreshTokenSecret,

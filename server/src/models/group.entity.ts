@@ -5,10 +5,10 @@ import {
   ManyToMany,
   JoinTable,
   ManyToOne,
+  RelationId,
 } from 'typeorm';
 import BaseModel from './base';
 import { Student } from './student.entity';
-import { User } from './user.entity';
 import { Teacher } from './teacher.entity';
 
 @Entity('groups')
@@ -21,6 +21,9 @@ export class Group extends BaseModel {
 
   @Column()
   description: string;
+
+  @RelationId((group: Group) => group.students)
+  studentsIds?: number[];
 
   @ManyToMany(() => Student)
   @JoinTable({
