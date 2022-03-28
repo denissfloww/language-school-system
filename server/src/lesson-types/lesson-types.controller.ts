@@ -1,7 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  ParseIntPipe,
+  Put,
+} from '@nestjs/common';
 import { LessonTypesService } from './lesson-types.service';
 import { CreateLessonTypeDto } from './dto/create-lesson-type.dto';
 import { UpdateLessonTypeDto } from './dto/update-lesson-type.dto';
+import { PageOptionsDto } from '../common/dtos/page-options.dto';
 
 @Controller('lesson-types')
 export class LessonTypesController {
@@ -13,22 +25,25 @@ export class LessonTypesController {
   }
 
   @Get()
-  findAll() {
-    return this.lessonTypesService.findAll();
+  findAll(@Query() pageOptionsDto: PageOptionsDto) {
+    return this.lessonTypesService.findAll(pageOptionsDto);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.lessonTypesService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLessonTypeDto: UpdateLessonTypeDto) {
-    return this.lessonTypesService.update(+id, updateLessonTypeDto);
+  @Put(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateLessonTypeDto: UpdateLessonTypeDto,
+  ) {
+    return await this.lessonTypesService.update(id, updateLessonTypeDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.lessonTypesService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    return await this.lessonTypesService.remove(id);
   }
 }

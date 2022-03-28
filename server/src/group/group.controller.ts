@@ -6,10 +6,11 @@ import {
   HttpCode,
   Param,
   ParseIntPipe,
-  Post, Put,
+  Post,
+  Put,
   Query,
-  UseGuards
-} from "@nestjs/common";
+  UseGuards,
+} from '@nestjs/common';
 import { GroupService } from './group.service';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { AddStudentInGroupDto } from './dto/add-student-in-group.dto';
@@ -30,7 +31,7 @@ export class GroupController {
   @UseGuards(JwtAuthGuard)
   @Get('/:id')
   async getGroup(@Param('id', ParseIntPipe) id: number) {
-    return await this.groupsService.getGroup(id);
+    return await this.groupsService.getGroupById(id);
   }
 
   @UseGuards(JwtAuthGuard)

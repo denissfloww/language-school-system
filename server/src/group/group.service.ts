@@ -58,7 +58,7 @@ export class GroupService {
     return new PageDto(dtos, pageMetaDto);
   }
 
-  async getGroup(id: number) {
+  async getGroupById(id: number) {
     const group = await this.groupsRepository
       .createQueryBuilder('group')
       .leftJoinAndSelect('group.teacher', 'teacher')
