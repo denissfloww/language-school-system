@@ -11,4 +11,7 @@ export class LessonType extends BaseModel {
 
   @Column()
   description: string;
+
+  @Column()
+  color: string;
 }

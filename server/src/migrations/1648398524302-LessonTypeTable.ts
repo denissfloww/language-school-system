@@ -29,6 +29,11 @@ export class LessonTypeTable1648398524302 implements MigrationInterface {
             isNullable: true,
           },
           {
+            name: 'color',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
             name: 'updatedAt',
             type: 'timestamp',
             default: 'now()',
