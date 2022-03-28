@@ -5,15 +5,15 @@ import GroupsService from '../../../services/GroupsService';
 import StudentsService from '../../../services/StudentsService';
 import { IStudentAutoCompleteValue } from './types';
 import { setLoading } from '../global/globalReducer';
+import { IPageDataResponse } from '../../../services/responses/types';
 
 interface InitialState {
-    groups: IGroup[];
+    groupsData?: IPageDataResponse<IGroup>;
     studentsAutocompleteValues: IStudentAutoCompleteValue[];
     currentGroup: IGroup | null;
 }
 
 const initialState: InitialState = {
-    groups: [],
     studentsAutocompleteValues: [],
     currentGroup: null,
 };
@@ -22,8 +22,8 @@ const groupsSlice = createSlice({
     name: 'groups',
     initialState,
     reducers: {
-        setGroups: (state, action: PayloadAction<IGroup[]>) => {
-            state.groups = action.payload;
+        setGroups: (state, action: PayloadAction<IPageDataResponse<IGroup>>) => {
+            state.groupsData = action.payload;
         },
         setStudentsAutocompleteValues: (state, action: PayloadAction<IStudentAutoCompleteValue[]>) => {
             state.studentsAutocompleteValues = action.payload;
@@ -36,13 +36,12 @@ const groupsSlice = createSlice({
 
 export const { setGroups, setStudentsAutocompleteValues, setCurrentGroup } = groupsSlice.actions;
 
-export const fetchGroups = (): AppThunk => {
+export const fetchGroups = (page: number, rowPerPage: number): AppThunk => {
     return async dispatch => {
         try {
             dispatch(setLoading(true));
-            const groups = GroupsService.getGroups();
-            dispatch(setGroups(groups));
-
+            const groupsData = await GroupsService.getGroups(page, rowPerPage);
+            dispatch(setGroups(groupsData));
             dispatch(setLoading(false));
         } catch (e) {
             console.log(e);

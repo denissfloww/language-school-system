@@ -14,6 +14,7 @@ import { Student } from '../models/student.entity';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { NotFoundException } from '../exceptions/not-found.exception';
 import { AlreadyExistException } from '../exceptions/already-exist.exception';
+import { Logger } from '@nestjs/common';
 
 @Injectable()
 export class GroupService {
@@ -30,9 +31,12 @@ export class GroupService {
       .leftJoinAndSelect('group.teacher', 'teacher')
       .leftJoinAndSelect('teacher.user', 'user');
 
+    const skip =
+      (Number(pageOptionsDto.page) - 1) * Number(pageOptionsDto.take);
+
     queryBuilder
       .orderBy('group.createdAt', pageOptionsDto.order)
-      .skip(pageOptionsDto.skip)
+      .skip(skip)
       .take(pageOptionsDto.take);
 
     const itemCount = await queryBuilder.getCount();

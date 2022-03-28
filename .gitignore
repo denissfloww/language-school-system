@@ -6,3 +6,4 @@
 **/*.env
 !config/env/development.env
 /server/dist/
+/server/.vscode/

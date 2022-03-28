@@ -29,7 +29,7 @@ const GroupDialogForm = (props: IGroupDialogFormProps) => {
     function _handleSubmit(values: any, actions: any) {
         console.log(values);
         dispatch(createOrUpdateGroup(values));
-        dispatch(fetchGroups());
+        // dispatch(fetchGroups());
         close();
     }
 

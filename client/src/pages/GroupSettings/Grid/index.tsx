@@ -13,75 +13,126 @@ import { IGroup } from '../../../interfaces/IGroup';
 import GroupGridToolbar from './GroupGridToolbar';
 import DeleteButton from './Buttons/DeleteButton';
 import UpdateGroupButton from './Buttons/UpdateGroupButton';
-import TablePagination from "@mui/material/TablePagination";
-import * as React from "react";
+import TablePagination from '@mui/material/TablePagination';
+import * as React from 'react';
+import TableBodySkeleton from '../../../components/Skeletons/TableBodySkeleton';
 
 const GroupGrid = () => {
     const dispatch = useDispatch();
-    const { groups } = useSelector(selectGroupsState);
+    const { groupsData } = useSelector(selectGroupsState);
+
+    const fetchGroupsData = () => {
+        console.log(page + 1, rowsPerPage);
+        dispatch(fetchGroups(page + 1, rowsPerPage));
+    };
+
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [page, setPage] = React.useState(0);
 
     useEffect(() => {
-        dispatch(fetchGroups());
-    }, []);
-
-    const [rowsPerPage, setRowsPerPage] = React.useState(25);
+        fetchGroupsData();
+    }, [page, rowsPerPage]);
 
     const handleChangePage = (event: unknown, newPage: number) => {
-        console.log(event)
+        setPage(newPage);
+        fetchGroupsData();
     };
 
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(event)
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+        fetchGroupsData();
     };
 
-    const [page, setPage] = React.useState(0);
+    const headerRows: { text: string; align: 'left' | 'center' | 'right' }[] = [
+        {
+            text: 'Код',
+            align: 'left',
+        },
+        {
+            text: 'Название',
+            align: 'center',
+        },
+        {
+            text: 'Учитель',
+            align: 'center',
+        },
+        {
+            text: 'Количество',
+            align: 'center',
+        },
+        {
+            text: 'Описание',
+            align: 'center',
+        },
+        {
+            text: 'Действия',
+            align: 'center',
+        },
+    ];
 
     return (
         <>
             <Box sx={{ width: '100%' }}>
                 <Paper sx={{ width: '100%', mb: 2 }}>
-                    <GroupGridToolbar />
-                    <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 1000 }} aria-labelledby='tableTitle' size='medium'>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell align='left'>Код</TableCell>
-                                    <TableCell align='center'>Название</TableCell>
-                                    <TableCell align='center'>Количество</TableCell>
-                                    <TableCell align='center'>Описание</TableCell>
-                                    <TableCell align='right'>Действия</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {groups.map((group: IGroup) => (
-                                    <TableRow key={group.id} sx={{ '& > *': { borderBottom: 'unset' } }}>
-                                        <TableCell component='th' scope='row'>
-                                            {group.id}
-                                        </TableCell>
-                                        <TableCell component='th' scope='row' align='center'>
-                                            {group.name}
-                                        </TableCell>
-                                        <TableCell component='th' scope='row' align='center'>{group.name}</TableCell>
-                                        <TableCell component='th' scope='row' align='center'>{group.desc}</TableCell>
-                                        <TableCell component='th' scope='row' align='right'>
-                                            <UpdateGroupButton groupId={group.id} />
-                                            <DeleteButton groupId={group.id} />
-                                        </TableCell>
+                    <>
+                        <GroupGridToolbar />
+                        <TableContainer component={Paper}>
+                            <Table sx={{ minWidth: 1000 }} aria-labelledby='tableTitle' size='medium'>
+                                <TableHead>
+                                    <TableRow>
+                                        {headerRows.map(value => (
+                                            <>
+                                                <TableCell align={value.align}>{value.text}</TableCell>
+                                            </>
+                                        ))}
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                        <TablePagination
-                          rowsPerPageOptions={[5, 10, 25]}
-                          component='div'
-                          count={groups.length}
-                          rowsPerPage={rowsPerPage}
-                          page={page}
-                          onPageChange={handleChangePage}
-                          onRowsPerPageChange={handleChangeRowsPerPage}
-                        />
-                    </TableContainer>
-
+                                </TableHead>
+                                <TableBody>
+                                    {groupsData ? (
+                                        <>
+                                            {groupsData.data.map((group: IGroup) => (
+                                                <TableRow key={group.id} sx={{ '& > *': { borderBottom: 'unset' } }}>
+                                                    <TableCell component='th' scope='row'>
+                                                        {group.id}
+                                                    </TableCell>
+                                                    <TableCell component='th' scope='row' align='center'>
+                                                        {group.name}
+                                                    </TableCell>
+                                                    <TableCell component='th' scope='row' align='center'>
+                                                        {group.teacher.firstName}
+                                                    </TableCell>
+                                                    <TableCell component='th' scope='row' align='center'>
+                                                        {group.name}
+                                                    </TableCell>
+                                                    <TableCell component='th' scope='row' align='center'>
+                                                        {group.desc}
+                                                    </TableCell>
+                                                    <TableCell component='th' scope='row' align='right'>
+                                                        <UpdateGroupButton groupId={group.id} />
+                                                        <DeleteButton groupId={group.id} />
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </>
+                                    ) : (
+                                        <TableBodySkeleton columnsCount={headerRows.length} />
+                                    )}
+                                </TableBody>
+                            </Table>
+                            {groupsData ? (
+                                <TablePagination
+                                    rowsPerPageOptions={[5, 10, 15]}
+                                    component='div'
+                                    count={groupsData?.meta.itemCount}
+                                    rowsPerPage={rowsPerPage}
+                                    page={page}
+                                    onPageChange={handleChangePage}
+                                    onRowsPerPageChange={handleChangeRowsPerPage}
+                                />
+                            ) : null}
+                        </TableContainer>
+                    </>
                 </Paper>
             </Box>
         </>

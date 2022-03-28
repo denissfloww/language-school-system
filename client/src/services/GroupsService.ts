@@ -1,26 +1,18 @@
 import { IGroupCreateUpdateValues } from '../redux/reducers/groups/types';
 import { IGroup } from '../interfaces/IGroup';
+import axios from 'axios';
+import { API_URL } from '../urls';
+import { IPageDataResponse } from './responses/types';
 
-const getGroups = () => {
-    const groups: IGroup[] = [
-        {
-            id: 1,
-            name: 'Англ',
-            desc: 'Группа по англ языку',
+const getGroups = async (page: number, rowPerPage: number) => {
+    const response = await axios.get(`${API_URL}/group`, {
+        params: {
+            page: page,
+            take: rowPerPage,
         },
-        {
-            id: 2,
-            name: 'Англ',
-            desc: 'Группа по англ языку',
-        },
-        {
-            id: 3,
-            name: 'Англ',
-            desc: 'Группа по англ языку',
-        },
-    ];
-
-    return groups;
+    });
+    const data: IPageDataResponse<IGroup> = response.data;
+    return data;
 };
 
 const createGroup = (values: any) => {
@@ -39,6 +31,13 @@ const createGroup = (values: any) => {
 
 const getGroupById = (id: number) => {
     const testGroup: IGroup = {
+        teacher: {
+            firstName:'fsdf',
+            middleName:'dfsf',
+            lastName:'sdf',
+            userId:1,
+            id: 2
+        },
         name: 'test',
         id: 1,
         desc: '',
