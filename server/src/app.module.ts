@@ -12,6 +12,7 @@ import { TeacherModule } from './teacher/teacher.module';
 
 import DatabaseConfig from './config/database.config';
 import { LoggerMiddleware } from "./middlewares/logger.middleware";
+import { LessonTypesModule } from './lesson-types/lesson-types.module';
 
 export function DatabaseOrmModule(): DynamicModule {
   return TypeOrmModule.forRoot({ ...DatabaseConfig, autoLoadEntities: true });
@@ -30,6 +31,7 @@ export function DatabaseOrmModule(): DynamicModule {
     StudentsModule,
     GroupModule,
     TeacherModule,
+    LessonTypesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
