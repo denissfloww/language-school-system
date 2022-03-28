@@ -5,4 +5,7 @@ export class CreateLessonTypeDto {
   readonly name: string;
 
   readonly description: string;
+
+  @IsNotEmpty()
+  readonly color: string;
 }
