@@ -18,5 +18,10 @@ export default {
         id: {
             name: 'id',
         },
+        teacher: {
+            name: 'teacher',
+            label: 'Учитель',
+            requiredErrorMsg: 'Необходимо выбрать учителя!',
+        }
     },
 };

@@ -3,18 +3,21 @@ import { IGroup } from '../../../interfaces/IGroup';
 import { AppThunk, RootState } from '../../store';
 import GroupsService from '../../../services/GroupsService';
 import StudentsService from '../../../services/StudentsService';
-import { IStudentAutoCompleteValue } from './types';
+import {IAutoCompleteValues, IStudentAutoCompleteValue} from './types';
 import { setLoading } from '../global/globalReducer';
 import { IPageDataResponse } from '../../../services/responses/types';
+import TeachersService from "../../../services/TeacherService";
 
 interface InitialState {
     groupsData?: IPageDataResponse<IGroup>;
     studentsAutocompleteValues: IStudentAutoCompleteValue[];
+    teachersValues: IAutoCompleteValues[];
     currentGroup: IGroup | null;
 }
 
 const initialState: InitialState = {
     studentsAutocompleteValues: [],
+    teachersValues: [],
     currentGroup: null,
 };
 
@@ -31,10 +34,13 @@ const groupsSlice = createSlice({
         setCurrentGroup: (state, action: PayloadAction<IGroup>) => {
             state.currentGroup = action.payload;
         },
+        setTeacherAutocompleteValues: (state, action: PayloadAction<IAutoCompleteValues[]>) => {
+            state.teachersValues = action.payload
+        }
     },
 });
 
-export const { setGroups, setStudentsAutocompleteValues, setCurrentGroup } = groupsSlice.actions;
+export const { setGroups, setStudentsAutocompleteValues, setCurrentGroup, setTeacherAutocompleteValues } = groupsSlice.actions;
 
 export const fetchGroups = (page: number, rowPerPage: number): AppThunk => {
     return async dispatch => {
@@ -49,16 +55,23 @@ export const fetchGroups = (page: number, rowPerPage: number): AppThunk => {
     };
 };
 
-export const fetchStudentsForForm = (): AppThunk => {
+export const fetchFormData = (): AppThunk => {
     return async dispatch => {
         try {
             const students = StudentsService.getStudents();
+            const teachers = await TeachersService.getTeachers();
 
             const studentsAutoCompleteValues: IStudentAutoCompleteValue[] = students.map(student => {
                 return { label: student.firstName, value: String(student.id) };
             });
 
+            const teachersValues: IAutoCompleteValues[] = teachers.data.map((teacher) => {
+                return { label: `${teacher.lastName} ${teacher.firstName}`, value: String(teacher.id) };
+            })
+            console.log(teachersValues)
+
             dispatch(setStudentsAutocompleteValues(studentsAutoCompleteValues));
+            dispatch(setTeacherAutocompleteValues(teachersValues))
         } catch (e) {
             console.log(e);
         }
@@ -68,7 +81,7 @@ export const fetchStudentsForForm = (): AppThunk => {
 export const fetchGroupById = (id: number): AppThunk => {
     return async dispatch => {
         try {
-            const group = GroupsService.getGroupById(id);
+            const group = await GroupsService.getGroupById(id);
             dispatch(setCurrentGroup(group));
         } catch (e) {
             console.log(e);

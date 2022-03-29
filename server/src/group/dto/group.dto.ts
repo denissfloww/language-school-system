@@ -1,3 +1,5 @@
+import { StudentDto } from '../../students/dto/students.dto';
+
 export class GroupDto {
   id: number | string;
   name: string;
@@ -9,4 +11,5 @@ export class GroupDto {
     lastName: string;
     userId: number | string;
   };
+  students: StudentDto[];
 }

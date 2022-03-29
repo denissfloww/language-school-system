@@ -29,27 +29,10 @@ const createGroup = (values: any) => {
     console.log(createValues);
 };
 
-const getGroupById = (id: number) => {
-    const testGroup: IGroup = {
-        teacher: {
-            firstName:'fsdf',
-            middleName:'dfsf',
-            lastName:'sdf',
-            userId:1,
-            id: 2
-        },
-        name: 'test',
-        id: 1,
-        desc: '',
-        students: [
-            {
-                firstName: 'Бугаков Денис',
-                id: 1,
-            },
-        ],
-    };
+const getGroupById = async (id: number) => {
+    const response = await axios.get(`${API_URL}/group/${id}`)
 
-    return testGroup;
+    return response.data;
 };
 
 const GroupsService = {

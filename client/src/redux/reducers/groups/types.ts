@@ -9,3 +9,8 @@ export interface IGroupCreateUpdateValues {
     desc: string;
     studentIds: number[];
 }
+
+export interface IAutoCompleteValues {
+    label: string;
+    value: string;
+}

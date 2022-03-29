@@ -4,9 +4,10 @@ import InputField from '../../../../components/FormFields/InputField';
 import AutocompleteField from '../../../../components/FormFields/AutocompleteField';
 import { Field } from 'formik';
 import { useEffect } from 'react';
-import { fetchStudentsForForm, selectGroupsState } from '../../../../redux/reducers/groups/groupsReducer';
+import { fetchFormData, selectGroupsState } from '../../../../redux/reducers/groups/groupsReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { TextField } from '@mui/material';
+import SelectField from "../../../../components/FormFields/SelectField";
 
 interface IGroupFormProps {
     formField?: any;
@@ -14,14 +15,14 @@ interface IGroupFormProps {
 
 const GroupForm = (props: IGroupFormProps) => {
     const {
-        formField: { name, desc, students, id },
+        formField: { name, desc, students, id, teacher },
     } = props;
 
     const dispatch = useDispatch();
-    const { studentsAutocompleteValues } = useSelector(selectGroupsState);
+    const { studentsAutocompleteValues, teachersValues } = useSelector(selectGroupsState);
 
     useEffect(() => {
-        dispatch(fetchStudentsForForm());
+        dispatch(fetchFormData());
     }, []);
 
     return (
@@ -47,6 +48,21 @@ const GroupForm = (props: IGroupFormProps) => {
                             label: students.label,
                         }}
                         multiple
+                    />
+                </Grid>
+                <Grid item xs={12} sm={12}>
+                    <Field
+                        margin='dense'
+                        name={teacher.name}
+                        component={AutocompleteField}
+                        options={teachersValues}
+                        groupBy={(option: any) => option.label[0]}
+                        textFieldProps={{
+                            fullWidth: true,
+                            margin: 'normal',
+                            variant: 'outlined',
+                            label: teacher.label,
+                        }}
                     />
                 </Grid>
             </Grid>

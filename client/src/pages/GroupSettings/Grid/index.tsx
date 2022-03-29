@@ -91,29 +91,41 @@ const GroupGrid = () => {
                                 <TableBody>
                                     {groupsData ? (
                                         <>
-                                            {groupsData.data.map((group: IGroup) => (
-                                                <TableRow key={group.id} sx={{ '& > *': { borderBottom: 'unset' } }}>
-                                                    <TableCell component='th' scope='row'>
-                                                        {group.id}
-                                                    </TableCell>
-                                                    <TableCell component='th' scope='row' align='center'>
-                                                        {group.name}
-                                                    </TableCell>
-                                                    <TableCell component='th' scope='row' align='center'>
-                                                        {group.teacher.firstName}
-                                                    </TableCell>
-                                                    <TableCell component='th' scope='row' align='center'>
-                                                        {group.name}
-                                                    </TableCell>
-                                                    <TableCell component='th' scope='row' align='center'>
-                                                        {group.desc}
-                                                    </TableCell>
-                                                    <TableCell component='th' scope='row' align='right'>
-                                                        <UpdateGroupButton groupId={group.id} />
-                                                        <DeleteButton groupId={group.id} />
+                                            {groupsData.data.length? (
+                                                <>
+                                                    {groupsData.data.map((group: IGroup) => (
+                                                        <TableRow key={group.id} sx={{ '& > *': { borderBottom: 'unset' } }}>
+                                                            <TableCell component='th' scope='row'>
+                                                                {group.id}
+                                                            </TableCell>
+                                                            <TableCell component='th' scope='row' align='center'>
+                                                                {group.name}
+                                                            </TableCell>
+                                                            <TableCell component='th' scope='row' align='center'>
+                                                                {group.teacher.firstName}
+                                                            </TableCell>
+                                                            <TableCell component='th' scope='row' align='center'>
+                                                                {group.name}
+                                                            </TableCell>
+                                                            <TableCell component='th' scope='row' align='center'>
+                                                                {group.desc}
+                                                            </TableCell>
+                                                            <TableCell component='th' scope='row' align='right'>
+                                                                <UpdateGroupButton groupId={group.id} />
+                                                                <DeleteButton groupId={group.id} />
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    ))}
+                                                </>
+
+                                            ) : (
+                                                <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+                                                    <TableCell  key={4} component='th' scope='row' align='center'>
+                                                        Отсутствуют данные
                                                     </TableCell>
                                                 </TableRow>
-                                            ))}
+                                            )}
+
                                         </>
                                     ) : (
                                         <TableBodySkeleton columnsCount={headerRows.length} />

@@ -44,6 +44,7 @@ const GroupDialogForm = (props: IGroupDialogFormProps) => {
         const studentsViews = currentGroup?.students?.map((student: IStudent) => {
             return { label: student.firstName, value: student.id };
         });
+
         initVal = {
             name: currentGroup?.name.toString(),
             desc: currentGroup?.desc?.toString(),
