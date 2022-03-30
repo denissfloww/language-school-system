@@ -1,4 +1,11 @@
-import { IsArray, IsInt, IsNotEmpty } from 'class-validator';
+import {
+  IsArray,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateGroupDto {
   @IsNotEmpty()
@@ -10,6 +17,6 @@ export class CreateGroupDto {
   @IsInt()
   readonly teacherId: number;
 
-  @IsArray()
+  @IsNumber({}, { each: true })
   readonly studentsIds: number[];
 }

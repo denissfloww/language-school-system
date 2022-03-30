@@ -7,7 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import Table from '@mui/material/Table';
 import { TableCell } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchGroups, selectGroupsState } from '../../../redux/reducers/groups/groupsReducer';
+import { fetchGroups, selectGroupsState, setPage, setRowsPerPage } from '../../../redux/reducers/groups/groupsReducer';
 import { useEffect } from 'react';
 import { IGroup } from '../../../interfaces/IGroup';
 import GroupGridToolbar from './GroupGridToolbar';
@@ -19,28 +19,26 @@ import TableBodySkeleton from '../../../components/Skeletons/TableBodySkeleton';
 
 const GroupGrid = () => {
     const dispatch = useDispatch();
-    const { groupsData } = useSelector(selectGroupsState);
+    const { groupsData, page, rowsPerPage, isLoading } = useSelector(selectGroupsState);
 
     const fetchGroupsData = () => {
-        console.log(page + 1, rowsPerPage);
-        dispatch(fetchGroups(page + 1, rowsPerPage));
+        console.log(page, rowsPerPage);
+        dispatch(fetchGroups(page, rowsPerPage));
     };
-
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const [page, setPage] = React.useState(0);
 
     useEffect(() => {
         fetchGroupsData();
     }, [page, rowsPerPage]);
 
     const handleChangePage = (event: unknown, newPage: number) => {
-        setPage(newPage);
+        dispatch(setPage(newPage));
         fetchGroupsData();
     };
 
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
+        dispatch(setRowsPerPage(parseInt(event.target.value, 10)));
+        dispatch(setPage(0));
+
         fetchGroupsData();
     };
 
@@ -58,7 +56,7 @@ const GroupGrid = () => {
             align: 'center',
         },
         {
-            text: 'Количество',
+            text: 'Количество учеников',
             align: 'center',
         },
         {
@@ -67,7 +65,7 @@ const GroupGrid = () => {
         },
         {
             text: 'Действия',
-            align: 'center',
+            align: 'right',
         },
     ];
 
@@ -89,43 +87,42 @@ const GroupGrid = () => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {groupsData ? (
+                                    {!isLoading && groupsData ? (
                                         <>
-                                            {groupsData.data.length? (
+                                            {groupsData.data.length ? (
                                                 <>
                                                     {groupsData.data.map((group: IGroup) => (
                                                         <TableRow key={group.id} sx={{ '& > *': { borderBottom: 'unset' } }}>
-                                                            <TableCell component='th' scope='row'>
+                                                            <TableCell component='th' scope='row' align='left'>
                                                                 {group.id}
                                                             </TableCell>
                                                             <TableCell component='th' scope='row' align='center'>
                                                                 {group.name}
                                                             </TableCell>
                                                             <TableCell component='th' scope='row' align='center'>
-                                                                {group.teacher.firstName}
+                                                                {group.teacher.lastName} {group.teacher.firstName}{' '}
+                                                                {group.teacher.middleName ?? ''}
                                                             </TableCell>
                                                             <TableCell component='th' scope='row' align='center'>
-                                                                {group.name}
+                                                                {group.students?.length}
                                                             </TableCell>
                                                             <TableCell component='th' scope='row' align='center'>
-                                                                {group.desc}
+                                                                {group.description}
                                                             </TableCell>
                                                             <TableCell component='th' scope='row' align='right'>
-                                                                <UpdateGroupButton groupId={group.id} />
+                                                                <UpdateGroupButton group={group} />
                                                                 <DeleteButton groupId={group.id} />
                                                             </TableCell>
                                                         </TableRow>
                                                     ))}
                                                 </>
-
                                             ) : (
                                                 <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-                                                    <TableCell  key={4} component='th' scope='row' align='center'>
+                                                    <TableCell key={4} component='th' scope='row' align='center'>
                                                         Отсутствуют данные
                                                     </TableCell>
                                                 </TableRow>
                                             )}
-
                                         </>
                                     ) : (
                                         <TableBodySkeleton columnsCount={headerRows.length} />

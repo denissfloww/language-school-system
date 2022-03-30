@@ -8,12 +8,18 @@ import { Student } from '../models/student.entity';
 import { Group } from '../models/group.entity';
 import { Teacher } from '../models/teacher.entity';
 import { User } from '../models/user.entity';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Student, Group, Teacher, User]),
     RolesModule,
     StudentsModule,
+    AutomapperModule.forRoot({
+      options: [{ name: 'blah', pluginInitializer: classes }],
+      singular: true,
+    }),
   ],
   controllers: [GroupController],
   providers: [GroupService],

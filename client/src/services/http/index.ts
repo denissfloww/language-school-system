@@ -1,11 +1,14 @@
 import axios from 'axios';
 import { API_URL } from '../../urls';
 import TokenService from '../TokenService';
+import { toast } from "react-toastify";
+import { getErrorMsg } from "../../utils/helperFunc";
+import { toastConfig } from "../../utils/toastConfig";
 
 const $api = axios.create({
     baseURL: API_URL,
     headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
     },
 });
 
@@ -39,7 +42,7 @@ $api.interceptors.response.use(
 
                 return $api.request(originalRequest);
             } catch (e) {
-                console.log(e);
+                toast.error(getErrorMsg(e as any), toastConfig);
             }
         }
     },

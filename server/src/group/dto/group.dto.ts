@@ -3,7 +3,7 @@ import { StudentDto } from '../../students/dto/students.dto';
 export class GroupDto {
   id: number | string;
   name: string;
-  desc: string;
+  description: string;
   teacher: {
     id: number | string;
     firstName: string;

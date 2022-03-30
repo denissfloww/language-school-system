@@ -4,7 +4,7 @@ import { ITeacher } from './ITeacher';
 export interface IGroup {
     id: number;
     name: string;
-    desc?: string;
+    description?: string;
     students?: IStudent[];
     teacher: ITeacher;
 }

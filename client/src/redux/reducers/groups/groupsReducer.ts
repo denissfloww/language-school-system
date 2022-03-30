@@ -3,22 +3,29 @@ import { IGroup } from '../../../interfaces/IGroup';
 import { AppThunk, RootState } from '../../store';
 import GroupsService from '../../../services/GroupsService';
 import StudentsService from '../../../services/StudentsService';
-import {IAutoCompleteValues, IStudentAutoCompleteValue} from './types';
-import { setLoading } from '../global/globalReducer';
 import { IPageDataResponse } from '../../../services/responses/types';
-import TeachersService from "../../../services/TeacherService";
+import TeachersService from '../../../services/TeacherService';
+import { IAutoCompleteValues, IStudentAutoCompleteValue } from '../../../interfaces/displayed/type';
+import { toast } from 'react-toastify';
+import { getErrorMsg } from '../../../utils/helperFunc';
+import { toastConfig } from '../../../utils/toastConfig';
+import { AxiosError } from 'axios';
 
 interface InitialState {
     groupsData?: IPageDataResponse<IGroup>;
     studentsAutocompleteValues: IStudentAutoCompleteValue[];
     teachersValues: IAutoCompleteValues[];
-    currentGroup: IGroup | null;
+    page: number;
+    rowsPerPage: number;
+    isLoading: boolean;
 }
 
 const initialState: InitialState = {
     studentsAutocompleteValues: [],
     teachersValues: [],
-    currentGroup: null,
+    page: 0,
+    rowsPerPage: 10,
+    isLoading: false,
 };
 
 const groupsSlice = createSlice({
@@ -31,25 +38,39 @@ const groupsSlice = createSlice({
         setStudentsAutocompleteValues: (state, action: PayloadAction<IStudentAutoCompleteValue[]>) => {
             state.studentsAutocompleteValues = action.payload;
         },
-        setCurrentGroup: (state, action: PayloadAction<IGroup>) => {
-            state.currentGroup = action.payload;
-        },
         setTeacherAutocompleteValues: (state, action: PayloadAction<IAutoCompleteValues[]>) => {
-            state.teachersValues = action.payload
-        }
+            state.teachersValues = action.payload;
+        },
+        setPage: (state, action: PayloadAction<number>) => {
+            state.page = action.payload;
+        },
+        setRowsPerPage: (state, action: PayloadAction<number>) => {
+            state.rowsPerPage = action.payload;
+        },
+        setGroupLoading: (state, action: PayloadAction<boolean>) => {
+            state.isLoading = action.payload;
+        },
     },
 });
 
-export const { setGroups, setStudentsAutocompleteValues, setCurrentGroup, setTeacherAutocompleteValues } = groupsSlice.actions;
+export const { setGroups, setStudentsAutocompleteValues, setTeacherAutocompleteValues, setPage, setRowsPerPage, setGroupLoading } =
+    groupsSlice.actions;
 
 export const fetchGroups = (page: number, rowPerPage: number): AppThunk => {
     return async dispatch => {
         try {
-            dispatch(setLoading(true));
-            const groupsData = await GroupsService.getGroups(page, rowPerPage);
+            dispatch(setGroupLoading(true));
+            const groupsData = await GroupsService.getGroups(page + 1, rowPerPage);
             dispatch(setGroups(groupsData));
-            dispatch(setLoading(false));
+            if (groupsData.data.length == 0) {
+                dispatch(setPage(0));
+            }
+            dispatch(setGroupLoading(false));
         } catch (e) {
+            const err = e as AxiosError;
+            if (err.response) {
+                toast.error(getErrorMsg(e as any), toastConfig);
+            }
             console.log(e);
         }
     };
@@ -58,52 +79,61 @@ export const fetchGroups = (page: number, rowPerPage: number): AppThunk => {
 export const fetchFormData = (): AppThunk => {
     return async dispatch => {
         try {
-            const students = StudentsService.getStudents();
+            const students = await StudentsService.getStudents();
             const teachers = await TeachersService.getTeachers();
 
             const studentsAutoCompleteValues: IStudentAutoCompleteValue[] = students.map(student => {
-                return { label: student.firstName, value: String(student.id) };
+                return { label: `${student.firstName} ${student.lastName}`, value: String(student.id) };
             });
 
-            const teachersValues: IAutoCompleteValues[] = teachers.data.map((teacher) => {
-                return { label: `${teacher.lastName} ${teacher.firstName}`, value: String(teacher.id) };
-            })
-            console.log(teachersValues)
-
+            const teachersValues: IAutoCompleteValues[] = teachers.data.map(teacher => {
+                return { label: `${teacher.lastName} ${teacher.middleName ?? ''} ${teacher.firstName}`, value: String(teacher.id) };
+            });
             dispatch(setStudentsAutocompleteValues(studentsAutoCompleteValues));
-            dispatch(setTeacherAutocompleteValues(teachersValues))
+            dispatch(setTeacherAutocompleteValues(teachersValues));
         } catch (e) {
+            const err = e as AxiosError;
+            if (err.response) {
+                toast.error(getErrorMsg(e as any), toastConfig);
+            }
             console.log(e);
         }
     };
 };
 
-export const fetchGroupById = (id: number): AppThunk => {
+export const createOrUpdateGroup = (values: any): AppThunk => {
     return async dispatch => {
         try {
-            const group = await GroupsService.getGroupById(id);
-            dispatch(setCurrentGroup(group));
+            let message: string;
+
+            if (values.id) {
+                await GroupsService.updateGroup(values);
+                message = 'Успешно обновлено!';
+            } else {
+                await GroupsService.createGroup(values);
+                message = 'Успешно добавлено!';
+            }
+
+            toast.success(message, toastConfig);
         } catch (e) {
+            const err = e as AxiosError;
+            if (err.response) {
+                toast.error(getErrorMsg(e as any), toastConfig);
+            }
             console.log(e);
         }
     };
 };
 
-export const createOrUpdateGroup = (groupCreateValues: any): AppThunk => {
+export const deleteGroup = (id: number): AppThunk => {
     return async dispatch => {
         try {
-            GroupsService.createGroup(groupCreateValues);
+            await GroupsService.deleteGroup(id);
         } catch (e) {
-            console.log(e);
-        }
-    };
-};
-
-export const deleteGroup = (): AppThunk => {
-    return async dispatch => {
-        try {
-            console.log('fsdf');
-        } catch (e) {
+            const err = e as AxiosError;
+            if (err.response) {
+                toast.error(getErrorMsg(e as any), toastConfig);
+            }
             console.log(e);
         }
     };

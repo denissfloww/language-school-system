@@ -1,30 +1,13 @@
 import { IStudent } from '../interfaces/IStudent';
+import $api from './http';
+import { API_URL } from '../urls';
+import { IPageDataResponse } from './responses/types';
 
-const getStudents = () => {
-    const students: IStudent[] = [
-        {
-            id: 1,
-            firstName: 'Бугаков Денис',
-        },
-        {
-            id: 2,
-            firstName: 'Петр Петрович',
-        },
-        {
-            id: 3,
-            firstName: 'Иван Петрович',
-        },
-        {
-            id: 4,
-            firstName: 'Иван Иванов',
-        },
-        {
-            id: 5,
-            firstName: 'Петр Иванович',
-        },
-    ];
+const getStudents = async () => {
+    const response = await $api.get(`${API_URL}/students`);
+    const data: IPageDataResponse<IStudent> = response.data;
 
-    return students;
+    return data.data;
 };
 
 const StudentsService = {

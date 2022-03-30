@@ -14,8 +14,8 @@ import { Student } from '../models/student.entity';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { NotFoundException } from '../exceptions/not-found.exception';
 import { AlreadyExistException } from '../exceptions/already-exist.exception';
-import { Logger } from '@nestjs/common';
-import { StudentDto } from '../students/dto/students.dto';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
 
 @Injectable()
 export class GroupService {
@@ -24,46 +24,28 @@ export class GroupService {
     private groupsRepository: Repository<Group>,
     private studentsService: StudentsService,
     private connection: Connection,
+    @InjectMapper()
+    private readonly mapper: Mapper,
   ) {}
 
   async getGroups(pageOptionsDto: PageOptionsDto) {
-    const queryBuilder = this.groupsRepository
-      .createQueryBuilder('group')
-      .leftJoinAndSelect('group.teacher', 'teacher')
-      .leftJoinAndSelect('teacher.user', 'user');
-
     const skip =
       (Number(pageOptionsDto.page) - 1) * Number(pageOptionsDto.take);
 
-    if (skip) {
-      queryBuilder
-        .orderBy('group.createdAt', pageOptionsDto.order)
-        .skip(skip)
-        .take(pageOptionsDto.take);
-    }
-
-    const itemCount = await queryBuilder.getCount();
-    const { entities } = await queryBuilder.getRawAndEntities();
-
-    const dtos: GroupDto[] = entities.map((group) => {
-      return {
-        id: group.id,
-        name: group.name,
-        desc: group.description,
-        teacher: {
-          id: group.teacher.id,
-          firstName: group.teacher.user.firstName,
-          middleName: group.teacher.user.middleName,
-          lastName: group.teacher.user.lastName,
-          userId: group.teacher.user.id,
-        },
-        students: null,
-      };
+    const [groups, count] = await this.groupsRepository.findAndCount({
+      relations: ['teacher', 'students', 'teacher.user', 'students.user'],
+      order: {
+        createdAt: pageOptionsDto.order,
+      },
+      take: pageOptionsDto.take,
+      skip: skip,
     });
 
-    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
+    const pageMetaDto = new PageMetaDto({ itemCount: count, pageOptionsDto });
 
-    return new PageDto(dtos, pageMetaDto);
+    const groupDtos = this.mapper.mapArray(groups, GroupDto, Group);
+
+    return new PageDto(groupDtos, pageMetaDto);
   }
 
   async getGroupById(id: number) {
@@ -71,41 +53,8 @@ export class GroupService {
       relations: ['teacher', 'students', 'teacher.user', 'students.user'],
     });
 
-    // const group = await this.groupsRepository
-    //   .createQueryBuilder('group')
-    //   .leftJoinAndSelect('group.students', 'students')
-    //   .leftJoinAndSelect('group.teacher', 'teacher')
-    //   .leftJoinAndSelect('teacher.user', 'user')
-    //
-    //   .where('group.id = :id', { id: id })
-    //   .getOne();
-
     if (group) {
-      const studentDtos: StudentDto[] = group.students.map((stud) => {
-        return {
-          id: stud.id,
-          firstName: stud.user.firstName,
-          middleName: stud.user.middleName,
-          lastName: stud.user.lastName,
-          userId: stud.user.id,
-        };
-      });
-
-      const groupDto: GroupDto = {
-        id: group.id,
-        name: group.name,
-        desc: group.description,
-        teacher: {
-          id: group.teacher.id,
-          firstName: group.teacher.user.firstName,
-          middleName: group.teacher.user.middleName,
-          lastName: group.teacher.user.lastName,
-          userId: group.teacher.user.id,
-        },
-        students: studentDtos,
-      };
-
-      return groupDto;
+      return this.mapper.map(group, GroupDto, Group);
     }
 
     throw new NotFoundException();
@@ -134,6 +83,7 @@ export class GroupService {
 
   async updateGroup(updateGroupDto: UpdateGroupDto) {
     const group = await this.groupsRepository.findOne(updateGroupDto.id);
+
     group.students = updateGroupDto.studentsIds.map(
       (id) => ({ id } as unknown as Student),
     );

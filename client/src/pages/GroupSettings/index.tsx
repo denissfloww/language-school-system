@@ -8,8 +8,8 @@ import Typography from '@mui/material/Typography';
 import { APP_NAME } from '../../settings';
 import { useSelector } from 'react-redux';
 import { Backdrop, CircularProgress } from '@mui/material';
-import GroupGrid from "./Grid";
-import { selectGlobalState } from "../../redux/reducers/global/globalReducer";
+import GroupGrid from './Grid';
+import { selectGlobalState } from '../../redux/reducers/global/globalReducer';
 
 const GroupSettings = () => {
     const { isLoading } = useSelector(selectGlobalState);
@@ -20,10 +20,6 @@ const GroupSettings = () => {
                 <meta charSet='utf-8' />
                 <title>Управление группами - {APP_NAME}</title>
             </Helmet>
-
-            <Backdrop open={isLoading}>
-                <CircularProgress color='inherit' />
-            </Backdrop>
 
             <Container maxWidth='lg' sx={{ mt: 10, mb: 4 }}>
                 <Typography variant='h4'>Управление группами</Typography>

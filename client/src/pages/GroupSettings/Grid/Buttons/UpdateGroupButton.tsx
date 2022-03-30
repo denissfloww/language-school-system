@@ -3,9 +3,10 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import GroupDialogForm from '../../FormDialog';
 import { useState } from 'react';
+import { IGroup } from '../../../../interfaces/IGroup';
 
-const UpdateGroupButton = (props: { groupId: number }) => {
-    const { groupId } = props;
+const UpdateGroupButton = (props: { group: IGroup }) => {
+    const { group } = props;
 
     const [openDialog, setOpenDialog] = useState(false);
 
@@ -19,7 +20,8 @@ const UpdateGroupButton = (props: { groupId: number }) => {
 
     return (
         <>
-            <GroupDialogForm open={openDialog} close={closeGroupDialog} groupId={groupId} />
+            <GroupDialogForm open={openDialog} close={closeGroupDialog} group={group} />
+
             <Tooltip title='Изменить'>
                 <IconButton
                     onClick={() => {

@@ -1,4 +1,4 @@
-import { IMenuItem } from "../layouts/SidebarLayout/Sidebar/SidebarMenu/items";
+import { IMenuItem } from '../layouts/SidebarLayout/Sidebar/SidebarMenu/items';
 
 function stringToColor(string: string) {
     let hash = 0;

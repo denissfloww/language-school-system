@@ -7,6 +7,6 @@ const {
 
 export default Yup.object().shape({
     [name.name]: Yup.string().required(`${name.requiredErrorMsg}`),
-    [teacher.name]: Yup.object().required(`${name.requiredErrorMsg}`)
+    [teacher.name]: Yup.string().nullable().required(`${teacher.requiredErrorMsg}`),
     // [students.name]: Yup.array().required(`${students.requiredErrorMsg}`),
 });

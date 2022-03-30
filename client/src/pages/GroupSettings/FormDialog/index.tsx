@@ -9,63 +9,55 @@ import { Formik, Form } from 'formik';
 import formModel from './FormModel/formModel';
 import validationSchema from './FormModel/validationSchema';
 import { useDispatch, useSelector } from 'react-redux';
-import { createOrUpdateGroup, fetchGroupById, fetchGroups, selectGroupsState } from '../../../redux/reducers/groups/groupsReducer';
+import { createOrUpdateGroup, fetchGroups, selectGroupsState } from '../../../redux/reducers/groups/groupsReducer';
 import { emptyInitialValues } from './FormModel/emptyInitialValues';
-import { IStudent } from '../../../interfaces/IStudent';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { IGroup } from '../../../interfaces/IGroup';
 
 interface IGroupDialogFormProps {
     open: boolean;
     close: () => void;
-    groupId?: number;
+    group?: IGroup;
 }
 
 const { formId, formField } = formModel;
 
 const GroupDialogForm = (props: IGroupDialogFormProps) => {
-    const { open, close, groupId } = props;
+    const { open, close, group } = props;
     const dispatch = useDispatch();
+    const { page, rowsPerPage } = useSelector(selectGroupsState);
+
+    const [initValues, setInitValues] =
+        useState<{ [p: string]: string | number | { label: string; value: number }[] | undefined }>(emptyInitialValues);
 
     function _handleSubmit(values: any, actions: any) {
-        console.log(values);
         dispatch(createOrUpdateGroup(values));
-        // dispatch(fetchGroups());
+        dispatch(fetchGroups(page, rowsPerPage));
         close();
     }
 
-    const loadGroup = (groupId: number) => {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        useEffect(() => {
-            dispatch(fetchGroupById(groupId));
-        }, []);
-    };
+    useEffect(() => {
+        setExistInitialValues();
+    }, []);
 
     const setExistInitialValues = () => {
-        const studentsViews = currentGroup?.students?.map((student: IStudent) => {
-            return { label: student.firstName, value: student.id };
+        const studentsViews = group?.students?.map(stud => {
+            return { label: `${stud.lastName} ${stud.firstName}`, value: stud.id };
         });
 
-        initVal = {
-            name: currentGroup?.name.toString(),
-            desc: currentGroup?.desc?.toString(),
+        setInitValues({
+            name: group?.name.toString(),
+            desc: group?.description?.toString(),
             students: studentsViews,
-            id: currentGroup?.id,
-        };
+            id: group?.id,
+            teacher: String(group?.teacher.id),
+        });
     };
-
-    const { currentGroup } = useSelector(selectGroupsState);
-
-    let initVal = emptyInitialValues;
-
-    if (groupId) {
-        loadGroup(groupId);
-        setExistInitialValues();
-    }
 
     return (
         <Dialog open={open} onClose={close} fullWidth={true} maxWidth='sm'>
-            <DialogTitle>{groupId ? 'Изменение данных группы' : 'Добавление новой группы'}</DialogTitle>
-            <Formik onSubmit={_handleSubmit} initialValues={initVal} validationSchema={validationSchema} validateOnChange>
+            <DialogTitle>{group ? 'Изменение данных группы' : 'Добавление новой группы'}</DialogTitle>
+            <Formik onSubmit={_handleSubmit} initialValues={initValues} validationSchema={validationSchema} validateOnChange>
                 {({ isSubmitting }) => (
                     <Form id={formId}>
                         <DialogContent>

@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 import { fetchFormData, selectGroupsState } from '../../../../redux/reducers/groups/groupsReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { TextField } from '@mui/material';
-import SelectField from "../../../../components/FormFields/SelectField";
+import SelectField from '../../../../components/FormFields/SelectField';
 
 interface IGroupFormProps {
     formField?: any;
@@ -23,6 +23,7 @@ const GroupForm = (props: IGroupFormProps) => {
 
     useEffect(() => {
         dispatch(fetchFormData());
+        console.log(teachersValues);
     }, []);
 
     return (
@@ -51,19 +52,7 @@ const GroupForm = (props: IGroupFormProps) => {
                     />
                 </Grid>
                 <Grid item xs={12} sm={12}>
-                    <Field
-                        margin='dense'
-                        name={teacher.name}
-                        component={AutocompleteField}
-                        options={teachersValues}
-                        groupBy={(option: any) => option.label[0]}
-                        textFieldProps={{
-                            fullWidth: true,
-                            margin: 'normal',
-                            variant: 'outlined',
-                            label: teacher.label,
-                        }}
-                    />
+                  <SelectField name={teacher.name} label={teacher.label} data={teachersValues} fullWidth />
                 </Grid>
             </Grid>
             <TextField name={id.name} type='hidden' style={{ display: 'none' }} />
