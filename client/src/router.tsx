@@ -1,12 +1,13 @@
-import { Navigate, Outlet, Route, Routes, useLocation } from "react-router-dom";
-import SidebarLayout from "./layouts/SidebarLayout";
-import React, { lazy, Suspense } from "react";
-import Login from "./pages/Login";
-import SuspenseLoader from "./components/SuspenseLoader";
-import { useSelector } from "react-redux";
-import { selectAuthState } from "./redux/reducers/auth/authReducer";
-import { RoleTypes } from "./interfaces/IRole";
-import Journal from "./pages/Journal";
+import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
+import SidebarLayout from './layouts/SidebarLayout';
+import React, { lazy, Suspense } from 'react';
+import Login from './pages/Login';
+import SuspenseLoader from './components/SuspenseLoader';
+import { useSelector } from 'react-redux';
+import { selectAuthState } from './redux/reducers/auth/authReducer';
+import { RoleTypes } from './interfaces/IRole';
+import Journal from './pages/Journal';
+import LessonTypeSettings from './pages/LessonTypeSettings';
 
 // @ts-ignore
 // eslint-disable-next-line react/display-name
@@ -36,6 +37,7 @@ const Router = () => {
                         <Route path='groups' element={<GroupSettings />} />
                         <Route path='students' element={<StudentsSettings />} />
                         <Route path='user/create' element={<CreateUserPage />} />
+                        <Route path='lesson-types' element={<LessonTypeSettings />} />
                         <Route
                             path='users'
                             element={

@@ -4,7 +4,7 @@ import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import Tooltip from '@mui/material/Tooltip';
 
-const AddButton = () => {
+const AddGroupButton = () => {
     const [openAddDialog, setOpenAddDialog] = useState(false);
 
     const showAddGroupDialog = () => {
@@ -18,7 +18,6 @@ const AddButton = () => {
     return (
         <>
             <GroupDialogForm open={openAddDialog} close={closeAddGroupDialog} />
-
             <Tooltip title='Добавить'>
                 <IconButton
                     onClick={() => {
@@ -32,4 +31,4 @@ const AddButton = () => {
     );
 };
 
-export default AddButton;
+export default AddGroupButton;

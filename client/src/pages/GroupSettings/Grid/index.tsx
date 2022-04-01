@@ -7,22 +7,21 @@ import TableHead from '@mui/material/TableHead';
 import Table from '@mui/material/Table';
 import { TableCell } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchGroups, selectGroupsState, setPage, setRowsPerPage } from '../../../redux/reducers/groups/groupsReducer';
+import { deleteGroup, fetchGroups, selectGroupsState, setPage, setRowsPerPage } from '../../../redux/reducers/groups/groupsReducer';
 import { useEffect } from 'react';
 import { IGroup } from '../../../interfaces/IGroup';
 import GroupGridToolbar from './GroupGridToolbar';
-import DeleteButton from './Buttons/DeleteButton';
 import UpdateGroupButton from './Buttons/UpdateGroupButton';
 import TablePagination from '@mui/material/TablePagination';
 import * as React from 'react';
 import TableBodySkeleton from '../../../components/Skeletons/TableBodySkeleton';
+import DeleteButton from '../../../components/Buttons/DeleteButton';
 
 const GroupGrid = () => {
     const dispatch = useDispatch();
     const { groupsData, page, rowsPerPage, isLoading } = useSelector(selectGroupsState);
 
     const fetchGroupsData = () => {
-        console.log(page, rowsPerPage);
         dispatch(fetchGroups(page, rowsPerPage));
     };
 
@@ -92,7 +91,7 @@ const GroupGrid = () => {
                                             {groupsData.data.length ? (
                                                 <>
                                                     {groupsData.data.map((group: IGroup) => (
-                                                        <TableRow key={group.id} sx={{ '& > *': { borderBottom: 'unset' } }}>
+                                                        <TableRow key={group.id}>
                                                             <TableCell component='th' scope='row' align='left'>
                                                                 {group.id}
                                                             </TableCell>
@@ -111,7 +110,15 @@ const GroupGrid = () => {
                                                             </TableCell>
                                                             <TableCell component='th' scope='row' align='right'>
                                                                 <UpdateGroupButton group={group} />
-                                                                <DeleteButton groupId={group.id} />
+                                                                <DeleteButton
+                                                                    id={group.id}
+                                                                    title='Удалить группу?'
+                                                                    onDeleteMethod={() => {
+                                                                        console.log(group.id);
+                                                                        dispatch(deleteGroup(group.id));
+                                                                        dispatch(fetchGroups(page, rowsPerPage));
+                                                                    }}
+                                                                />
                                                             </TableCell>
                                                         </TableRow>
                                                     ))}

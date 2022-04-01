@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_URL } from '../urls';
+import { API_URL } from '../constants/urls';
 import jwt_decode from 'jwt-decode';
 import 'react-toastify/dist/ReactToastify.css';
 import { LOCAL_STORAGE_NAME } from '../settings';

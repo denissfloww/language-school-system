@@ -6,6 +6,7 @@ import usersReducer from './reducers/users/usersReducer';
 import authReducer from './reducers/auth/authReducer';
 import globalReducer from './reducers/global/globalReducer';
 import rolesReducer from './reducers/roles/rolesReducer';
+import lessonTypesReducer from './reducers/lessonTypes/lessonTypesReducer';
 
 const store = configureStore({
     reducer: {
@@ -15,6 +16,7 @@ const store = configureStore({
         auth: authReducer,
         global: globalReducer,
         roles: rolesReducer,
+        lessonTypes: lessonTypesReducer,
     },
 });
 

@@ -1,6 +1,6 @@
 import { IRole } from '../interfaces/IRole';
 import axios from 'axios';
-import { API_URL } from '../urls';
+import { API_URL } from '../constants/urls';
 
 const getRoles = async () => {
     const response = await axios.get(`${API_URL}/roles`);

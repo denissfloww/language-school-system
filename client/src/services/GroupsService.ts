@@ -1,5 +1,5 @@
 import { IGroup } from '../interfaces/IGroup';
-import { API_URL } from '../urls';
+import { API_URL } from '../constants/urls';
 import { IPageDataResponse } from './responses/types';
 import $api from './http';
 import { IGroupCreateUpdateValues } from './types';

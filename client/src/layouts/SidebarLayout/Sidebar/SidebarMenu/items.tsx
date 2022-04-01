@@ -4,6 +4,7 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import GroupsIcon from '@mui/icons-material/Groups';
 import PersonAddAltSharpIcon from '@mui/icons-material/PersonAddAltSharp';
 import ImportContactsIcon from '@mui/icons-material/ImportContacts';
+import SchoolIcon from '@mui/icons-material/School';
 import React, { ReactNode } from 'react';
 import { RoleTypes } from '../../../../interfaces/IRole';
 
@@ -54,6 +55,11 @@ export const menu: IMenuItem[] = [
                 icon: <GroupIcon />,
                 title: 'Ученики',
                 link: '/dashboard/settings/students',
+            },
+            {
+                icon: <SchoolIcon />,
+                title: 'Типы занятий',
+                link: '/dashboard/settings/lesson-types',
             },
         ],
     },

@@ -1,18 +1,18 @@
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import AddGroupButton from './Buttons/AddGroupButton';
+import AddLessonTypeButton from './Buttons/AddButton';
 
-const GroupGridToolbar = () => {
+const LessonTypeGridToolbar = () => {
     return (
         <>
             <Toolbar>
                 <Typography sx={{ flex: '1 1 100%' }} variant='h6' id='tableTitle' component='div'>
-                    Учебные группы
+                    Типы занятий
                 </Typography>
-                <AddGroupButton />
+                <AddLessonTypeButton />
             </Toolbar>
         </>
     );
 };
 
-export default GroupGridToolbar;
+export default LessonTypeGridToolbar;

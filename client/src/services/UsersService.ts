@@ -1,6 +1,6 @@
 import { IUser } from '../interfaces/IUser';
 import axios from 'axios';
-import { API_URL } from '../urls';
+import { API_URL } from '../constants/urls';
 import { ICreatedUser, ICreateUserData } from '../redux/reducers/users/types';
 import { RoleTypes } from '../interfaces/IRole';
 import $api from './http';

@@ -1,24 +1,20 @@
 import * as React from 'react';
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import { useSelector } from 'react-redux';
-import GroupGrid from './Grid';
-import { selectGlobalState } from '../../redux/reducers/global/globalReducer';
 import DashboardPage from '../../components/Pages/DashboardPage';
+import Grid from '@mui/material/Grid';
+import LessonTypeGrid from './Grid';
+import Typography from '@mui/material/Typography';
 
-const GroupSettings = () => {
-    const { isLoading } = useSelector(selectGlobalState);
-
+const LessonTypeSettings = () => {
     return (
         <>
-            <DashboardPage title='Управление группами'>
+            <DashboardPage title='Управление типами занятий'>
                 <Typography variant='h4' sx={{ mb: 6 }}>
-                    Управление группами
+                    Управление типами занятий
                 </Typography>
                 <Container maxWidth='lg' sx={{ mb: 4 }}>
                     <Grid container spacing={3} justifyContent='center'>
-                        <GroupGrid />
+                        <LessonTypeGrid />
                     </Grid>
                 </Container>
             </DashboardPage>
@@ -26,4 +22,4 @@ const GroupSettings = () => {
     );
 };
 
-export default GroupSettings;
+export default LessonTypeSettings;

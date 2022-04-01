@@ -1,6 +1,6 @@
 import {ITeacher} from "../interfaces/ITeacher";
 import axios from "axios";
-import {API_URL} from "../urls";
+import {API_URL} from "../constants/urls";
 import {IPageDataResponse} from "./responses/types";
 
 const getTeachers = async () => {
