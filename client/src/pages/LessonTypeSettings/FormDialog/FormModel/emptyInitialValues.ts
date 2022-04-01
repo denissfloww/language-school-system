@@ -6,5 +6,5 @@ const {
 export const emptyInitialValues: { [p: string]: string | { label: string; value: number }[] | undefined | number } = {
     [name.name]: '',
     [description.name]: '',
-    [color.name]: '',
+    [color.name]: '#000000',
 };

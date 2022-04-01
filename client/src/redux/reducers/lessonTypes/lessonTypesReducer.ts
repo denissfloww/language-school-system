@@ -46,6 +46,7 @@ export const { setLessonTypes, setPage, setLessonTypesLoading, setRowsPerPage } 
 export const fetchLessonTypes = (page: number, rowPerPage: number): AppThunk => {
     return async dispatch => {
         try {
+            console.log('тута')
             dispatch(setGroupLoading(true));
             const lessonTypes = await LessonTypesService.getLessonTypes(page + 1, rowPerPage);
             dispatch(setLessonTypes(lessonTypes));
@@ -62,6 +63,24 @@ export const fetchLessonTypes = (page: number, rowPerPage: number): AppThunk => 
         }
     };
 };
+
+export const createLessonTypes = (values: any): AppThunk => {
+    return async dispatch => {
+        try {
+            let message: string = 'Успешно добавлено!';
+            await LessonTypesService.createLessonType(values)
+            toast.success(message, toastConfig);
+        }
+        catch (e) {
+            const err = e as AxiosError;
+            if (err.response) {
+                toast.error(getErrorMsg(e as any), toastConfig);
+            }
+            console.log(e);
+        }
+    }
+
+}
 
 export const selectLessonTypesState = (state: RootState) => state.lessonTypes;
 

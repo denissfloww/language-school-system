@@ -10,6 +10,12 @@ import LessonTypeForm from './Form';
 import formModel from './FormModel/formModel';
 import { emptyInitialValues } from './FormModel/emptyInitialValues';
 import validationSchema from './FormModel/validationSchema';
+import {useDispatch, useSelector} from "react-redux";
+import {
+    createLessonTypes,
+    fetchLessonTypes,
+    selectLessonTypesState
+} from "../../../redux/reducers/lessonTypes/lessonTypesReducer";
 
 interface ILessonTypeDialogFormProps {
     open: boolean;
@@ -20,11 +26,15 @@ const { formId, formField } = formModel;
 
 const LessonTypeDialogForm = (props: ILessonTypeDialogFormProps) => {
     const { open, close } = props;
+    const dispatch = useDispatch();
+    const { page, rowsPerPage } = useSelector(selectLessonTypesState)
     const [initValues, setInitValues] =
         useState<{ [p: string]: string | number | { label: string; value: number }[] | undefined }>(emptyInitialValues);
 
     function _handleSubmit(values: any, actions: any) {
         console.log(values);
+        dispatch(createLessonTypes(values))
+        dispatch(fetchLessonTypes(page, rowsPerPage))
         close();
     }
 
@@ -43,7 +53,7 @@ const LessonTypeDialogForm = (props: ILessonTypeDialogFormProps) => {
     return (
         <Dialog open={open} onClose={close} fullWidth={true} maxWidth='sm'>
             {/*<DialogTitle>{group ? 'Изменение данных группы' : 'Добавление новой группы'}</DialogTitle>*/}
-            <DialogTitle>{'Добавление новой типа занятия'}</DialogTitle>
+            <DialogTitle>{'Добавление нового типа занятия'}</DialogTitle>
             <Formik onSubmit={_handleSubmit} initialValues={initValues} validationSchema={validationSchema} validateOnChange>
                 {({ isSubmitting }) => (
                     <Form id={formId}>

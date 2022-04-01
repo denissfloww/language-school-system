@@ -25,7 +25,24 @@ const getLessonTypes = async (page: number, rowPerPage: number) => {
     return data;
 };
 
+const createLessonType = async (values: any) => {
+    const response = await $api
+        .post(`${API_URL}/lesson-types`, {
+            name:values.name,
+            description: values.description,
+            color: values.color
+        })
+        .catch(e => {
+            if (!e.response) {
+                toast.error('Connection error', toastConfig);
+            } else {
+                toast.error(getErrorMsg(e as any), toastConfig);
+            }
+        });
+}
+
 const LessonTypesService = {
     getLessonTypes,
+    createLessonType
 };
 export default LessonTypesService;

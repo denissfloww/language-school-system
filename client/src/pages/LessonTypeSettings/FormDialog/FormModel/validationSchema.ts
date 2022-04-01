@@ -7,5 +7,5 @@ const {
 
 export default Yup.object().shape({
     [name.name]: Yup.string().required(`${name.requiredErrorMsg}`),
-    [color.name]: Yup.string().required(`${name.requiredErrorMsg}`),
+    // [color.name]: Yup.string().required(`${name.requiredErrorMsg}`),
 });
