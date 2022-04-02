@@ -4,7 +4,7 @@ import InputField from '../../../../components/FormFields/InputField';
 import AutocompleteField from '../../../../components/FormFields/AutocompleteField';
 import { Field } from 'formik';
 import { useEffect } from 'react';
-import { fetchFormData, selectGroupsState } from '../../../../redux/reducers/groups/groupsReducer';
+import { fetchFormDataAction, selectGroupsState } from '../../../../redux/reducers/groups/groupsReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { TextField } from '@mui/material';
 import SelectField from '../../../../components/FormFields/SelectField';
@@ -22,7 +22,7 @@ const GroupForm = (props: IGroupFormProps) => {
     const { studentsAutocompleteValues, teachersValues } = useSelector(selectGroupsState);
 
     useEffect(() => {
-        dispatch(fetchFormData());
+        dispatch(fetchFormDataAction());
         console.log(teachersValues);
     }, []);
 

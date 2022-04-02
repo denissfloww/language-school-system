@@ -10,31 +10,27 @@ import LessonTypeForm from './Form';
 import formModel from './FormModel/formModel';
 import { emptyInitialValues } from './FormModel/emptyInitialValues';
 import validationSchema from './FormModel/validationSchema';
-import {useDispatch, useSelector} from "react-redux";
-import {
-    createLessonTypes,
-    fetchLessonTypes,
-    selectLessonTypesState
-} from "../../../redux/reducers/lessonTypes/lessonTypesReducer";
+import { useDispatch, useSelector } from 'react-redux';
+import { createOrUpdateLessonTypesAction } from '../../../redux/reducers/lessonTypes/lessonTypesReducer';
+import { ILessonType } from '../../../interfaces/ILessonType';
 
 interface ILessonTypeDialogFormProps {
     open: boolean;
     close: () => void;
+    lessonType?: ILessonType;
 }
 
 const { formId, formField } = formModel;
 
 const LessonTypeDialogForm = (props: ILessonTypeDialogFormProps) => {
-    const { open, close } = props;
+    const { open, close, lessonType } = props;
     const dispatch = useDispatch();
-    const { page, rowsPerPage } = useSelector(selectLessonTypesState)
     const [initValues, setInitValues] =
         useState<{ [p: string]: string | number | { label: string; value: number }[] | undefined }>(emptyInitialValues);
 
     function _handleSubmit(values: any, actions: any) {
         console.log(values);
-        dispatch(createLessonTypes(values))
-        dispatch(fetchLessonTypes(page, rowsPerPage))
+        dispatch(createOrUpdateLessonTypesAction(values));
         close();
     }
 
@@ -42,18 +38,16 @@ const LessonTypeDialogForm = (props: ILessonTypeDialogFormProps) => {
         setExistInitialValues();
     }, []);
     const setExistInitialValues = () => {
-        // setInitValues({
-        //     name: group?.name.toString(),
-        //     desc: group?.description?.toString(),
-        //     students: studentsViews,
-        //     id: group?.id,
-        //     teacher: String(group?.teacher.id),
-        // });
+        setInitValues({
+            name: lessonType?.name,
+            description: lessonType?.description ?? '',
+            color: lessonType?.color ?? '',
+            id: lessonType?.id,
+        });
     };
     return (
         <Dialog open={open} onClose={close} fullWidth={true} maxWidth='sm'>
-            {/*<DialogTitle>{group ? 'Изменение данных группы' : 'Добавление новой группы'}</DialogTitle>*/}
-            <DialogTitle>{'Добавление нового типа занятия'}</DialogTitle>
+            <DialogTitle>{lessonType ? 'Изменение данных типа занятия' : 'Добавление нового типа занятия'}</DialogTitle>
             <Formik onSubmit={_handleSubmit} initialValues={initValues} validationSchema={validationSchema} validateOnChange>
                 {({ isSubmitting }) => (
                     <Form id={formId}>

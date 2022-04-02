@@ -7,7 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import Table from '@mui/material/Table';
 import { TableCell } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteGroup, fetchGroups, selectGroupsState, setPage, setRowsPerPage } from '../../../redux/reducers/groups/groupsReducer';
+import { deleteGroupAction, fetchGroupsAction, selectGroupsState, setPage, setRowsPerPage } from '../../../redux/reducers/groups/groupsReducer';
 import { useEffect } from 'react';
 import { IGroup } from '../../../interfaces/IGroup';
 import GroupGridToolbar from './GroupGridToolbar';
@@ -22,7 +22,7 @@ const GroupGrid = () => {
     const { groupsData, page, rowsPerPage, isLoading } = useSelector(selectGroupsState);
 
     const fetchGroupsData = () => {
-        dispatch(fetchGroups(page, rowsPerPage));
+        dispatch(fetchGroupsAction(page, rowsPerPage));
     };
 
     useEffect(() => {
@@ -114,9 +114,7 @@ const GroupGrid = () => {
                                                                     id={group.id}
                                                                     title='Удалить группу?'
                                                                     onDeleteMethod={() => {
-                                                                        console.log(group.id);
-                                                                        dispatch(deleteGroup(group.id));
-                                                                        dispatch(fetchGroups(page, rowsPerPage));
+                                                                        dispatch(deleteGroupAction(group.id));
                                                                     }}
                                                                 />
                                                             </TableCell>

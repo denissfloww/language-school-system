@@ -22,15 +22,21 @@ const getLessonTypes = async (page: number, rowPerPage: number) => {
             }
         });
     const data: IPageDataResponse<ILessonType> = response?.data;
+    console.log(data);
     return data;
 };
 
 const createLessonType = async (values: any) => {
     const response = await $api
         .post(`${API_URL}/lesson-types`, {
-            name:values.name,
+            name: values.name,
             description: values.description,
-            color: values.color
+            color: values.color,
+        })
+        .then(data => {
+            if (data.status == 200 || data.status == 204 || data.status == 201) {
+                toast.success('Успешно добавлено!', toastConfig);
+            }
         })
         .catch(e => {
             if (!e.response) {
@@ -39,10 +45,47 @@ const createLessonType = async (values: any) => {
                 toast.error(getErrorMsg(e as any), toastConfig);
             }
         });
-}
+};
+
+const updateLessonType = async (values: any) => {
+    const id = values.id;
+    await $api
+        .put(`${API_URL}/lesson-types/${id}`, {
+            name: values.name,
+            description: values.description,
+            color: values.color,
+        })
+        .then(data => {
+            if (data.status == 200 || data.status == 204) {
+                toast.success('Успешно обновлено!', toastConfig);
+            }
+        })
+        .catch(e => {
+            console.log(e);
+        });
+};
+
+const deleteLessonType = async (id: number) => {
+    const response = await $api
+        .delete(`${API_URL}/lesson-types/${id}`)
+        .then(data => {
+            if (data.status == 200 || data.status == 204) {
+                toast.success('Успешно удалено!', toastConfig);
+            }
+        })
+        .catch(e => {
+            if (!e.response) {
+                toast.error('Connection error', toastConfig);
+            } else {
+                toast.error(getErrorMsg(e as any), toastConfig);
+            }
+        });
+};
 
 const LessonTypesService = {
     getLessonTypes,
-    createLessonType
+    createLessonType,
+    deleteLessonType,
+    updateLessonType,
 };
 export default LessonTypesService;

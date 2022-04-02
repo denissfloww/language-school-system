@@ -56,7 +56,7 @@ const groupsSlice = createSlice({
 export const { setGroups, setStudentsAutocompleteValues, setTeacherAutocompleteValues, setPage, setRowsPerPage, setGroupLoading } =
     groupsSlice.actions;
 
-export const fetchGroups = (page: number, rowPerPage: number): AppThunk => {
+export const fetchGroupsAction = (page: number, rowPerPage: number): AppThunk => {
     return async dispatch => {
         try {
             dispatch(setGroupLoading(true));
@@ -76,7 +76,7 @@ export const fetchGroups = (page: number, rowPerPage: number): AppThunk => {
     };
 };
 
-export const fetchFormData = (): AppThunk => {
+export const fetchFormDataAction = (): AppThunk => {
     return async dispatch => {
         try {
             const students = await StudentsService.getStudents();
@@ -101,20 +101,16 @@ export const fetchFormData = (): AppThunk => {
     };
 };
 
-export const createOrUpdateGroup = (values: any): AppThunk => {
-    return async dispatch => {
+export const createOrUpdateGroupAction = (values: any): AppThunk => {
+    return async (dispatch, getState) => {
         try {
-            let message: string;
-
             if (values.id) {
                 await GroupsService.updateGroup(values);
-                message = 'Успешно обновлено!';
             } else {
                 await GroupsService.createGroup(values);
-                message = 'Успешно добавлено!';
             }
-
-            toast.success(message, toastConfig);
+            const { page, rowsPerPage } = getState().groups;
+            dispatch(fetchGroupsAction(page, rowsPerPage));
         } catch (e) {
             const err = e as AxiosError;
             if (err.response) {
@@ -125,10 +121,13 @@ export const createOrUpdateGroup = (values: any): AppThunk => {
     };
 };
 
-export const deleteGroup = (id: number): AppThunk => {
-    return async dispatch => {
+export const deleteGroupAction = (id: number): AppThunk => {
+    return async (dispatch, getState) => {
         try {
             await GroupsService.deleteGroup(id);
+            const { page, rowsPerPage } = getState().groups;
+            dispatch(fetchGroupsAction(page, rowsPerPage));
+            toast.success('Запись успешно удалена', toastConfig);
         } catch (e) {
             const err = e as AxiosError;
             if (err.response) {
