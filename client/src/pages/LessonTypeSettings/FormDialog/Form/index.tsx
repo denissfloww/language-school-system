@@ -26,7 +26,7 @@ const LessonTypeForm = (props: ILessonTypeFormProps) => {
                 </Grid>
                 <Grid item xs={12} sm={12} sx={{ mt: 2 }}>
                     <Typography>
-                        Цвет ячейки в расписании: <Field name={color.name} type='color' />
+                        Цвет ячейки в расписании: <Field style={{cursor:'pointer'}} name={color.name} type='color' />
                     </Typography>
                 </Grid>
             </Grid>

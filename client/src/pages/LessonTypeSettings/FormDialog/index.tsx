@@ -38,12 +38,14 @@ const LessonTypeDialogForm = (props: ILessonTypeDialogFormProps) => {
         setExistInitialValues();
     }, []);
     const setExistInitialValues = () => {
-        setInitValues({
-            name: lessonType?.name,
-            description: lessonType?.description ?? '',
-            color: lessonType?.color ?? '',
-            id: lessonType?.id,
-        });
+        if (lessonType) {
+            setInitValues({
+                name: lessonType?.name,
+                description: lessonType?.description ?? '',
+                color: lessonType?.color,
+                id: lessonType?.id,
+            });
+        }
     };
     return (
         <Dialog open={open} onClose={close} fullWidth={true} maxWidth='sm'>

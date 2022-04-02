@@ -22,7 +22,7 @@ import { useEffect } from 'react';
 import TablePagination from '@mui/material/TablePagination';
 import DeleteButton from '../../../components/Buttons/DeleteButton';
 import UpdateLessonTypeButton from './Buttons/UpdateLessonTypeButton';
-import EditIcon from "@mui/icons-material/Edit";
+import EditIcon from '@mui/icons-material/Edit';
 
 const LessonTypeGrid = () => {
     const dispatch = useDispatch();
@@ -44,7 +44,6 @@ const LessonTypeGrid = () => {
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setRowsPerPage(parseInt(event.target.value, 10)));
         dispatch(setPage(0));
-
         fetchLessonTypesData();
     };
 
