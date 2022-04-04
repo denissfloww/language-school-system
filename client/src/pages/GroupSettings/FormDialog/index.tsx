@@ -9,7 +9,7 @@ import { Formik, Form } from 'formik';
 import formModel from './FormModel/formModel';
 import validationSchema from './FormModel/validationSchema';
 import { useDispatch, useSelector } from 'react-redux';
-import { createOrUpdateGroup, fetchGroups, selectGroupsState } from '../../../redux/reducers/groups/groupsReducer';
+import { createOrUpdateGroupAction, fetchGroupsAction, selectGroupsState } from '../../../redux/reducers/groups/groupsReducer';
 import { emptyInitialValues } from './FormModel/emptyInitialValues';
 import { useEffect, useState } from 'react';
 import { IGroup } from '../../../interfaces/IGroup';
@@ -25,14 +25,12 @@ const { formId, formField } = formModel;
 const GroupDialogForm = (props: IGroupDialogFormProps) => {
     const { open, close, group } = props;
     const dispatch = useDispatch();
-    const { page, rowsPerPage } = useSelector(selectGroupsState);
 
     const [initValues, setInitValues] =
         useState<{ [p: string]: string | number | { label: string; value: number }[] | undefined }>(emptyInitialValues);
 
     function _handleSubmit(values: any, actions: any) {
-        dispatch(createOrUpdateGroup(values));
-        dispatch(fetchGroups(page, rowsPerPage));
+        dispatch(createOrUpdateGroupAction(values));
         close();
     }
 

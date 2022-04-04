@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { API_URL } from '../../constants/urls';
 import TokenService from '../TokenService';
-import { toast } from "react-toastify";
-import { getErrorMsg } from "../../utils/helperFunc";
-import { toastConfig } from "../../utils/toastConfig";
+import { toast } from 'react-toastify';
+import { getErrorMsg } from '../../utils/helperFunc';
+import { toastConfig } from '../../utils/toastConfig';
 
 const $api = axios.create({
     baseURL: API_URL,
@@ -44,6 +44,15 @@ $api.interceptors.response.use(
             } catch (e) {
                 toast.error(getErrorMsg(e as any), toastConfig);
             }
+        }
+        if (error.response.status == 404) {
+            toast.error(getErrorMsg(error), toastConfig);
+        }
+        if (error.response.status == 400) {
+            toast.error(getErrorMsg(error), toastConfig);
+        }
+        if (!error.response) {
+            toast.error('Connection error', toastConfig);
         }
     },
 );

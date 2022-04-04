@@ -6,15 +6,14 @@ import { selectUsersState } from '../../../redux/reducers/users/usersReducer';
 
 const CheckoutSuccess = (props: { handleBack: () => void }) => {
     const { handleBack } = props;
+    const { createdUser } = useSelector(selectUsersState);
     const c = document.createElement('a');
-    c.download = 'user-text.txt';
+    c.download = `${createdUser?.firstName} ${createdUser?.lastName}.txt` ?? 'user-data.txt';
 
-    const t = new Blob(['dfgdf'], {
+    const t = new Blob([`login: ${createdUser?.login}`, `\npassword: ${createdUser?.password}`], {
         type: 'text/plain',
     });
     c.href = window.URL.createObjectURL(t);
-
-    const { createdUser } = useSelector(selectUsersState);
 
     const handleClick = () => {
         c.click();
@@ -28,7 +27,10 @@ const CheckoutSuccess = (props: { handleBack: () => void }) => {
                         Пользователь успешно создан!
                     </Typography>
                     <Typography variant='h5' gutterBottom>
-                        {createdUser.login}
+                        Логин <b>{createdUser.login}</b>
+                    </Typography>
+                    <Typography variant='h5' gutterBottom>
+                        Пароль <b>{createdUser.password}</b>
                     </Typography>
                     <p>
                         <Button onClick={handleClick} variant='contained'>

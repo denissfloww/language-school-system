@@ -7,7 +7,8 @@ import { toast } from 'react-toastify';
 import { getErrorMsg } from '../../../utils/helperFunc';
 import { toastConfig } from '../../../utils/toastConfig';
 import LessonTypesService from '../../../services/LessonTypesService';
-import { setGroupLoading } from '../groups/groupsReducer';
+import { useSelector } from 'react-redux';
+import GroupsService from '../../../services/GroupsService';
 
 interface InitialState {
     lessonTypesData?: IPageDataResponse<ILessonType>;
@@ -26,7 +27,7 @@ const lessonTypesSlice = createSlice({
     name: 'lessonTypes',
     initialState,
     reducers: {
-        setLessonTypes: (state, action: PayloadAction<IPageDataResponse<ILessonType>>) => {
+        setLessonTypes: (state, action: PayloadAction<IPageDataResponse<ILessonType> | undefined>) => {
             state.lessonTypesData = action.payload;
         },
         setPage: (state, action: PayloadAction<number>) => {
@@ -43,17 +44,36 @@ const lessonTypesSlice = createSlice({
 
 export const { setLessonTypes, setPage, setLessonTypesLoading, setRowsPerPage } = lessonTypesSlice.actions;
 
-export const fetchLessonTypes = (page: number, rowPerPage: number): AppThunk => {
+export const fetchLessonTypesAction = (page: number, rowPerPage: number): AppThunk => {
     return async dispatch => {
         try {
-            console.log('тута')
-            dispatch(setGroupLoading(true));
+            dispatch(setLessonTypesLoading(true));
             const lessonTypes = await LessonTypesService.getLessonTypes(page + 1, rowPerPage);
             dispatch(setLessonTypes(lessonTypes));
             if (lessonTypes.data.length == 0) {
                 dispatch(setPage(0));
             }
-            dispatch(setGroupLoading(false));
+            dispatch(setLessonTypesLoading(false));
+        } catch (e) {
+            const err = e as AxiosError;
+            if (err.response) {
+                toast.error(getErrorMsg(e as any), toastConfig);
+            }
+        }
+    };
+};
+
+export const createOrUpdateLessonTypesAction = (values: any): AppThunk => {
+    return async (dispatch, getState) => {
+        try {
+            if (values.id) {
+                await LessonTypesService.updateLessonType(values);
+            } else {
+                await LessonTypesService.createLessonType(values);
+            }
+
+            const { page, rowsPerPage } = getState().lessonTypes;
+            dispatch(fetchLessonTypesAction(page, rowsPerPage));
         } catch (e) {
             const err = e as AxiosError;
             if (err.response) {
@@ -64,23 +84,21 @@ export const fetchLessonTypes = (page: number, rowPerPage: number): AppThunk => 
     };
 };
 
-export const createLessonTypes = (values: any): AppThunk => {
-    return async dispatch => {
+export const deleteLessonTypeAction = (id: number): AppThunk => {
+    return async (dispatch, getState) => {
         try {
-            let message: string = 'Успешно добавлено!';
-            await LessonTypesService.createLessonType(values)
-            toast.success(message, toastConfig);
-        }
-        catch (e) {
+            await LessonTypesService.deleteLessonType(id);
+            const { page, rowsPerPage } = getState().lessonTypes;
+            dispatch(fetchLessonTypesAction(page, rowsPerPage));
+        } catch (e) {
             const err = e as AxiosError;
             if (err.response) {
                 toast.error(getErrorMsg(e as any), toastConfig);
             }
             console.log(e);
         }
-    }
-
-}
+    };
+};
 
 export const selectLessonTypesState = (state: RootState) => state.lessonTypes;
 

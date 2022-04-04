@@ -8,21 +8,28 @@ import * as React from 'react';
 import Table from '@mui/material/Table';
 import LessonTypeGridToolbar from './LessonTypeGridToolbar';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchLessonTypes, selectLessonTypesState, setPage, setRowsPerPage } from '../../../redux/reducers/lessonTypes/lessonTypesReducer';
+import {
+    deleteLessonTypeAction,
+    fetchLessonTypesAction,
+    selectLessonTypesState,
+    setPage,
+    setRowsPerPage,
+} from '../../../redux/reducers/lessonTypes/lessonTypesReducer';
 import TableBody from '@mui/material/TableBody';
 import TableBodySkeleton from '../../../components/Skeletons/TableBodySkeleton';
 import { ILessonType } from '../../../interfaces/ILessonType';
 import { useEffect } from 'react';
 import TablePagination from '@mui/material/TablePagination';
 import DeleteButton from '../../../components/Buttons/DeleteButton';
-import { deleteGroup, fetchGroups } from '../../../redux/reducers/groups/groupsReducer';
+import UpdateLessonTypeButton from './Buttons/UpdateLessonTypeButton';
+import EditIcon from '@mui/icons-material/Edit';
 
 const LessonTypeGrid = () => {
     const dispatch = useDispatch();
     const { isLoading, lessonTypesData, page, rowsPerPage } = useSelector(selectLessonTypesState);
 
     const fetchLessonTypesData = () => {
-        dispatch(fetchLessonTypes(page, rowsPerPage));
+        dispatch(fetchLessonTypesAction(page, rowsPerPage));
     };
 
     useEffect(() => {
@@ -37,7 +44,6 @@ const LessonTypeGrid = () => {
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setRowsPerPage(parseInt(event.target.value, 10)));
         dispatch(setPage(0));
-
         fetchLessonTypesData();
     };
 
@@ -60,7 +66,7 @@ const LessonTypeGrid = () => {
         },
         {
             text: 'Действия',
-            align: 'center',
+            align: 'right',
         },
     ];
 
@@ -97,15 +103,24 @@ const LessonTypeGrid = () => {
                                                             {lessonType.description}
                                                         </TableCell>
                                                         <TableCell component='th' scope='row' align='center'>
-                                                            {lessonType.color}
+                                                            <Box
+                                                                sx={{
+                                                                    margin: '0 auto',
+                                                                    textAlign: 'center',
+                                                                    width: 30,
+                                                                    height: 30,
+                                                                    borderRadius: 1,
+                                                                    backgroundColor: lessonType.color,
+                                                                }}
+                                                            />
                                                         </TableCell>
                                                         <TableCell component='th' scope='row' align='right'>
-                                                            {/*<UpdateGroupButton group={group} />*/}
+                                                            <UpdateLessonTypeButton lessonType={lessonType} />
                                                             <DeleteButton
                                                                 id={lessonType.id}
                                                                 title='Удалить тип занятия?'
                                                                 onDeleteMethod={() => {
-                                                                    console.log(lessonType.id);
+                                                                    dispatch(deleteLessonTypeAction(lessonType.id));
                                                                 }}
                                                             />
                                                         </TableCell>

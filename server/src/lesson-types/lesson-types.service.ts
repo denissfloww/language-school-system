@@ -23,7 +23,16 @@ export class LessonTypesService {
   }
 
   async findAll(pageOptionsDto: PageOptionsDto) {
-    const [list, count] = await this.lessonTypesRepository.findAndCount();
+    const skip =
+      (Number(pageOptionsDto.page) - 1) * Number(pageOptionsDto.take);
+
+    const [list, count] = await this.lessonTypesRepository.findAndCount({
+      order: {
+        createdAt: pageOptionsDto.order,
+      },
+      take: pageOptionsDto.take,
+      skip: skip,
+    });
 
     const pageMetaDto = new PageMetaDto({ itemCount: count, pageOptionsDto });
     return new PageDto(list, pageMetaDto);

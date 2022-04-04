@@ -15,6 +15,9 @@ const getGroups = async (page: number, rowPerPage: number) => {
                 take: rowPerPage,
             },
         })
+        .then(data => {
+            return data;
+        })
         .catch(e => {
             if (!e.response) {
                 toast.error('Connection error', toastConfig);
@@ -43,6 +46,11 @@ const createGroup = async (values: any) => {
         .post(`${API_URL}/group`, {
             ...createValues,
         })
+        .then(data => {
+            if (data.status == 200 || data.status == 204 || data.status == 201) {
+                toast.success('Успешно добавлено!', toastConfig);
+            }
+        })
         .catch(e => {
             if (!e.response) {
                 toast.error('Connection error', toastConfig);
@@ -68,6 +76,11 @@ const updateGroup = async (values: any) => {
     const response = await $api
         .put(`${API_URL}/group`, {
             ...updateValues,
+        })
+        .then(data => {
+            if (data.status == 200 || data.status == 204) {
+                toast.success('Успешно обновлено!', toastConfig);
+            }
         })
         .catch(e => {
             if (!e.response) {

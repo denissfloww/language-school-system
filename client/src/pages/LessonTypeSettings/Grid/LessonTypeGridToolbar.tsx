@@ -1,6 +1,6 @@
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import AddLessonTypeButton from './Buttons/AddButton';
+import AddLessonTypeButton from './Buttons/AddLessonTypeButton';
 
 const LessonTypeGridToolbar = () => {
     return (
