@@ -399,7 +399,23 @@ const dataSource = [
         StartTime: '2020-01-05T04:00:00.000Z',
         EndTime: '2020-01-05T05:30:00.000Z',
         RecurrenceRule: "FREQ=DAILY;INTERVAL=1;COUNT=10;",
+        RecurrenceException: "20200107T040000Z",
         GroupId: 1,
+        TeacherId: 1
+    },
+    {
+        ClassTypeId: 1,
+        Description: "Meeting to discuss business goal of 2020.",
+        EndTime: '2020-01-07T07:30:00.000Z',
+        FollowingID: null,
+        GroupId: 1,
+        Guid: "283b7a85-4858-ae60-e801-dc9361cb8f17",
+        Id: 3,
+        RecurrenceException: "20200107T040000Z",
+        RecurrenceID: 1,
+        RecurrenceRule: "FREQ=DAILY;INTERVAL=1;COUNT=10;",
+        StartTime: '2020-01-07T04:00:00.000Z',
+        Subject: "Занятие по плану",
         TeacherId: 1
     },
     {
