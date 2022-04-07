@@ -22,6 +22,7 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { GroupProfile } from './group/mappings/group.map';
 import { StudentProfile } from './students/student.map';
+import { ScheduleModule } from './schedule/schedule.module';
 
 export function DatabaseOrmModule(): DynamicModule {
   return TypeOrmModule.forRoot({ ...DatabaseConfig, autoLoadEntities: true });
@@ -47,6 +48,7 @@ export function DatabaseOrmModule(): DynamicModule {
     LessonTypesModule,
     GroupProfile,
     StudentProfile,
+    ScheduleModule,
   ],
   controllers: [AppController],
   providers: [AppService],

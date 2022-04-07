@@ -9,6 +9,6 @@ export class SampleBase extends React.PureComponent {
     componentDidMount() {
         setTimeout(() => {
             this.rendereComplete();
-        });
+        }, 1000);
     }
 }

@@ -25,9 +25,9 @@
     "typeorm:create": "npm run typeorm migration:create -- -n"
   },
   "dependencies": {
-    "@automapper/nestjs": "^7.3.14",
     "@automapper/classes": "7.3.14",
     "@automapper/core": "7.3.14",
+    "@automapper/nestjs": "^7.3.14",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^1.2.0",
     "@nestjs/core": "^8.0.0",
@@ -48,6 +48,7 @@
     "pg": "^8.7.3",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
+    "rrule": "^2.6.9",
     "rxjs": "^7.2.0",
     "typeorm": "^0.2.41"
   },

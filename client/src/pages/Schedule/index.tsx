@@ -4,14 +4,21 @@ import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { SchedulerComponent } from './SchedulerComponent';
 import { Helmet } from 'react-helmet';
-import { useNavigate } from 'react-router-dom';
 import { APP_NAME } from '../../settings';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { fetchScheduleGroups, fetchScheduleLessonTypes, selectScheduleState } from '../../redux/reducers/schedule/scheduleReducer';
 
 const Schedule = () => {
-    const navigate = useNavigate();
-    const markButtonClick = () => {
-        navigate('/marks');
-    };
+    const dispatch = useDispatch();
+    const [test, setTest] = useState(0);
+    useEffect(() => {
+        dispatch(fetchScheduleLessonTypes());
+        dispatch(fetchScheduleGroups());
+    }, []);
+
+    const { lessonTypes, groups } = useSelector(selectScheduleState);
+
     return (
         <>
             <Helmet>
@@ -31,7 +38,7 @@ const Schedule = () => {
 
                 <Grid container spacing={3}>
                     <Grid item xs={12} sx={{ margin: '15px' }}>
-                        <SchedulerComponent showMarkPage={markButtonClick} />
+                        <SchedulerComponent lessonTypes={lessonTypes} groups={groups} />
                     </Grid>
                 </Grid>
             </Box>

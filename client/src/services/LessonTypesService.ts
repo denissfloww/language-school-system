@@ -6,12 +6,12 @@ import { getErrorMsg } from '../utils/helperFunc';
 import { IPageDataResponse } from './responses/types';
 import { ILessonType } from '../interfaces/ILessonType';
 
-const getLessonTypes = async (page: number, rowPerPage: number) => {
+const getLessonTypes = async (page?: number, rowPerPage?: number) => {
     const response = await $api
         .get(`${API_URL}/lesson-types`, {
             params: {
-                page: page,
-                take: rowPerPage,
+                page: page ?? null,
+                take: rowPerPage ?? null,
             },
         })
         .catch(e => {

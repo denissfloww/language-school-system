@@ -1,6 +1,6 @@
 import { Action, configureStore } from '@reduxjs/toolkit';
 import { ThunkAction } from 'redux-thunk';
-import scheduleReducer from './reducers/scheduleReducer';
+import scheduleReducer from './reducers/schedule/scheduleReducer';
 import groupsReducer from './reducers/groups/groupsReducer';
 import usersReducer from './reducers/users/usersReducer';
 import authReducer from './reducers/auth/authReducer';

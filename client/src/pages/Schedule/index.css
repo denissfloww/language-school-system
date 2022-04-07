@@ -135,6 +135,15 @@ hr {
     font-family: 'Nunito', sans-serif !important;
 }
 
+.e-appointment:hover{
+    cursor: pointer !important;
+}
+
+div#GroupId_Error {
+    top: 71px !important;
+    left: 66px !important;
+}
+
 /*.e-schedule .e-schedule-toolbar .e-active-view .e-tbar-btn-text,*/
 /*.e-schedule .e-schedule-toolbar .e-active-view .e-icons,*/
 /*.e-schedule .e-vertical-view .e-header-cells.e-current-day,*/

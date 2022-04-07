@@ -7,12 +7,12 @@ import { toast } from 'react-toastify';
 import { getErrorMsg } from '../utils/helperFunc';
 import { toastConfig } from '../utils/toastConfig';
 
-const getGroups = async (page: number, rowPerPage: number) => {
+const getGroups = async (page?: number, rowPerPage?: number) => {
     const response = await $api
         .get(`${API_URL}/group`, {
             params: {
-                page: page,
-                take: rowPerPage,
+                page: page ?? null,
+                take: rowPerPage ?? null,
             },
         })
         .then(data => {
