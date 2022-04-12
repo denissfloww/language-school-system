@@ -47,6 +47,11 @@ export const menu: IMenuItem[] = [
                 link: '/dashboard/settings/groups',
             },
             {
+                icon: <SchoolIcon />,
+                title: 'Типы занятий',
+                link: '/dashboard/settings/lesson-types',
+            },
+            {
                 icon: <GroupIcon />,
                 title: 'Пользователи',
                 link: '/dashboard/settings/users',
@@ -55,11 +60,6 @@ export const menu: IMenuItem[] = [
                 icon: <GroupIcon />,
                 title: 'Ученики',
                 link: '/dashboard/settings/students',
-            },
-            {
-                icon: <SchoolIcon />,
-                title: 'Типы занятий',
-                link: '/dashboard/settings/lesson-types',
             },
         ],
     },

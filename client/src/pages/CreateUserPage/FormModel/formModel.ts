@@ -1,86 +1,63 @@
 export default {
-  formId: 'createUserForm',
-  formField: {
-    firstName: {
-      name: 'firstName',
-      label: 'Имя*',
-      requiredErrorMsg: 'Имя обязательно для заполнения'
+    formId: 'createUserForm',
+    formField: {
+        firstName: {
+            name: 'firstName',
+            label: 'Имя*',
+            requiredErrorMsg: 'Имя обязательно для заполнения',
+        },
+        middleName: {
+            name: 'middleName',
+            label: 'Отчество',
+        },
+        lastName: {
+            name: 'lastName',
+            label: 'Фамилия*',
+            requiredErrorMsg: 'Фамилия обязательна для заполнения',
+        },
+        role: {
+            name: 'roles',
+            label: 'Роль*',
+            requiredErrorMsg: 'Выберите роль',
+        },
+        age: {
+          name: 'age',
+          label: 'Возраст*',
+          requiredErrorMsg: 'Введите возраст',
+        },
+        phone: {
+            name: 'phone',
+            label: 'Номер телефона*',
+            requiredErrorMsg: 'Введите номер телефона',
+            validateErrorMsg: 'Введите корректный формат телефона',
+        },
+        email: {
+            name: 'email',
+            label: 'Электронная почта',
+        },
+        parentPhone: {
+            name: 'parentPhone',
+            label: 'Номер телефона родителя*',
+            requiredErrorMsg: 'Введите номер телефона',
+            validateErrorMsg: 'Введите корректный формат телефона',
+        },
+        parentName: {
+            name: 'parentName',
+            label: 'Имя родителя*',
+            requiredErrorMsg: 'Имя обязательно для заполнения',
+        },
+        parentMiddleName: {
+            name: 'parentMiddleName',
+            label: 'Отчество родителя',
+        },
+        parentLastName: {
+            name: 'parentLastName',
+            label: 'Фамилия родителя*',
+            requiredErrorMsg: 'Фамилия обязательна для заполнения',
+        },
+        parentEmail: {
+            name: 'parentEmail',
+            label: 'Электронная почта родителя',
+        },
     },
-    middleName:{
-      name: 'middleName',
-      label: 'Отчество',
-    },
-    lastName: {
-      name: 'lastName',
-      label: 'Фамилия*',
-      requiredErrorMsg: 'Фамилия обязательна для заполнения'
-    },
-    role:{
-      name: 'roles',
-      label: 'Роль*',
-      requiredErrorMsg: 'Выберите роль'
-    },
-    phone:{
-      name: 'phone',
-      label: 'Номер телефона*',
-      requiredErrorMsg: 'Введите номер телефона',
-      validateErrorMsg: 'Введите корректный формат телефона'
-    },
-    address1: {
-      name: 'address1',
-      label: 'Address Line 1*',
-      requiredErrorMsg: 'Address Line 1 is required'
-    },
-    address2: {
-      name: 'address2',
-      label: 'Address Line 2'
-    },
-    city: {
-      name: 'city',
-      label: 'City*',
-      requiredErrorMsg: 'City is required'
-    },
-    state: {
-      name: 'state',
-      label: 'State/Province/Region'
-    },
-    zipcode: {
-      name: 'zipcode',
-      label: 'Zipcode*',
-      requiredErrorMsg: 'Zipcode is required',
-      invalidErrorMsg: 'Zipcode is not valid (e.g. 70000)'
-    },
-    country: {
-      name: 'country',
-      label: 'Country*',
-      requiredErrorMsg: 'Country is required'
-    },
-    useAddressForPaymentDetails: {
-      name: 'useAddressForPaymentDetails',
-      label: 'Use this address for payment details'
-    },
-    nameOnCard: {
-      name: 'nameOnCard',
-      label: 'Name on card*',
-      requiredErrorMsg: 'Name on card is required'
-    },
-    cardNumber: {
-      name: 'cardNumber',
-      label: 'Card number*',
-      requiredErrorMsg: 'Card number is required',
-      invalidErrorMsg: 'Card number is not valid (e.g. 4111111111111)'
-    },
-    expiryDate: {
-      name: 'expiryDate',
-      label: 'Expiry date*',
-      requiredErrorMsg: 'Expiry date is required',
-      invalidErrorMsg: 'Expiry date is not valid'
-    },
-    cvv: {
-      name: 'cvv',
-      label: 'CVV*',
-      requiredErrorMsg: 'CVV is required',
-      invalidErrorMsg: 'CVV is invalid (e.g. 357)'
-    }
-  }
 };

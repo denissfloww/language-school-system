@@ -16,7 +16,7 @@ const AutocompleteField = ({ textFieldProps, options, ...props }: any) => {
             options={options}
             onChange={(_, value) => setFieldValue(name, value)}
             getOptionLabel={(option: any) => option.label}
-            getOptionSelected={(item: any, current: any) => item.value === current.value}
+            isOptionEqualToValue={(option: any, value: any) => option.value === value.value}
             renderInput={props => <TextField {...textFieldProps} {...props} helperText={helperText} error={error} />}
         />
     );

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { Step, StepLabel, Stepper, useTheme } from '@mui/material';
-import { Formik, Form } from 'formik';
+import { Formik, Form, useFormikContext } from 'formik';
 import formInitialValues from './FormModel/formInitialValues';
 import validationSchema from './FormModel/validationSchema';
 import formModel from './FormModel/formModel';
@@ -11,8 +11,9 @@ import UserRolesForm from './Forms/UserRolesForm';
 import CheckoutSuccess from './CreateSuccess/CreateSuccess';
 import { useDispatch } from 'react-redux';
 import { createUserAction } from '../../redux/reducers/users/usersReducer';
+import ContactInformation from './Forms/ContactInformation';
 
-const steps = ['Основная информация', 'Роли'];
+const steps = ['Основные данные', 'Роли', 'Контактная информация'];
 const { formId, formField } = formModel;
 
 function _renderStepContent(step: number) {
@@ -22,7 +23,8 @@ function _renderStepContent(step: number) {
         case 1:
             return <UserRolesForm formField={formField} />;
         case 2:
-            return <div>Not Found</div>;
+            return <ContactInformation formField={formField} />;
+
         default:
             return <div>Not Found</div>;
     }
@@ -49,7 +51,7 @@ const CreateUserForm = () => {
                 lastName: values.lastName,
                 middleName: values.middleName,
                 roles: roles,
-                phone: values.phone
+                phone: values.phone,
             }),
         );
         alert(JSON.stringify(values, null, 2));
@@ -60,7 +62,8 @@ const CreateUserForm = () => {
 
     function _handleSubmit(values: any, actions: any) {
         if (isLastStep) {
-            _submitForm(values, actions);
+            console.log(values);
+            // _submitForm(values, actions);
         } else {
             setActiveStep(activeStep + 1);
             actions.setTouched({});
@@ -90,7 +93,7 @@ const CreateUserForm = () => {
                 <CheckoutSuccess handleBack={backToFirstForm} />
             ) : (
                 <Formik initialValues={formInitialValues} validationSchema={currentValidationSchema} onSubmit={_handleSubmit}>
-                    {({ isSubmitting }) => (
+                    {props => (
                         <Form id={formId}>
                             {_renderStepContent(activeStep)}
                             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -100,7 +103,7 @@ const CreateUserForm = () => {
                                     </Button>
                                 )}
                                 <Button
-                                    disabled={isSubmitting}
+                                    disabled={props.isSubmitting}
                                     type='submit'
                                     variant='contained'
                                     color='primary'

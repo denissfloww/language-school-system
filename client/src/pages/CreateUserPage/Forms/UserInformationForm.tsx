@@ -1,8 +1,6 @@
-import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import InputField from '../../../components/FormFields/InputField';
 import * as React from 'react';
-import PhoneMask from '../../../components/InputMasks/PhoneMask';
 
 interface IProps {
     formField?: any;
@@ -10,31 +8,28 @@ interface IProps {
 
 export const UserInformationForm = (props: IProps) => {
     const {
-        formField: { firstName, middleName, lastName, phone },
+        formField: { firstName, middleName, lastName, age },
     } = props;
 
     return (
         <React.Fragment>
-            <Typography variant='h6' gutterBottom>
-                Информация о пользователе
-            </Typography>
-            <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
-                    <InputField name={firstName.name} label={firstName.label} fullWidth />
+            <Grid container spacing={3} style={{ textAlign: 'center' }}>
+                <Grid item xs={12} md={12}>
+                    <InputField name={firstName.name} label={firstName.label} sx={{ width: '50%' }} />
                 </Grid>
-                <Grid item xs={12} md={6}>
-                    <InputField name={middleName.name} label={middleName.label} fullWidth />
+                <Grid item xs={12} md={12}>
+                    <InputField name={middleName.name} label={middleName.label} sx={{ width: '50%' }} />
                 </Grid>
-                <Grid item xs={12} md={6}>
-                    <InputField name={lastName.name} label={lastName.label} fullWidth />
+                <Grid item xs={12} md={12}>
+                    <InputField name={lastName.name} label={lastName.label} sx={{ width: '50%' }} />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={12}>
                     <InputField
-                        name={phone.name}
-                        fullWidth
-                        InputProps={{
-                            inputComponent: PhoneMask as any,
-                        }}
+                        name={age.name}
+                        label={age.label}
+                        sx={{ width: '50%' }}
+                        type='number'
+                        InputProps={{ inputProps: { min: 0, max: 200 } }}
                     />
                 </Grid>
             </Grid>

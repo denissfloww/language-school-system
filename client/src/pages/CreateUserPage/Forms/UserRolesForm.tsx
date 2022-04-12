@@ -4,8 +4,9 @@ import Grid from '@mui/material/Grid';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchRoles, selectRolesState } from '../../../redux/reducers/roles/rolesReducer';
 import { useEffect } from 'react';
-import { Field } from 'formik';
+import { Field, useFormikContext } from 'formik';
 import AutocompleteField from '../../../components/FormFields/AutocompleteField';
+import SelectField from '../../../components/FormFields/SelectField';
 
 const UserRolesForm = (props: { formField?: any }) => {
     const dispatch = useDispatch();
@@ -13,12 +14,12 @@ const UserRolesForm = (props: { formField?: any }) => {
         formField: { role },
     } = props;
 
-    const { roles } = useSelector(selectRolesState);
+    const { roles: rolesFill } = useSelector(selectRolesState);
     useEffect(() => {
         dispatch(fetchRoles());
     }, []);
 
-    const rolesDisplayValues = roles.map(role => {
+    const rolesDisplayValues = rolesFill.map(role => {
         return { label: role.label, value: role.name };
     });
 
@@ -27,16 +28,15 @@ const UserRolesForm = (props: { formField?: any }) => {
             <Typography variant='h6' gutterBottom>
                 Назначение роли
             </Typography>
-            <Grid container spacing={3}>
-                <Grid item xs={12} sm={6}>
-                    {/*<SelectField name={role.name} label={role.label} data={cities} fullWidth />*/}
+            <Grid container spacing={3} justifyContent='center'>
+                <Grid item xs={12} md={6}>
+                    {/*<SelectField name={role.name} label={role.label} data={rolesDisplayValues} fullWidth />*/}
                     <Field
                         margin='dense'
                         name={role.name}
                         component={AutocompleteField}
                         options={rolesDisplayValues}
                         getOptionLabel={(option: any) => option.label}
-                        // getOptionSelected={(option: any, value: any) => option.value === value.value}
                         textFieldProps={{
                             fullWidth: true,
                             margin: 'normal',
@@ -45,7 +45,7 @@ const UserRolesForm = (props: { formField?: any }) => {
                         }}
                         multiple
                         required
-                        fullWidth
+                        fullwidth
                     />
                 </Grid>
             </Grid>
