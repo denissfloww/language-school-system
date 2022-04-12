@@ -28,7 +28,7 @@ export class ScheduleController {
     return this.scheduleService.getScheduleEvents();
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('/loadData')
   loadSchedulerData() {
     return this.scheduleService.getScheduleEvents();

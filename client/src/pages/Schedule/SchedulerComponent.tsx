@@ -20,7 +20,7 @@ import {
     Week,
     WorkWeek,
 } from '@syncfusion/ej2-react-schedule';
-import { DataManager, UrlAdaptor, ReturnOption, WebApiAdaptor, ODataV4Adaptor } from '@syncfusion/ej2-data';
+import { DataManager, UrlAdaptor, ReturnOption, WebApiAdaptor, ODataV4Adaptor, CrudOptions, DataOptions } from '@syncfusion/ej2-data';
 import { SampleBase } from './sample-base';
 import Moment from 'react-moment';
 import moment from 'moment';
@@ -28,6 +28,7 @@ import { Locale } from './locale';
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
 import { Query } from '@syncfusion/ej2-data/src/query';
 import { API_URL } from '../../constants/urls';
+import {DataResult} from "@syncfusion/ej2-react-grids";
 
 loadCldr(
     require('cldr-data/supplemental/numberingSystems.json'),
@@ -40,22 +41,28 @@ L10n.load(Locale);
 
 class TestAdaptor extends UrlAdaptor {
     public insert(dm: DataManager, data: Object, tableName: string, query: Query) {
-        console.log(data);
         return super.insert(dm, data, tableName, query);
     }
 
     public update(dm: DataManager, keyField: string, data: Object, tableName: string, query: Query) {
-        console.log(data);
         return super.update(dm, keyField, data, tableName, query);
     }
 
     processQuery(dm: DataManager, query: Query, hierarchyFilters?: Object[]): Object {
-        console.log(query);
         return super.processQuery(dm, query, hierarchyFilters);
     }
 
+    batchRequest(dm: DataManager, changes: CrudOptions, e: Object, query: Query, original?: Object): Object {
+        console.log(original)
+        return super.batchRequest(dm, changes, e, query, original);
+    }
+
+    // processResponse(data: DataResult, ds?: DataOptions, query?: Query, xhr?: XMLHttpRequest, request?: Object, changes?: CrudOptions): DataResult {
+    //     console.log(changes)
+    //     return super.processResponse(data, ds, query, xhr, request, changes);
+    // }
+
     beforeSend(dm: DataManager, request: XMLHttpRequest) {
-        console.log(request);
         super.beforeSend(dm, request);
     }
 }
@@ -71,11 +78,6 @@ export class SchedulerComponent extends SampleBase {
         // @ts-ignore
         super(...arguments);
         this.intl = new Internationalization();
-        // this.dataManager = new DataManager({
-        //     url: `${API_URL}/schedule/loadData`,
-        //     crudUrl: `${API_URL}/schedule/updateData`,
-        //     adaptor: new TestAdaptor(),
-        // });
         this.groupData = [
             { Name: 'Англ 1 группа', Id: 1 },
             { Name: 'Англ 2 группа', Id: 2 },
@@ -83,17 +85,16 @@ export class SchedulerComponent extends SampleBase {
     }
 
     componentDidMount() {
-        console.log(this.props);
         this.dataManager = new DataManager({
             url: `${API_URL}/schedule/loadData`,
             crudUrl: `${API_URL}/schedule/updateData`,
             adaptor: new TestAdaptor(),
+            headers: [{ 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwibG9naW4iOiJJLkl2YW5vdiIsImZpcnN0TmFtZSI6ItCY0LLQsNC9IiwibGFzdE5hbWUiOiLQmNCy0LDQvdC-0LIiLCJyb2xlcyI6W3sibmFtZSI6InN0dWRlbnQiLCJkZXNjIjoi0KDQvtC70Ywg0YHRgtGD0LTQtdC90YLQsCJ9LHsibmFtZSI6InRlYWNoZXIiLCJkZXNjIjoi0KDQvtC70Ywg0KPRh9C40YLQtdC70Y8ifV0sImlhdCI6MTY0OTc0NTU0MSwiZXhwIjoxNjQ5NzgxNTQxfQ.RdHWhjqwkJxepeWJ_PL_2NnXhFGwPoPcifzhk45URtQ' }]
         });
-        // console.log('Test mounted');
     }
 
     componentDidUpdate() {
-        // console.log('Test updated');
+
     }
 
     getResourceData(data: Record<string, any>): Record<string, any> {
