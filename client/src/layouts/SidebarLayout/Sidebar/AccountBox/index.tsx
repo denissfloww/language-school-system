@@ -12,10 +12,11 @@ const AccountStyle = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     marginTop: '10px',
-    padding: theme.spacing(2, 2.5),
-    margin: theme.spacing(2, 2.0),
+    padding: theme.spacing(2, 1.5),
+    margin: theme.spacing(2, 1.0),
     borderRadius: '10px',
     backgroundColor: theme.palette.grey[200],
+    overflowWrap: 'break-word'
 }));
 
 const AccountBox = () => {
@@ -35,10 +36,10 @@ const AccountBox = () => {
                 <>
                     <Avatar {...stringAvatar(`${user?.firstName} ${user?.lastName}`, 40)} />
                     <Box sx={{ ml: 2 }}>
-                        <Typography variant='subtitle2' sx={{ color: 'text.primary' }}>
+                        <Typography variant='subtitle2' sx={{ color: 'text.primary', overflowWrap: 'break-word' }}>
                             {user?.firstName} {user?.lastName}
                         </Typography>
-                        <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+                        <Typography variant='body2' sx={{ color: 'text.secondary', overflowWrap: 'break-word' }}>
                             {user.roles.length? (
                                 <>
                                     {userRolesString(user.roles)}

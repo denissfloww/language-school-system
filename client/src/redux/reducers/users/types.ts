@@ -6,6 +6,11 @@ export interface ICreateUserData {
     middleName?: string;
     roles: RoleTypes[];
     phone: string;
+    parentEmail: string;
+    parentLastName: string;
+    parentMiddleName: string;
+    parentName: string;
+    parentPhone: string;
 }
 
 export interface ICreatedUser {

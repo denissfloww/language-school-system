@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { selectAuthState } from '../../../redux/reducers/auth/authReducer';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { Button, ListItemIcon } from '@mui/material';
+import { ListItemIcon } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import Logout from '@mui/icons-material/Logout';
 import IconButton from '@mui/material/IconButton';

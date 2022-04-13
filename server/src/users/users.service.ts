@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { User } from '../models/user.entity';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
@@ -65,6 +65,11 @@ export class UsersService {
 
     if (dto.roles.includes(RolesEnum.Student)) {
       const studentDto: CreateStudentDto = {
+        parentEmail: dto.parentEmail,
+        parentLastName: dto.parentLastName,
+        parentMiddleName: dto.parentMiddleName,
+        parentName: dto.parentName,
+        parentPhone: dto.parentPhone,
         userId: parseInt(user.id),
       };
       await this.studentsService.createStudent(studentDto);

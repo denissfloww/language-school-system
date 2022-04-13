@@ -18,6 +18,11 @@ export class StudentsService {
   async createStudent(dto: CreateStudentDto) {
     await this.studentsRepository.save({
       userId: dto.userId,
+      parentEmail: dto.parentEmail,
+      parentLastName: dto.parentLastName,
+      parentMiddleName: dto.parentMiddleName,
+      parentName: dto.parentName,
+      parentPhone: dto.parentPhone,
     });
   }
 

@@ -12,4 +12,14 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   readonly roles: RolesEnum[];
+
+  readonly parentEmail: string;
+
+  readonly parentLastName: string;
+
+  readonly parentMiddleName: string;
+
+  readonly parentName: string;
+
+  readonly parentPhone: string;
 }

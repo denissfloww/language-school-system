@@ -52,6 +52,11 @@ const CreateUserForm = () => {
                 middleName: values.middleName,
                 roles: roles,
                 phone: values.phone,
+                parentEmail: values.parentEmail,
+                parentLastName: values.parentLastName,
+                parentMiddleName: values.parentMiddleName,
+                parentName: values.parentName,
+                parentPhone: values.parentPhone,
             }),
         );
         alert(JSON.stringify(values, null, 2));
@@ -63,7 +68,7 @@ const CreateUserForm = () => {
     function _handleSubmit(values: any, actions: any) {
         if (isLastStep) {
             console.log(values);
-            // _submitForm(values, actions);
+            _submitForm(values, actions);
         } else {
             setActiveStep(activeStep + 1);
             actions.setTouched({});
