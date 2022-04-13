@@ -31,6 +31,9 @@ export class User extends BaseModel {
   @Column()
   phone: string;
 
+  @Column()
+  email: string;
+
   @ManyToMany(() => Role)
   @JoinTable({
     name: 'user_role',

@@ -61,6 +61,8 @@ export class UsersService {
       login: login,
       password: hashPassword,
       roles: roles,
+      phone: dto.phone,
+      email: dto.email,
     });
 
     if (dto.roles.includes(RolesEnum.Student)) {

@@ -30,23 +30,23 @@ const UserRolesForm = (props: { formField?: any }) => {
             </Typography>
             <Grid container spacing={3} justifyContent='center'>
                 <Grid item xs={12} md={6}>
-                    {/*<SelectField name={role.name} label={role.label} data={rolesDisplayValues} fullWidth />*/}
-                    <Field
-                        margin='dense'
-                        name={role.name}
-                        component={AutocompleteField}
-                        options={rolesDisplayValues}
-                        getOptionLabel={(option: any) => option.label}
-                        textFieldProps={{
-                            fullWidth: true,
-                            margin: 'normal',
-                            variant: 'outlined',
-                            label: role.label,
-                        }}
-                        multiple
-                        required
-                        fullwidth
-                    />
+                    <SelectField name={role.name} label={role.label} data={rolesDisplayValues} fullWidth />
+                    {/*<Field*/}
+                    {/*    margin='dense'*/}
+                    {/*    name={role.name}*/}
+                    {/*    component={AutocompleteField}*/}
+                    {/*    options={rolesDisplayValues}*/}
+                    {/*    getOptionLabel={(option: any) => option.label}*/}
+                    {/*    textFieldProps={{*/}
+                    {/*        fullWidth: true,*/}
+                    {/*        margin: 'normal',*/}
+                    {/*        variant: 'outlined',*/}
+                    {/*        label: role.label,*/}
+                    {/*    }}*/}
+                    {/*    multiple*/}
+                    {/*    required*/}
+                    {/*    fullwidth*/}
+                    {/*/>*/}
                 </Grid>
             </Grid>
         </React.Fragment>

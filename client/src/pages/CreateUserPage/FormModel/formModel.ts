@@ -21,9 +21,9 @@ export default {
             requiredErrorMsg: 'Выберите роль',
         },
         age: {
-          name: 'age',
-          label: 'Возраст*',
-          requiredErrorMsg: 'Введите возраст',
+            name: 'age',
+            label: 'Возраст*',
+            requiredErrorMsg: 'Введите возраст',
         },
         phone: {
             name: 'phone',
@@ -34,6 +34,8 @@ export default {
         email: {
             name: 'email',
             label: 'Электронная почта',
+            requiredErrorMsg: 'Введите электронную почту',
+            validateErrorMsg: 'Введите корректный формат электронной почты',
         },
         parentPhone: {
             name: 'parentPhone',
@@ -48,7 +50,8 @@ export default {
         },
         parentMiddleName: {
             name: 'parentMiddleName',
-            label: 'Отчество родителя',
+            label: 'Отчество родителя*',
+            requiredErrorMsg: 'Отчество обязательно для заполнения',
         },
         parentLastName: {
             name: 'parentLastName',
@@ -57,7 +60,9 @@ export default {
         },
         parentEmail: {
             name: 'parentEmail',
-            label: 'Электронная почта родителя',
+            label: 'Электронная почта родителя*',
+            requiredErrorMsg: 'Введите электронную почту',
+            validateErrorMsg: 'Введите корректный формат электронной почты',
         },
     },
 };
