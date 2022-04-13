@@ -25,6 +25,11 @@ export class AuthService {
     return this.getTokens(payload);
   }
 
+  async isUserExist(userId: number) {
+    const user = await this.usersService.getUserById(userId);
+    return !!user;
+  }
+
   async getNewAccessAndRefreshToken(refreshToken: string) {
     const decode = this.jwtService.verify(refreshToken, {
       secret: jwtConstants.refreshTokenSecret,

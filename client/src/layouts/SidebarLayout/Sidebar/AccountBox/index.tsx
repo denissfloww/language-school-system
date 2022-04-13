@@ -6,7 +6,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 import { selectAuthState } from '../../../../redux/reducers/auth/authReducer';
-import {IRole, RoleTypes, RoleTypesDisplay} from "../../../../interfaces/IRole";
+import { IRole, RoleTypes, RoleTypesDisplay } from '../../../../interfaces/IRole';
 
 const AccountStyle = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -16,7 +16,7 @@ const AccountStyle = styled('div')(({ theme }) => ({
     margin: theme.spacing(2, 1.0),
     borderRadius: '10px',
     backgroundColor: theme.palette.grey[200],
-    overflowWrap: 'break-word'
+    overflowWrap: 'break-word',
 }));
 
 const AccountBox = () => {
@@ -24,36 +24,43 @@ const AccountBox = () => {
     const userRolesString = (roles: IRole[]) => {
         const roleNames: string[] = [];
 
-        roles.forEach((role) => {
-            roleNames.push(RoleTypesDisplay[role.name])
-        })
+        roles.forEach(role => {
+            roleNames.push(RoleTypesDisplay[role.name]);
+        });
 
-        return roleNames.join(', ');
-    }
+        return (
+            <>
+                {roleNames.length ? (
+                    <>
+                        {roleNames.map(role => (
+                            <>
+                                <Typography variant='body2' sx={{ color: 'text.secondary', overflowWrap: 'revert' }}>
+                                    {role}
+                                </Typography>
+                            </>
+                        ))}
+                    </>
+                ) : (
+                    <Typography variant='body2' sx={{ color: 'text.secondary', overflowWrap: 'revert' }}>
+                        {RoleTypesDisplay[RoleTypes.None]}
+                    </Typography>
+                )}
+            </>
+        );
+    };
     return (
         <AccountStyle>
-            {user? (
+            {user ? (
                 <>
                     <Avatar {...stringAvatar(`${user?.firstName} ${user?.lastName}`, 40)} />
                     <Box sx={{ ml: 2 }}>
                         <Typography variant='subtitle2' sx={{ color: 'text.primary', overflowWrap: 'break-word' }}>
                             {user?.firstName} {user?.lastName}
                         </Typography>
-                        <Typography variant='body2' sx={{ color: 'text.secondary', overflowWrap: 'break-word' }}>
-                            {user.roles.length? (
-                                <>
-                                    {userRolesString(user.roles)}
-                                </>
-
-                            ) : (
-                                RoleTypesDisplay[RoleTypes.None]
-                            )}
-
-                        </Typography>
+                        {userRolesString(user.roles)}
                     </Box>
                 </>
             ) : null}
-
         </AccountStyle>
     );
 };

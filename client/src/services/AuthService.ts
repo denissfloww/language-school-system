@@ -6,6 +6,10 @@ import { LOCAL_STORAGE_NAME } from '../settings';
 import { ICreditionals } from '../redux/reducers/auth/types';
 import { ICurrentUser } from '../interfaces/ICurrentUser';
 import TokenService from './TokenService';
+import $api from './http';
+import { toast } from 'react-toastify';
+import { toastConfig } from '../utils/toastConfig';
+import { getErrorMsg } from '../utils/helperFunc';
 
 const localStorageUserKey = `${LOCAL_STORAGE_NAME}User`;
 
@@ -42,8 +46,26 @@ const removeLocalStorageUserData = async () => {
     localStorage.removeItem(localStorageUserKey);
 };
 
+const isUserExist = async () => {
+    const isUserExistResponse = await $api
+        .post(`${API_URL}/auth/check`)
+        .then(data => {
+            return data;
+        })
+        .catch(e => {
+            if (!e.response) {
+                toast.error('Connection error', toastConfig);
+            } else {
+                toast.error(getErrorMsg(e as any), toastConfig);
+            }
+        });
+
+    return isUserExistResponse?.data;
+};
+
 const AuthService = {
     login,
+    isUserExist,
     getLocalStorageUserData,
     removeLocalStorageUserData,
 };
