@@ -23,7 +23,7 @@ export class Student extends BaseModel {
   @JoinColumn()
   user: User;
 
-  @ManyToMany(() => Student)
+  @ManyToMany(() => Group)
   @JoinTable({
     name: 'student_group',
     joinColumns: [{ name: 'studentId' }],

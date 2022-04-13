@@ -43,6 +43,7 @@
     "class-validator": "^0.13.2",
     "cyrillic-to-translit-js": "3.1.0",
     "dotenv": "^16.0.0",
+    "moment": "^2.29.2",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "pg": "^8.7.3",

@@ -8,15 +8,21 @@ import {
   Delete,
   ParseIntPipe,
   UseGuards,
+  Headers,
+  Logger,
 } from '@nestjs/common';
 import { ScheduleService } from './schedule.service';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.auth.guard';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('schedule')
 export class ScheduleController {
-  constructor(private readonly scheduleService: ScheduleService) {}
+  constructor(
+    private readonly scheduleService: ScheduleService,
+    private jwtService: JwtService,
+  ) {}
 
   @Post()
   create(@Body() createScheduleDto: CreateScheduleDto) {
@@ -25,19 +31,30 @@ export class ScheduleController {
 
   @Get()
   findAll() {
-    return this.scheduleService.getScheduleEvents();
+    return this.scheduleService.getAllScheduleEvents();
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('/loadData')
-  loadSchedulerData() {
-    return this.scheduleService.getScheduleEvents();
+  loadSchedulerData(@Headers() headers) {
+    const jwtToken = headers['authorization'].split(' ')[1];
+    const userJwtInfo = this.jwtService.decode(jwtToken);
+    const userId = userJwtInfo['id'];
+    return this.scheduleService.getScheduleEventsForUser(userId);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('/updateData')
-  async updateSchedulerData(@Body() data: any) {
-    return await this.scheduleService.updateData(data);
+  async updateSchedulerData(@Body() data: any, @Headers() headers) {
+    const jwtToken = headers['authorization'].split(' ')[1];
+    const userJwtInfo = this.jwtService.decode(jwtToken);
+    const userId = userJwtInfo['id'];
+    return await this.scheduleService.updateData(data, userId);
+  }
+
+  @Get('/test')
+  async test() {
+    return await this.scheduleService.getScheduleEventsForUser(3);
   }
 
   @Get(':id')

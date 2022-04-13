@@ -3,11 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Student } from '../models/student.entity';
 import { CreateStudentDto } from './dto/create-student.dto';
-import { TeacherDto } from '../teacher/dtos/teacher.dto';
 import { PageMetaDto } from '../common/dtos/page-meta.dto';
 import { PageDto } from '../common/dtos/page.dto';
 import { PageOptionsDto } from '../common/dtos/page-options.dto';
-import { StudentDto } from "./dto/students.dto";
+import { StudentDto } from './dto/students.dto';
 
 @Injectable()
 export class StudentsService {
@@ -23,7 +22,14 @@ export class StudentsService {
   }
 
   async getStudentById(id: number) {
-    return await this.studentsRepository.findOne(id);
+    return await this.studentsRepository.findOne(id, { relations: ['groups'] });
+  }
+
+  async getStudentByUserId(userId: number) {
+    return await this.studentsRepository.findOne({
+      relations: ['groups'],
+      where: { userId: userId },
+    });
   }
 
   async getStudents(pageOptionsDto: PageOptionsDto) {

@@ -29,6 +29,7 @@ import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
 import { Query } from '@syncfusion/ej2-data/src/query';
 import { API_URL } from '../../constants/urls';
 import {DataResult} from "@syncfusion/ej2-react-grids";
+import TokenService from "../../services/TokenService";
 
 loadCldr(
     require('cldr-data/supplemental/numberingSystems.json'),
@@ -89,7 +90,7 @@ export class SchedulerComponent extends SampleBase {
             url: `${API_URL}/schedule/loadData`,
             crudUrl: `${API_URL}/schedule/updateData`,
             adaptor: new TestAdaptor(),
-            headers: [{ 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwibG9naW4iOiJJLkl2YW5vdiIsImZpcnN0TmFtZSI6ItCY0LLQsNC9IiwibGFzdE5hbWUiOiLQmNCy0LDQvdC-0LIiLCJyb2xlcyI6W3sibmFtZSI6InN0dWRlbnQiLCJkZXNjIjoi0KDQvtC70Ywg0YHRgtGD0LTQtdC90YLQsCJ9LHsibmFtZSI6InRlYWNoZXIiLCJkZXNjIjoi0KDQvtC70Ywg0KPRh9C40YLQtdC70Y8ifV0sImlhdCI6MTY0OTc0NTU0MSwiZXhwIjoxNjQ5NzgxNTQxfQ.RdHWhjqwkJxepeWJ_PL_2NnXhFGwPoPcifzhk45URtQ' }]
+            headers: [{ 'Authorization': `Bearer ${TokenService.getAccessToken()}` }]
         });
     }
 

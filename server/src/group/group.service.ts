@@ -128,4 +128,9 @@ export class GroupService {
       .of(group)
       .remove(currentStudent);
   }
+
+  async getGroupsByStudentId(studentId: number) {
+    const student = await this.studentsService.getStudentById(studentId);
+    return student.groups;
+  }
 }

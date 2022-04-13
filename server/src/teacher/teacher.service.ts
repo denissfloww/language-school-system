@@ -52,4 +52,11 @@ export class TeacherService {
 
     return new PageDto(dtos, pageMetaDto);
   }
+
+  async getTeacherByUserId(userId: number) {
+    return await this.teacherRepository.findOne({
+      relations: ['groups'],
+      where: { userId: userId },
+    });
+  }
 }

@@ -4,15 +4,25 @@ import { UpdateScheduleDto } from './dto/update-schedule.dto';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
 import { ScheduleEvent } from '../models/schedule-event.entity';
-import RRule from 'rrule';
-import { User } from '../models/user.entity';
+import RRule, { RRuleSet } from 'rrule';
+import moment from 'moment';
+import { Group } from '../models/group.entity';
+import { StudentsService } from '../students/students.service';
+import { UsersService } from '../users/users.service';
+import { RolesEnum } from '../auth/roles.enum';
+import { TeacherService } from '../teacher/teacher.service';
 
 @Injectable()
 export class ScheduleService {
   constructor(
     @InjectRepository(ScheduleEvent)
     private scheduleEventRepository: Repository<ScheduleEvent>,
+    private userService: UsersService,
+    @InjectRepository(Group)
+    private groupRepository: Repository<Group>,
     @InjectConnection() private connection: Connection,
+    private studentsService: StudentsService,
+    private teachersService: TeacherService,
   ) {}
 
   async create(createScheduleDto: CreateScheduleDto) {
@@ -45,7 +55,7 @@ export class ScheduleService {
     return scheduleEventData;
   }
 
-  async getScheduleEvents() {
+  async getAllScheduleEvents() {
     const events = await this.scheduleEventRepository
       .createQueryBuilder('event')
       .select(['event.eventData'])
@@ -54,7 +64,69 @@ export class ScheduleService {
     return events.map((e) => e.eventData);
   }
 
-  async updateData(param: any) {
+  async getScheduleEventsForUser(userId: number) {
+    const user = await this.userService.getUserById(userId);
+    if (user.roles.some((role) => role.name == RolesEnum.Admin)) {
+      return await this.getAllScheduleEvents();
+    } else {
+      let studentEventsData = [];
+      let teacherEventsData = [];
+      if (user.roles.some((role) => role.name == RolesEnum.Student)) {
+        studentEventsData = await this.getStudentEvents(userId);
+      }
+      if (user.roles.some((role) => role.name == RolesEnum.Teacher)) {
+        teacherEventsData = await this.getTeacherEvents(userId);
+      }
+
+      return [...studentEventsData, ...teacherEventsData];
+    }
+  }
+
+  async getStudentEvents(userId: number) {
+    const student = await this.studentsService.getStudentByUserId(userId);
+
+    const eventsResult: ScheduleEvent[] = [];
+
+    for (const group of student.groups) {
+      const events = await this.scheduleEventRepository
+        .createQueryBuilder('event')
+        .where(`event.event_data->>'GroupId' = :GroupId`, {
+          GroupId: group.id,
+        })
+        .select('event.eventData')
+        .getMany();
+
+      events.map((e) => {
+        eventsResult.push(e.eventData);
+      });
+    }
+
+    return eventsResult;
+  }
+
+  async getTeacherEvents(userId: number) {
+    const teacher = await this.teachersService.getTeacherByUserId(userId);
+
+    const eventsResult: ScheduleEvent[] = [];
+
+    for (const group of teacher.groups) {
+      const events = await this.scheduleEventRepository
+        .createQueryBuilder('event')
+        .where(`event.event_data->>'GroupId' = :GroupId`, {
+          GroupId: group.id,
+        })
+        .select('event.eventData')
+        .getMany();
+
+      events.map((e) => {
+        eventsResult.push(e.eventData);
+      });
+    }
+
+    return eventsResult;
+  }
+
+  async updateData(param: any, userId: number) {
     await this.connection.transaction(async (manager) => {
       if (
         param.action === 'insert' ||
@@ -136,60 +208,20 @@ export class ScheduleService {
       }
     });
 
-    // if (
-    //   param.action === 'insert' ||
-    //   (param.action == 'batch' && param.added.length)
-    // ) {
-    //   const value = param.action == 'insert' ? param.value : param.added[0];
-    //
-    //   const lastEvent = await this.scheduleEventRepository.findOne({
-    //     order: { id: 'DESC' },
-    //   });
-    //   let index = 1;
-    //   if (lastEvent) {
-    //     index = parseInt(lastEvent.id) + 1;
-    //   }
-    //   value.id = index;
-    //   await this.scheduleEventRepository.save({
-    //     eventId: index,
-    //     eventData: value,
-    //   });
-    // }
-
-    // if (
-    //   param.action == 'update' ||
-    //   (param.action == 'batch' && param.changed.length)
-    // ) {
-    //   const value = param.action == 'update' ? param.value : param.changed[0];
-    //   const filterData = await this.scheduleEventRepository.find({
-    //     eventId: value.Id,
-    //   });
-    //   if (filterData.length > 0) {
-    //     //ScheduleEventData appointment = db.ScheduleEventDatas.Single(A => A.Id == Convert.ToInt32(value.Id));
-    //     const appointment = filterData.find(
-    //       (e) => e.eventId == parseInt(value.Id),
-    //     );
-    //     appointment.eventData.StartTime = value.StartTime;
-    //     appointment.eventData.EndTime = value.EndTime;
-    //     appointment.eventData.Subject = value.Subject;
-    //     appointment.eventData.IsAllDay = value.IsAllDay;
-    //     appointment.eventData.RecurrenceRule = value.RecurrenceRule;
-    //     appointment.eventData.RecurrenceID = value.RecurrenceID;
-    //     appointment.eventData.RecurrenceException = value.RecurrenceException;
-    //
-    //     appointment.eventData.GroupId = value.GroupId;
-    //     appointment.eventData.TeacherId = value.TeacherId;
-    //     appointment.eventData.ClassTypeId = value.ClassTypeId;
-    //
-    //     await this.scheduleEventRepository.save(appointment);
-    //   }
-    //   //var filterData = db.ScheduleEventDatas.Where(c => c.Id == Convert.ToInt32(value.Id));
-    // }
-
-    return await this.getScheduleEvents();
+    return await this.getScheduleEventsForUser(userId);
   }
 
   findOne(id: number) {
+    const options = RRule.parseString(
+      'FREQ=WEEKLY;BYDAY=TU,TH;INTERVAL=1;UNTIL=20220531T043000Z',
+    );
+    options.dtstart = new Date('2022-04-07T06:00:00.000Z');
+    const rule = new RRule(options);
+    const rruleSet = new RRuleSet();
+    rruleSet.rrule(rule);
+    rruleSet.exdate(moment('2022-04-07T06:30:00.000Z').toDate());
+    return rruleSet.all();
+
     return `This action returns a #${id} schedule`;
   }
 
