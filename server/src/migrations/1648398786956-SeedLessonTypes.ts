@@ -17,7 +17,7 @@ export class SeedLessonTypes1648398786956 implements MigrationInterface {
 
     LessonTypesSeed.map(async (type) => {
       await queryRunner.query(
-        `INSERT INTO "lesson_types" (name, description, color, "updatedAt", "createdAt") VALUES ('${type.name}', '${type.description}','${type.color}', now(), now()) `,
+        `INSERT INTO "lesson_types" (name, description, color) VALUES ('${type.name}', '${type.description}','${type.color}') `,
       );
     });
   }

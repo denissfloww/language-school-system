@@ -21,13 +21,13 @@ export class ScheduleEventsTable1649089959464 implements MigrationInterface {
             type: 'int',
           },
           {
-            name: 'updatedAt',
+            name: 'updated_at',
             type: 'timestamp',
             default: 'now()',
             isNullable: false,
           },
           {
-            name: 'createdAt',
+            name: 'created_at',
             type: 'timestamp',
             default: 'now()',
             isNullable: false,

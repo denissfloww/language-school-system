@@ -14,17 +14,17 @@ export class UserRoleEntity extends BaseModel {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @PrimaryColumn('int')
+  @PrimaryColumn('int', { name: 'user_id' })
   userId: number;
 
-  @PrimaryColumn('int')
+  @PrimaryColumn('int', { name: 'role_id' })
   roleId: number;
 
   @OneToOne(() => User)
-  @JoinColumn()
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
   user: User;
 
   @OneToOne(() => Role)
-  @JoinColumn()
+  @JoinColumn([{ name: 'role_id', referencedColumnName: 'id' }])
   role: Role;
 }

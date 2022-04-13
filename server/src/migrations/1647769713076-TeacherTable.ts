@@ -19,18 +19,18 @@ export class TeacherTable1647769713076 implements MigrationInterface {
             isGenerated: true,
           },
           {
-            name: 'shortName',
+            name: 'short_name',
             type: 'varchar',
             isNullable: true,
           },
           {
-            name: 'updatedAt',
+            name: 'updated_at',
             type: 'timestamp',
             default: 'now()',
             isNullable: false,
           },
           {
-            name: 'createdAt',
+            name: 'created_at',
             type: 'timestamp',
             default: 'now()',
             isNullable: false,
@@ -43,7 +43,7 @@ export class TeacherTable1647769713076 implements MigrationInterface {
     await queryRunner.addColumn(
       'teachers',
       new TableColumn({
-        name: 'userId',
+        name: 'user_id',
         type: 'int',
       }),
     );
@@ -51,7 +51,7 @@ export class TeacherTable1647769713076 implements MigrationInterface {
     await queryRunner.createForeignKey(
       'teachers',
       new TableForeignKey({
-        columnNames: ['userId'],
+        columnNames: ['user_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'users',
         onDelete: 'CASCADE',
@@ -62,7 +62,7 @@ export class TeacherTable1647769713076 implements MigrationInterface {
     await queryRunner.addColumn(
       'groups',
       new TableColumn({
-        name: 'teacherId',
+        name: 'teacher_id',
         type: 'int',
       }),
     );
@@ -70,7 +70,7 @@ export class TeacherTable1647769713076 implements MigrationInterface {
     await queryRunner.createForeignKey(
       'groups',
       new TableForeignKey({
-        columnNames: ['teacherId'],
+        columnNames: ['teacher_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'teachers',
         onDelete: 'CASCADE',

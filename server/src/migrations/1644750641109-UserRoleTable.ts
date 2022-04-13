@@ -19,13 +19,13 @@ export class UserRoleTable1644750641109 implements MigrationInterface {
             isGenerated: true,
           },
           {
-            name: 'updatedAt',
+            name: 'updated_at',
             type: 'timestamp',
             default: 'now()',
             isNullable: false,
           },
           {
-            name: 'createdAt',
+            name: 'created_at',
             type: 'timestamp',
             default: 'now()',
             isNullable: false,
@@ -38,14 +38,14 @@ export class UserRoleTable1644750641109 implements MigrationInterface {
     await queryRunner.addColumn(
       'user_role',
       new TableColumn({
-        name: 'userId',
+        name: 'user_id',
         type: 'int',
       }),
     );
     await queryRunner.addColumn(
       'user_role',
       new TableColumn({
-        name: 'roleId',
+        name: 'role_id',
         type: 'int',
       }),
     );
@@ -53,7 +53,7 @@ export class UserRoleTable1644750641109 implements MigrationInterface {
     await queryRunner.createForeignKey(
       'user_role',
       new TableForeignKey({
-        columnNames: ['userId'],
+        columnNames: ['user_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'users',
         onDelete: 'CASCADE',
@@ -64,7 +64,7 @@ export class UserRoleTable1644750641109 implements MigrationInterface {
     await queryRunner.createForeignKey(
       'user_role',
       new TableForeignKey({
-        columnNames: ['roleId'],
+        columnNames: ['role_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'roles',
         onDelete: 'CASCADE',

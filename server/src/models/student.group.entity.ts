@@ -14,17 +14,17 @@ export class StudentGroup extends BaseModel {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @PrimaryColumn('int')
+  @PrimaryColumn('int', { name: 'student_id' })
   studentId: number;
 
-  @PrimaryColumn('int')
+  @PrimaryColumn('int', { name: 'group_id' })
   groupId: number;
 
   @OneToOne(() => Student)
-  @JoinColumn()
+  @JoinColumn([{ name: 'student_id', referencedColumnName: 'id' }])
   student: Student;
 
   @OneToOne(() => Group)
-  @JoinColumn()
+  @JoinColumn([{ name: 'group_id', referencedColumnName: 'id' }])
   group: Group;
 }

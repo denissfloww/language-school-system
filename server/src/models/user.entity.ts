@@ -16,13 +16,13 @@ export class User extends BaseModel {
   @Column()
   login: string;
 
-  @Column({ name: 'firstname' })
+  @Column({ name: 'first_name' })
   firstName: string;
 
-  @Column({ name: 'lastname' })
+  @Column({ name: 'last_name' })
   lastName: string;
 
-  @Column({ name: 'middlename' })
+  @Column({ name: 'middle_name' })
   middleName: string;
 
   @Column()
@@ -34,8 +34,8 @@ export class User extends BaseModel {
   @ManyToMany(() => Role)
   @JoinTable({
     name: 'user_role',
-    joinColumns: [{ name: 'userId' }],
-    inverseJoinColumns: [{ name: 'roleId' }],
+    joinColumns: [{ name: 'user_id' }],
+    inverseJoinColumns: [{ name: 'role_id' }],
   })
   roles: Role[];
 }

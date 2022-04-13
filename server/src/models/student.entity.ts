@@ -16,18 +16,33 @@ export class Student extends BaseModel {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column()
+  @Column({ name: 'user_id' })
   userId: number;
 
   @OneToOne(() => User)
-  @JoinColumn()
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
   user: User;
 
   @ManyToMany(() => Group)
   @JoinTable({
     name: 'student_group',
-    joinColumns: [{ name: 'studentId' }],
-    inverseJoinColumns: [{ name: 'groupId' }],
+    joinColumns: [{ name: 'student_id' }],
+    inverseJoinColumns: [{ name: 'group_id' }],
   })
   groups: Group[];
+
+  @Column({ name: 'parent_name' })
+  parentName: string;
+
+  @Column({ name: 'parent_middle_name' })
+  parentMiddleName: string;
+
+  @Column({ name: 'parent_last_name' })
+  parentLastName: string;
+
+  @Column({ name: 'parent_email' })
+  parentEmail: string;
+
+  @Column({ name: 'parent_phone' })
+  parentPhone: string;
 }

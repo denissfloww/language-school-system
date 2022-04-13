@@ -5,6 +5,7 @@ import {
   OneToOne,
   JoinColumn,
   OneToMany,
+  PrimaryColumn,
 } from 'typeorm';
 import BaseModel from './base';
 import { User } from './user.entity';
@@ -15,11 +16,11 @@ export class Teacher extends BaseModel {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column()
+  @PrimaryColumn({ name: 'user_id' })
   userId: number;
 
   @OneToOne(() => User)
-  @JoinColumn()
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
   user: User;
 
   @OneToMany(() => Group, (group) => group.teacher)

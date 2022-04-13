@@ -2,7 +2,6 @@ import {
   MigrationInterface,
   QueryRunner,
   Table,
-  TableColumn,
   TableIndex,
 } from 'typeorm';
 
@@ -34,13 +33,13 @@ export class LessonTypeTable1648398524302 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'updatedAt',
+            name: 'updated_at',
             type: 'timestamp',
             default: 'now()',
             isNullable: false,
           },
           {
-            name: 'createdAt',
+            name: 'created_at',
             type: 'timestamp',
             default: 'now()',
             isNullable: false,

@@ -6,6 +6,7 @@ import {
   JoinTable,
   ManyToOne,
   RelationId,
+  JoinColumn,
 } from 'typeorm';
 import BaseModel from './base';
 import { Student } from './student.entity';
@@ -28,14 +29,15 @@ export class Group extends BaseModel {
   @ManyToMany(() => Student)
   @JoinTable({
     name: 'student_group',
-    joinColumns: [{ name: 'groupId' }],
-    inverseJoinColumns: [{ name: 'studentId' }],
+    joinColumns: [{ name: 'group_id' }],
+    inverseJoinColumns: [{ name: 'student_id' }],
   })
   students: Student[];
 
-  @Column()
+  @Column({ name: 'teacher_id' })
   teacherId: number;
 
   @ManyToOne(() => Teacher, (teacher) => teacher.groups)
+  @JoinColumn([{ name: 'teacher_id', referencedColumnName: 'id' }])
   teacher: Teacher;
 }

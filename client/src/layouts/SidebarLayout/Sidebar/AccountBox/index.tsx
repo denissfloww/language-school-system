@@ -6,7 +6,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 import { selectAuthState } from '../../../../redux/reducers/auth/authReducer';
-import { RoleTypes, RoleTypesDisplay } from "../../../../interfaces/IRole";
+import {IRole, RoleTypes, RoleTypesDisplay} from "../../../../interfaces/IRole";
 
 const AccountStyle = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -20,24 +20,39 @@ const AccountStyle = styled('div')(({ theme }) => ({
 
 const AccountBox = () => {
     const { user } = useSelector(selectAuthState);
+    const userRolesString = (roles: IRole[]) => {
+        const roleNames: string[] = [];
+
+        roles.forEach((role) => {
+            roleNames.push(RoleTypesDisplay[role.name])
+        })
+
+        return roleNames.join(', ');
+    }
     return (
         <AccountStyle>
-            <Avatar {...stringAvatar(`${user?.firstName} ${user?.lastName}`, 40)} />
-            <Box sx={{ ml: 2 }}>
-                <Typography variant='subtitle2' sx={{ color: 'text.primary' }}>
-                    {user?.firstName} {user?.lastName}
-                </Typography>
-                <Typography variant='body2' sx={{ color: 'text.secondary' }}>
-                    {/*{user?.roles?.map((role: IRole) => {*/}
-                    {/*    return RoleTypesDisplay[role.name];*/}
-                    {/*})}*/}
-                    {user?.roles? (
-                      RoleTypesDisplay[user.roles[0].name]
-                    ) : (
-                      RoleTypesDisplay[RoleTypes.None]
-                    )}
-                </Typography>
-            </Box>
+            {user? (
+                <>
+                    <Avatar {...stringAvatar(`${user?.firstName} ${user?.lastName}`, 40)} />
+                    <Box sx={{ ml: 2 }}>
+                        <Typography variant='subtitle2' sx={{ color: 'text.primary' }}>
+                            {user?.firstName} {user?.lastName}
+                        </Typography>
+                        <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+                            {user.roles.length? (
+                                <>
+                                    {userRolesString(user.roles)}
+                                </>
+
+                            ) : (
+                                RoleTypesDisplay[RoleTypes.None]
+                            )}
+
+                        </Typography>
+                    </Box>
+                </>
+            ) : null}
+
         </AccountStyle>
     );
 };

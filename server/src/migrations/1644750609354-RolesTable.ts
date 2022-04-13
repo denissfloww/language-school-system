@@ -29,13 +29,13 @@ export class RolesTable1644750609354 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'updatedAt',
+            name: 'updated_at',
             type: 'timestamp',
             default: 'now()',
             isNullable: false,
           },
           {
-            name: 'createdAt',
+            name: 'created_at',
             type: 'timestamp',
             default: 'now()',
             isNullable: false,
@@ -52,18 +52,6 @@ export class RolesTable1644750609354 implements MigrationInterface {
         columnNames: ['name'],
       }),
     );
-
-    // await queryRunner.query(
-    //   `INSERT INTO roles VALUES (1,${RolesEnum.Student}, 'Студент', 'Роль студента', now(), now()) `,
-    // );
-
-    // await queryRunner.query(
-    //   `INSERT INTO roles VALUES ('',${RolesEnum.Admin}, 'Администратор', 'Роль администратора', now(), now()) `,
-    // );
-    //
-    // await queryRunner.query(
-    //   `INSERT INTO roles VALUES ('',${RolesEnum.Teacher}, 'Учитель', 'Роль учителя', now(), now()) `,
-    // );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

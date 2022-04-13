@@ -19,13 +19,13 @@ export class StudentsGroupsTable1645093844566 implements MigrationInterface {
             isGenerated: true,
           },
           {
-            name: 'updatedAt',
+            name: 'updated_at',
             type: 'timestamp',
             default: 'now()',
             isNullable: false,
           },
           {
-            name: 'createdAt',
+            name: 'created_at',
             type: 'timestamp',
             default: 'now()',
             isNullable: false,
@@ -38,14 +38,14 @@ export class StudentsGroupsTable1645093844566 implements MigrationInterface {
     await queryRunner.addColumn(
       'student_group',
       new TableColumn({
-        name: 'studentId',
+        name: 'student_id',
         type: 'int',
       }),
     );
     await queryRunner.addColumn(
       'student_group',
       new TableColumn({
-        name: 'groupId',
+        name: 'group_id',
         type: 'int',
       }),
     );
@@ -53,7 +53,7 @@ export class StudentsGroupsTable1645093844566 implements MigrationInterface {
     await queryRunner.createForeignKey(
       'student_group',
       new TableForeignKey({
-        columnNames: ['studentId'],
+        columnNames: ['student_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'students',
         onDelete: 'CASCADE',
@@ -64,7 +64,7 @@ export class StudentsGroupsTable1645093844566 implements MigrationInterface {
     await queryRunner.createForeignKey(
       'student_group',
       new TableForeignKey({
-        columnNames: ['groupId'],
+        columnNames: ['group_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'groups',
         onDelete: 'CASCADE',

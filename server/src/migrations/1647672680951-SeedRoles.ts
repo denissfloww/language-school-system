@@ -23,7 +23,7 @@ export class SeedRoles1647672680951 implements MigrationInterface {
 
     RolesSeed.map(async (role) => {
       await queryRunner.query(
-        `INSERT INTO "roles" (name, label, description, "updatedAt", "createdAt") VALUES ('${role.name}', '${role.label}', '${role.description}', now(), now()) `,
+        `INSERT INTO "roles" (name, label, description) VALUES ('${role.name}', '${role.label}', '${role.description}') `,
       );
     });
   }

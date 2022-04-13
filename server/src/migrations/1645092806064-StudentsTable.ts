@@ -19,18 +19,43 @@ export class StudentsTable1645092806064 implements MigrationInterface {
             isGenerated: true,
           },
           {
-            name: 'shortName',
+            name: 'short_name',
             type: 'varchar',
             isNullable: true,
           },
           {
-            name: 'updatedAt',
+            name: 'parent_name',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'parent_middle_name',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'parent_last_name',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'parent_email',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'parent_phone',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'updated_at',
             type: 'timestamp',
             default: 'now()',
             isNullable: false,
           },
           {
-            name: 'createdAt',
+            name: 'created_at',
             type: 'timestamp',
             default: 'now()',
             isNullable: false,
@@ -43,7 +68,7 @@ export class StudentsTable1645092806064 implements MigrationInterface {
     await queryRunner.addColumn(
       'students',
       new TableColumn({
-        name: 'userId',
+        name: 'user_id',
         type: 'int',
       }),
     );
@@ -51,7 +76,7 @@ export class StudentsTable1645092806064 implements MigrationInterface {
     await queryRunner.createForeignKey(
       'students',
       new TableForeignKey({
-        columnNames: ['userId'],
+        columnNames: ['user_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'users',
         onDelete: 'CASCADE',
