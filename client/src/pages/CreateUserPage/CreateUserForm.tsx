@@ -29,7 +29,6 @@ function _renderStepContent(step: number, props: any) {
 
     useEffect(() => {
         dispatch(setValidationSchema(getCurrentValidation(isStudent)));
-        console.log(isStudent);
     }, [isStudent]);
 
     switch (step) {

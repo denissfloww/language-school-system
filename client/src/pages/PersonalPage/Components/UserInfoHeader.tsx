@@ -17,25 +17,25 @@ const UserInfoHeader = (props: { firstName: string; lastName: string; roles: IRo
         return roleNames.join(', ');
     };
     return (
-        <Paper sx={{ width: '100%', mb: 2, height: '17vh', borderRadius: '10px' }}>
+        <Paper sx={{ width: '100%', mb: 2, borderRadius: '10px', }}>
             <Grid
                 container
                 sx={{
-                    height: '80%',
                     borderRadius: '10px 10px 0px 0px',
                     background: color,
                     opacity: '0.6',
+                    padding: 3
                 }}
             >
                 <Grid item md={2}>
                     <Avatar
                         {...stringAvatar(`${firstName} ${lastName}`, 105)}
-                        style={{ margin: '0 auto', marginTop: '16%', border: '2px solid white' }}
+                        style={{ margin: '0 auto', border: '2px solid white' }}
                     />
                 </Grid>
                 <Grid item md={3}>
                     <>
-                        <Typography variant='h6' component='div' sx={{ margin: '0 auto', marginTop: '20%', fontWeight: 'bold' }}>
+                        <Typography variant='h6' component='div' sx={{ margin: '0 auto', fontWeight: 'bold' }}>
                             {`${firstName} ${lastName}`}
                         </Typography>
                         <Typography variant='subtitle1' sx={{ color: 'text.secondary', overflowWrap: 'break-word' }}>
