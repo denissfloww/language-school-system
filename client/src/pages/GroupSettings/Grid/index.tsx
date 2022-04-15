@@ -80,7 +80,7 @@ const GroupGrid = () => {
                                     <TableRow>
                                         {headerRows.map(value => (
                                             <>
-                                                <TableCell align={value.align}>{value.text}</TableCell>
+                                                <TableCell align={value.align}><b>{value.text}</b></TableCell>
                                             </>
                                         ))}
                                     </TableRow>

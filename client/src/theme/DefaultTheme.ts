@@ -117,13 +117,13 @@ const colors = {
     },
 };
 
-// A custom theme for this app
 export const DefaultTheme = createTheme({
     status: {
         danger: orange[500],
     },
     typography: {
-        fontFamily: "'Nunito', sans-serif",
+        fontFamily: ['"Nunito"', 'sans-serif'].join(','),
+        fontSize: 14,
     },
     palette: {
         common: {
@@ -162,8 +162,144 @@ export const DefaultTheme = createTheme({
         menuItemIconColor: colors.layout.sidebar.menuItemIconColor,
         menuItemIconColorActive: colors.layout.sidebar.menuItemIconColorActive,
         menuItemHeadingColor: colors.layout.sidebar.menuItemHeadingColor,
-        boxShadow:
-          '2px 0 3px rgba(159, 162, 191, 0.18), 1px 0 1px rgba(159, 162, 191, 0.32)',
-        width: '280px'
+        boxShadow: '2px 0 3px rgba(159, 162, 191, 0.18), 1px 0 1px rgba(159, 162, 191, 0.32)',
+        width: '280px',
+    },
+
+    components: {
+        MuiOutlinedInput: {
+            styleOverrides: {
+                root: {
+                    borderRadius: 10,
+                    '& .MuiInputAdornment-positionEnd.MuiInputAdornment-outlined': {
+                        paddingRight: 6,
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: colors.alpha.black[50],
+                    },
+                    '&.Mui-focused:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: colors.primary.main,
+                    },
+                },
+            },
+        },
+        MuiButton: {
+            defaultProps: {
+                disableRipple: true,
+            },
+            styleOverrides: {
+                root: {
+                    borderRadius: 10,
+                    fontWeight: 'bold',
+                    textTransform: 'none',
+                    paddingLeft: 16,
+                    paddingRight: 16,
+
+                    '.MuiSvgIcon-root': {
+                        transition: 'all .2s',
+                    },
+                },
+                endIcon: {
+                    marginRight: -8,
+                },
+                containedSecondary: {
+                    backgroundColor: colors.secondary.main,
+                    color: colors.alpha.white[100],
+                    border: '1px solid ' + colors.alpha.black[30],
+                },
+                outlinedSecondary: {
+                    backgroundColor: colors.alpha.white[100],
+
+                    '&:hover, &.MuiSelected': {
+                        backgroundColor: colors.alpha.black[5],
+                        color: colors.alpha.black[100],
+                    },
+                },
+            },
+        },
+        MuiTabs: {
+            styleOverrides: {
+                root: {
+                    height: 38,
+                    minHeight: 38,
+                    overflow: 'visible',
+                },
+                scrollableX: {
+                    overflow: 'visible !important',
+                },
+            },
+        },
+        MuiTab: {
+            styleOverrides: {
+                root: {
+                    padding: 0,
+                    height: 38,
+                    minHeight: 38,
+                    borderRadius: 6,
+                    transition: 'color .2s',
+                    textTransform: 'capitalize',
+
+                    '&.MuiButtonBase-root': {
+                        minWidth: 'auto',
+                        paddingLeft: 20,
+                        paddingRight: 20,
+                        marginRight: 4,
+                    },
+                    '&.Mui-selected, &.Mui-selected:hover': {
+                        color: colors.primary.main,
+                        zIndex: 5,
+                    },
+                    '&:hover': {
+                        color: colors.alpha.black[100],
+                    },
+                },
+            },
+        },
+        MuiTableRow: {
+            styleOverrides: {
+                head: {
+                    background: colors.alpha.black[5],
+                },
+                root: {
+                    transition: 'background-color .2s',
+
+                    '&.MuiTableRow-hover:hover': {
+                        backgroundColor: lighten(colors.alpha.black[5], 0.5),
+                    },
+                },
+            },
+        },
+        MuiTableCell: {
+            styleOverrides: {
+                root: {
+                    borderBottomColor: colors.alpha.black[10],
+                    fontSize: 14,
+                },
+                head: {
+                    fontSize: 14,
+                    fontWeight: 'bold',
+                    color: colors.alpha.black[100],
+                },
+            },
+        },
+        MuiPaper: {
+            styleOverrides: {
+                root: {
+                    padding: 0,
+                },
+                elevation0: {
+                    boxShadow: 'none',
+                },
+                elevation: {
+                    boxShadow: colors.shadows.card,
+                },
+                elevation2: {
+                    boxShadow: colors.shadows.cardSm,
+                },
+                elevation24: {
+                    boxShadow: colors.shadows.cardLg,
+                },
+            },
+        },
     },
 });

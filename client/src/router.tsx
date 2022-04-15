@@ -8,6 +8,7 @@ import { selectAuthState } from './redux/reducers/auth/authReducer';
 import { RoleTypes } from './interfaces/IRole';
 import Journal from './pages/Journal';
 import LessonTypeSettings from './pages/LessonTypeSettings';
+import PersonalPage from './pages/PersonalPage';
 
 // @ts-ignore
 // eslint-disable-next-line react/display-name
@@ -47,6 +48,7 @@ const Router = () => {
                             }
                         />
                     </Route>
+                    <Route path='personal' element={<PersonalPage />} />
                     <Route path='journal' element={<Journal />} />
                 </Route>
             </Route>

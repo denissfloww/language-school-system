@@ -1,6 +1,6 @@
 import { IMenuItem } from '../layouts/SidebarLayout/Sidebar/SidebarMenu/items';
 
-function stringToColor(str: string, s: string = '30', l: string = '80') {
+export function stringToColor(str: string, s: string = '30', l: string = '80') {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
         hash = str.charCodeAt(i) + ((hash << 5) - hash);
@@ -17,8 +17,10 @@ export function stringAvatar(name: string, width: number) {
             width: width,
             height: width,
             color: 'black',
+            fontSize: width / 1.78,
         },
-        children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+        children:
+          `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
     };
 }
 

@@ -7,6 +7,8 @@ import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 import SchoolIcon from '@mui/icons-material/School';
 import React, { ReactNode } from 'react';
 import { RoleTypes } from '../../../../interfaces/IRole';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import LanguageIcon from '@mui/icons-material/Language';
 
 export interface IMenuItem {
     icon: ReactNode;
@@ -52,6 +54,11 @@ export const menu: IMenuItem[] = [
                 link: '/dashboard/settings/lesson-types',
             },
             {
+                icon: <LanguageIcon />,
+                title: 'Языки',
+                link: '/dashboard/settings/lesson-types',
+            },
+            {
                 icon: <GroupIcon />,
                 title: 'Пользователи',
                 link: '/dashboard/settings/users',
@@ -62,5 +69,11 @@ export const menu: IMenuItem[] = [
                 link: '/dashboard/settings/students',
             },
         ],
+    },
+    {
+        icon: <AccountBoxIcon />,
+        title: 'Профиль',
+        link: '/dashboard/personal',
+        items: [],
     },
 ];

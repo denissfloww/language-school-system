@@ -14,6 +14,8 @@ import Divider from '@mui/material/Divider';
 import Logout from '@mui/icons-material/Logout';
 import IconButton from '@mui/material/IconButton';
 import LogoutButton from '../../../components/Buttons/LogoutButton';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import { Link } from "react-router-dom";
 
 const drawerWidth: number = 296;
 
@@ -91,11 +93,15 @@ function Header() {
                     transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 >
-                    <MenuItem>
-                        <Avatar /> Profile
+                    <MenuItem style={{ pointerEvents: 'none' }}>
+                        <b>{user?.firstName} {user?.lastName}</b>
                     </MenuItem>
-                    <MenuItem>
-                        <Avatar /> My account
+                    <Divider />
+                    <MenuItem component={Link} to='/dashboard/personal'>
+                        <ListItemIcon>
+                            <AccountBoxIcon fontSize='small' />
+                        </ListItemIcon>
+                        Профиль
                     </MenuItem>
                     <Divider />
                     <LogoutButton parent={MenuItem}>
