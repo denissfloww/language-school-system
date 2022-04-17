@@ -12,11 +12,11 @@ export class SeedAdminUser1649832835745 implements MigrationInterface {
     };
 
     await queryRunner.query(
-      `INSERT INTO "users" (login, password, first_name, last_name) VALUES ('${AdminSeed.login}', '${AdminSeed.password}','${AdminSeed.firstName}','${AdminSeed.lastName}' ) `,
+      `INSERT INTO "users" (login, password, first_name, last_name, birth_date) VALUES ('${AdminSeed.login}', '${AdminSeed.password}','${AdminSeed.firstName}','${AdminSeed.lastName}', '1999-01-08' ) `,
     );
 
     await queryRunner.query(
-        `INSERT INTO "user_role" (user_id, role_id) VALUES ('1','2') `,
+      `INSERT INTO "user_role" (user_id, role_id) VALUES ('1','2') `,
     );
   }
 

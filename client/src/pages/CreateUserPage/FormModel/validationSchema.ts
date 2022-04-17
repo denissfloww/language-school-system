@@ -1,7 +1,19 @@
 import * as Yup from 'yup';
 import formModel from './formModel';
 const {
-    formField: { firstName, lastName, role, phone, age, email, parentName, parentPhone, parentEmail, parentLastName, parentMiddleName },
+    formField: {
+        firstName,
+        lastName,
+        role,
+        phone,
+        birthDate,
+        email,
+        parentName,
+        parentPhone,
+        parentEmail,
+        parentLastName,
+        parentMiddleName,
+    },
 } = formModel;
 
 export function getCurrentValidation(isStudent: boolean): any[] {
@@ -11,7 +23,10 @@ export function getCurrentValidation(isStudent: boolean): any[] {
         Yup.object().shape({
             [firstName.name]: Yup.string().required(`${firstName.requiredErrorMsg}`),
             [lastName.name]: Yup.string().required(`${lastName.requiredErrorMsg}`),
-            [age.name]: Yup.number().required(`${age.requiredErrorMsg}`),
+            [birthDate.name]: Yup.date()
+                .typeError(`${birthDate.typeErrorMsg}`)
+                .max(new Date(), `${birthDate.maxDateErrorMsg}`)
+                .required(`${birthDate.requiredErrorMsg}`),
         }) as any,
     );
 
@@ -57,7 +72,7 @@ export default [
     Yup.object().shape({
         [firstName.name]: Yup.string().required(`${firstName.requiredErrorMsg}`),
         [lastName.name]: Yup.string().required(`${lastName.requiredErrorMsg}`),
-        [age.name]: Yup.number().required(`${age.requiredErrorMsg}`),
+        [birthDate.name]: Yup.string().required(`${birthDate.requiredErrorMsg}`),
     }),
     Yup.object().shape({
         // [role.name]: Yup.string().required(`${role.requiredErrorMsg}`),

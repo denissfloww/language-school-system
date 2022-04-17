@@ -5,6 +5,7 @@ export interface ICreateUserData {
     lastName: string;
     middleName?: string;
     roles: RoleTypes[];
+    birthDate: string;
     phone: string;
     email: string;
     parentEmail: string;

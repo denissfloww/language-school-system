@@ -33,7 +33,7 @@ function _renderStepContent(step: number, props: any) {
 
     switch (step) {
         case 0:
-            return <UserInformationForm formField={formField} />;
+            return <UserInformationForm formField={formField} formikProps={props} />;
         case 1:
             return <UserRolesForm formField={formField} />;
         case 2:
@@ -62,7 +62,7 @@ const CreateUserForm = () => {
     async function _submitForm(values: any, actions: any) {
         await _sleep(1000);
 
-        const roles: RoleTypes[] = []
+        const roles: RoleTypes[] = [];
         roles.push(values?.roles);
 
         dispatch(
@@ -71,6 +71,7 @@ const CreateUserForm = () => {
                 lastName: values.lastName,
                 middleName: values.middleName,
                 roles: roles,
+                birthDate: values.birthDate,
                 phone: values.phone,
                 email: values.email,
                 parentEmail: values.parentEmail,
@@ -80,7 +81,7 @@ const CreateUserForm = () => {
                 parentPhone: values.parentPhone,
             }),
         );
-        alert(JSON.stringify(values, null, 2));
+        // alert(JSON.stringify(values, null, 2));
         actions.setSubmitting(false);
 
         setActiveStep(activeStep + 1);

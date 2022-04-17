@@ -34,6 +34,9 @@ export class User extends BaseModel {
   @Column()
   email: string;
 
+  @Column({ name: 'birth_date' })
+  birthDate: Date;
+
   @ManyToMany(() => Role)
   @JoinTable({
     name: 'user_role',

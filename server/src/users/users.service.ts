@@ -63,6 +63,7 @@ export class UsersService {
       roles: roles,
       phone: dto.phone,
       email: dto.email,
+      birthDate: dto.birthDate,
     });
 
     if (dto.roles.includes(RolesEnum.Student)) {

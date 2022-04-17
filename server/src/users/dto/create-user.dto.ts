@@ -13,6 +13,9 @@ export class CreateUserDto {
   @IsNotEmpty()
   readonly roles: RolesEnum[];
 
+  @IsNotEmpty()
+  readonly birthDate: Date;
+
   readonly phone: string;
 
   readonly email: string;

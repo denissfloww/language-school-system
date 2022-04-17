@@ -20,10 +20,12 @@ export default {
             label: 'Роль*',
             requiredErrorMsg: 'Выберите роль',
         },
-        age: {
-            name: 'age',
-            label: 'Возраст*',
-            requiredErrorMsg: 'Введите возраст',
+        birthDate: {
+            name: 'birthDate',
+            label: 'Дата рождения*',
+            requiredErrorMsg: 'Введите дату рождения!',
+            typeErrorMsg: 'Введите дату в правильном формате!',
+            maxDateErrorMsg: 'Вы не можете родиться в будущем!',
         },
         phone: {
             name: 'phone',

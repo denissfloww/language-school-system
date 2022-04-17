@@ -1,14 +1,19 @@
 import Grid from '@mui/material/Grid';
 import InputField from '../../../components/FormFields/InputField';
 import * as React from 'react';
+import { DatePicker, LocalizationProvider } from '@mui/lab';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { TextField } from '@mui/material';
 
 interface IProps {
     formField?: any;
+    formikProps: any;
 }
 
 export const UserInformationForm = (props: IProps) => {
     const {
-        formField: { firstName, middleName, lastName, age },
+        formField: { firstName, middleName, lastName, birthDate },
+        formikProps,
     } = props;
 
     return (
@@ -24,13 +29,26 @@ export const UserInformationForm = (props: IProps) => {
                     <InputField name={middleName.name} label={middleName.label} fullWidth />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <InputField
-                        name={age.name}
-                        label={age.label}
-                        fullWidth
-                        type='number'
-                        InputProps={{ inputProps: { min: 0, max: 200 } }}
-                    />
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
+                            onChange={(value: any) => {
+                                console.log(formikProps)
+                                formikProps.setFieldValue('birthDate', value)}
+                            }
+                            inputFormat='dd.MM.yyyy'
+                            value={formikProps.values.birthDate}
+                            renderInput={(params: any) => (
+                                <TextField
+                                    {...params}
+                                    name={birthDate.name}
+                                    label={birthDate.label}
+                                    error={!!formikProps.errors.birthDate && formikProps.touched.birthDate}
+                                    helperText={formikProps.errors.birthDate}
+                                    fullWidth
+                                />
+                            )}
+                        />
+                    </LocalizationProvider>
                 </Grid>
             </Grid>
         </React.Fragment>
