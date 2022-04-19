@@ -7,11 +7,12 @@ import { useState } from 'react';
 interface IDeleteButtonProps {
     id: number;
     title: string;
+    confirmationText: string;
     onDeleteMethod: () => void;
 }
 
 const DeleteButton = (props: IDeleteButtonProps) => {
-    const { onDeleteMethod, title } = props;
+    const { onDeleteMethod, title, confirmationText } = props;
 
     const [openDeleteDialog, setOpenDeleteDialog] = useState({ isOpen: false, onConfirm: () => {} });
 
@@ -19,7 +20,7 @@ const DeleteButton = (props: IDeleteButtonProps) => {
         <>
             <>
                 <ConfirmDialog title={title} confirmDialogConfig={openDeleteDialog} setConfirmDialogConfig={setOpenDeleteDialog}>
-                    Вы действительно хотите удалить группу?
+                    {confirmationText}
                 </ConfirmDialog>
                 <Tooltip title='Удалить'>
                     <IconButton

@@ -50,6 +50,18 @@ export class GroupProfile extends AutomapperProfile {
           mapFrom((source) => source.teacher.user.id),
         )
         .forMember(
+          (destination) => destination.language.id,
+          mapFrom((source) => source.language.id),
+        )
+        .forMember(
+          (destination) => destination.language.name,
+          mapFrom((source) => source.language.name),
+        )
+        .forMember(
+          (destination) => destination.language.description,
+          mapFrom((source) => source.language.description),
+        )
+        .forMember(
           (destination) => destination.students,
           mapWith(StudentDto, Student, (source) => source.students),
         );

@@ -40,6 +40,7 @@ const createGroup = async (values: any) => {
         studentsIds: studentsIds,
         id: values.id,
         teacherId: Number(values.teacher),
+        languageId: Number(values.language),
     };
 
     const response = await $api
@@ -71,6 +72,7 @@ const updateGroup = async (values: any) => {
         studentsIds: studentsIds,
         id: values.id,
         teacherId: Number(values.teacher),
+        languageId: Number(values.language),
     };
 
     const response = await $api

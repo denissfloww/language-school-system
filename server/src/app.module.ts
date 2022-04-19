@@ -23,6 +23,7 @@ import { classes } from '@automapper/classes';
 import { GroupProfile } from './group/mappings/group.map';
 import { StudentProfile } from './students/student.map';
 import { ScheduleModule } from './schedule/schedule.module';
+import { LanguagesModule } from './languages/languages.module';
 
 export function DatabaseOrmModule(): DynamicModule {
   return TypeOrmModule.forRoot({ ...DatabaseConfig, autoLoadEntities: true });
@@ -49,6 +50,7 @@ export function DatabaseOrmModule(): DynamicModule {
     GroupProfile,
     StudentProfile,
     ScheduleModule,
+    LanguagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

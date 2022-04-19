@@ -10,7 +10,7 @@ import LessonTypeForm from './Form';
 import formModel from './FormModel/formModel';
 import { emptyInitialValues } from './FormModel/emptyInitialValues';
 import validationSchema from './FormModel/validationSchema';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { createOrUpdateLessonTypesAction } from '../../../redux/reducers/lessonTypes/lessonTypesReducer';
 import { ILessonType } from '../../../interfaces/ILessonType';
 

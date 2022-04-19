@@ -33,7 +33,13 @@ export class GroupService {
       (Number(pageOptionsDto.page) - 1) * Number(pageOptionsDto.take);
 
     const [groups, count] = await this.groupsRepository.findAndCount({
-      relations: ['teacher', 'students', 'teacher.user', 'students.user'],
+      relations: [
+        'teacher',
+        'students',
+        'teacher.user',
+        'students.user',
+        'language',
+      ],
       order: {
         createdAt: pageOptionsDto.order,
       },
@@ -50,7 +56,13 @@ export class GroupService {
 
   async getGroupById(id: number) {
     const group = await this.groupsRepository.findOne(id, {
-      relations: ['teacher', 'students', 'teacher.user', 'students.user'],
+      relations: [
+        'teacher',
+        'students',
+        'language',
+        'teacher.user',
+        'students.user',
+      ],
     });
 
     if (group) {
@@ -69,6 +81,7 @@ export class GroupService {
         name: createGroupDto.name,
         description: createGroupDto.description,
         teacherId: createGroupDto.teacherId,
+        languageId: createGroupDto.languageId,
         students: createGroupDto.studentsIds.map(
           (id) => ({ id } as unknown as Student),
         ),

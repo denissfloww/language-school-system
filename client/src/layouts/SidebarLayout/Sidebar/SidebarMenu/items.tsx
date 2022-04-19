@@ -56,7 +56,7 @@ export const menu: IMenuItem[] = [
             {
                 icon: <LanguageIcon />,
                 title: 'Языки',
-                link: '/dashboard/settings/lesson-types',
+                link: '/dashboard/settings/languages',
             },
             {
                 icon: <GroupIcon />,

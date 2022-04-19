@@ -11,5 +11,10 @@ export class GroupDto {
     lastName: string;
     userId: number | string;
   };
+  language: {
+    id: number | string;
+    name: string;
+    description: string;
+  };
   students: StudentDto[];
 }

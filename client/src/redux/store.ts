@@ -7,7 +7,8 @@ import authReducer from './reducers/auth/authReducer';
 import globalReducer from './reducers/global/globalReducer';
 import rolesReducer from './reducers/roles/rolesReducer';
 import lessonTypesReducer from './reducers/lessonTypes/lessonTypesReducer';
-import profileReducer from "./reducers/profile/profileReducer";
+import profileReducer from './reducers/profile/profileReducer';
+import languageReducer from './reducers/language/languageReducer';
 
 const store = configureStore({
     reducer: {
@@ -19,6 +20,7 @@ const store = configureStore({
         roles: rolesReducer,
         lessonTypes: lessonTypesReducer,
         profile: profileReducer,
+        languages: languageReducer,
     },
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware({

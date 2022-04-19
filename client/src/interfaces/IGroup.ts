@@ -1,5 +1,6 @@
 import { IStudent } from './IStudent';
 import { ITeacher } from './ITeacher';
+import { ILanguage } from './ILanguage';
 
 export interface IGroup {
     id: number;
@@ -7,4 +8,5 @@ export interface IGroup {
     description?: string;
     students?: IStudent[];
     teacher: ITeacher;
+    language: ILanguage;
 }

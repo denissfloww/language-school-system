@@ -1,66 +1,60 @@
+import { ILanguage } from '../../../interfaces/ILanguage';
+import formModel from './FormModel/formModel';
+import { emptyInitialValues } from './FormModel/emptyInitialValues';
+import validationSchema from './FormModel/validationSchema';
 import DialogTitle from '@mui/material/DialogTitle';
+import * as React from 'react';
+import { Dialog } from '@mui/material';
+import { Form, Formik } from 'formik';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import * as React from 'react';
-import GroupForm from './Form';
-import { Formik, Form } from 'formik';
-import formModel from './FormModel/formModel';
-import validationSchema from './FormModel/validationSchema';
-import { useDispatch, useSelector } from 'react-redux';
-import { createOrUpdateGroupAction, fetchGroupsAction, selectGroupsState } from '../../../redux/reducers/groups/groupsReducer';
-import { emptyInitialValues } from './FormModel/emptyInitialValues';
 import { useEffect, useState } from 'react';
-import { IGroup } from '../../../interfaces/IGroup';
+import LanguageForm from './Form';
+import { useDispatch } from 'react-redux';
+import { createOrUpdateLanguageAction } from '../../../redux/reducers/language/languageReducer';
 
-interface IGroupDialogFormProps {
+interface ILanguageDialogFormProps {
     open: boolean;
     close: () => void;
-    group?: IGroup;
+    language?: ILanguage;
 }
 
 const { formId, formField } = formModel;
 
-const GroupDialogForm = (props: IGroupDialogFormProps) => {
-    const { open, close, group } = props;
+const LanguageDialogForm = (props: ILanguageDialogFormProps) => {
+    const { open, close, language } = props;
     const dispatch = useDispatch();
-
     const [initValues, setInitValues] =
         useState<{ [p: string]: string | number | { label: string; value: number }[] | undefined }>(emptyInitialValues);
 
     function _handleSubmit(values: any, actions: any) {
-        dispatch(createOrUpdateGroupAction(values));
+        console.log(values);
+        dispatch(createOrUpdateLanguageAction(values));
         close();
     }
 
     useEffect(() => {
         setExistInitialValues();
     }, []);
-
     const setExistInitialValues = () => {
-        const studentsViews = group?.students?.map(stud => {
-            return { label: `${stud.lastName} ${stud.firstName}`, value: stud.id };
-        });
-
-        setInitValues({
-            name: group?.name.toString(),
-            desc: group?.description?.toString(),
-            students: studentsViews,
-            id: group?.id,
-            teacher: String(group?.teacher.id),
-            language: String(group?.language.id),
-        });
+        if (language) {
+            setInitValues({
+                name: language?.name,
+                description: language?.description ?? '',
+                id: language?.id,
+            });
+        }
     };
 
     return (
         <Dialog open={open} onClose={close} fullWidth={true} maxWidth='sm'>
-            <DialogTitle>{group ? 'Изменение данных группы' : 'Добавление новой группы'}</DialogTitle>
+            <DialogTitle>{language ? 'Изменение языка' : 'Добавление нового языка'}</DialogTitle>
             <Formik onSubmit={_handleSubmit} initialValues={initValues} validationSchema={validationSchema} validateOnChange>
                 {({ isSubmitting }) => (
                     <Form id={formId}>
                         <DialogContent>
-                            <GroupForm formField={formField} />
+                            <LanguageForm formField={formField} />
                         </DialogContent>
                         <DialogActions>
                             <Button type='submit' color='primary'>
@@ -77,4 +71,4 @@ const GroupDialogForm = (props: IGroupDialogFormProps) => {
     );
 };
 
-export default GroupDialogForm;
+export default LanguageDialogForm;

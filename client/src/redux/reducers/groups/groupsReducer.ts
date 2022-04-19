@@ -10,11 +10,13 @@ import { toast } from 'react-toastify';
 import { getErrorMsg } from '../../../utils/helperFunc';
 import { toastConfig } from '../../../utils/toastConfig';
 import { AxiosError } from 'axios';
+import LanguageService from '../../../services/LanguageService';
 
 interface InitialState {
     groupsData?: IPageDataResponse<IGroup>;
     studentsAutocompleteValues: IStudentAutoCompleteValue[];
     teachersValues: IAutoCompleteValues[];
+    languagesValues: IAutoCompleteValues[];
     page: number;
     rowsPerPage: number;
     isLoading: boolean;
@@ -23,6 +25,7 @@ interface InitialState {
 const initialState: InitialState = {
     studentsAutocompleteValues: [],
     teachersValues: [],
+    languagesValues: [],
     page: 0,
     rowsPerPage: 10,
     isLoading: false,
@@ -41,6 +44,9 @@ const groupsSlice = createSlice({
         setTeacherAutocompleteValues: (state, action: PayloadAction<IAutoCompleteValues[]>) => {
             state.teachersValues = action.payload;
         },
+        setLanguagesAutocompleteValues: (state, action: PayloadAction<IAutoCompleteValues[]>) => {
+            state.languagesValues = action.payload;
+        },
         setPage: (state, action: PayloadAction<number>) => {
             state.page = action.payload;
         },
@@ -53,8 +59,15 @@ const groupsSlice = createSlice({
     },
 });
 
-export const { setGroups, setStudentsAutocompleteValues, setTeacherAutocompleteValues, setPage, setRowsPerPage, setGroupLoading } =
-    groupsSlice.actions;
+export const {
+    setGroups,
+    setStudentsAutocompleteValues,
+    setTeacherAutocompleteValues,
+    setPage,
+    setRowsPerPage,
+    setGroupLoading,
+    setLanguagesAutocompleteValues,
+} = groupsSlice.actions;
 
 export const fetchGroupsAction = (page: number, rowPerPage: number): AppThunk => {
     return async dispatch => {
@@ -81,6 +94,7 @@ export const fetchFormDataAction = (): AppThunk => {
         try {
             const students = await StudentsService.getStudents();
             const teachers = await TeachersService.getTeachers();
+            const languages = await LanguageService.getLanguages();
 
             const studentsAutoCompleteValues: IStudentAutoCompleteValue[] = students.map(student => {
                 return { label: `${student.firstName} ${student.lastName}`, value: String(student.id) };
@@ -89,8 +103,14 @@ export const fetchFormDataAction = (): AppThunk => {
             const teachersValues: IAutoCompleteValues[] = teachers.data.map(teacher => {
                 return { label: `${teacher.lastName} ${teacher.middleName ?? ''} ${teacher.firstName}`, value: String(teacher.id) };
             });
+
+            const languagesValues: IAutoCompleteValues[] = languages.data.map(language => {
+                return { label: language.name, value: String(language.id) };
+            });
+
             dispatch(setStudentsAutocompleteValues(studentsAutoCompleteValues));
             dispatch(setTeacherAutocompleteValues(teachersValues));
+            dispatch(setLanguagesAutocompleteValues(languagesValues));
         } catch (e) {
             const err = e as AxiosError;
             if (err.response) {

@@ -1,6 +1,4 @@
 import * as React from 'react';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { useSelector } from 'react-redux';
 import GroupGrid from './Grid';
@@ -16,11 +14,10 @@ const GroupSettings = () => {
                 <Typography variant='h4' sx={{ mb: 6 }}>
                     Управление группами
                 </Typography>
-                <Container maxWidth='lg' sx={{ mb: 4 }}>
-                    <Grid container spacing={3} justifyContent='center'>
-                        <GroupGrid />
-                    </Grid>
-                </Container>
+
+                {/*<Grid container spacing={3} justifyContent='center'>*/}
+                <GroupGrid />
+                {/*</Grid>*/}
             </DashboardPage>
         </>
     );

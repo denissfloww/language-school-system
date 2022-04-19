@@ -4,4 +4,5 @@ export interface IGroupCreateUpdateValues {
     description: string;
     studentsIds: number[];
     teacherId: string | number;
+    languageId: string | number;
 }

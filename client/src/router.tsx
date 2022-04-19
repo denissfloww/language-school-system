@@ -9,6 +9,7 @@ import { RoleTypes } from './interfaces/IRole';
 import Journal from './pages/Journal';
 import LessonTypeSettings from './pages/LessonTypeSettings';
 import PersonalPage from './pages/PersonalPage';
+import LanguageSettings from './pages/LanguageSettings';
 
 // @ts-ignore
 // eslint-disable-next-line react/display-name
@@ -39,6 +40,7 @@ const Router = () => {
                         <Route path='students' element={<StudentsSettings />} />
                         <Route path='user/create' element={<CreateUserPage />} />
                         <Route path='lesson-types' element={<LessonTypeSettings />} />
+                        <Route path='languages' element={<LanguageSettings />} />
                         <Route
                             path='users'
                             element={

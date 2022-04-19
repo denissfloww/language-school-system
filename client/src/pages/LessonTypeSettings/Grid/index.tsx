@@ -22,7 +22,6 @@ import { useEffect } from 'react';
 import TablePagination from '@mui/material/TablePagination';
 import DeleteButton from '../../../components/Buttons/DeleteButton';
 import UpdateLessonTypeButton from './Buttons/UpdateLessonTypeButton';
-import EditIcon from '@mui/icons-material/Edit';
 
 const LessonTypeGrid = () => {
     const dispatch = useDispatch();
@@ -81,7 +80,9 @@ const LessonTypeGrid = () => {
                                 <TableRow>
                                     {headerRows.map(value => (
                                         <>
-                                            <TableCell align={value.align}><b>{value.text}</b></TableCell>
+                                            <TableCell align={value.align}>
+                                                <b>{value.text}</b>
+                                            </TableCell>
                                         </>
                                     ))}
                                 </TableRow>
@@ -119,6 +120,7 @@ const LessonTypeGrid = () => {
                                                             <DeleteButton
                                                                 id={lessonType.id}
                                                                 title='Удалить тип занятия?'
+                                                                confirmationText='Вы действительно хотите удалить тип занятия?'
                                                                 onDeleteMethod={() => {
                                                                     dispatch(deleteLessonTypeAction(lessonType.id));
                                                                 }}

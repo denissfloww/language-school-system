@@ -55,6 +55,10 @@ const GroupGrid = () => {
             align: 'center',
         },
         {
+            text: 'Язык',
+            align: 'center',
+        },
+        {
             text: 'Количество учеников',
             align: 'center',
         },
@@ -103,6 +107,9 @@ const GroupGrid = () => {
                                                                 {group.teacher.middleName ?? ''}
                                                             </TableCell>
                                                             <TableCell component='th' scope='row' align='center'>
+                                                                {group.language?.name}
+                                                            </TableCell>
+                                                            <TableCell component='th' scope='row' align='center'>
                                                                 {group.students?.length}
                                                             </TableCell>
                                                             <TableCell component='th' scope='row' align='center'>
@@ -112,6 +119,7 @@ const GroupGrid = () => {
                                                                 <UpdateGroupButton group={group} />
                                                                 <DeleteButton
                                                                     id={group.id}
+                                                                    confirmationText='Вы действительно хотите удалить группу?'
                                                                     title='Удалить группу?'
                                                                     onDeleteMethod={() => {
                                                                         dispatch(deleteGroupAction(group.id));

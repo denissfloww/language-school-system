@@ -22,6 +22,11 @@ export default {
             name: 'teacher',
             label: 'Учитель',
             requiredErrorMsg: 'Необходимо выбрать учителя!',
+        },
+        language:{
+            name: 'language',
+            label: 'Язык',
+            requiredErrorMsg: 'Необходимо выбрать язык!'
         }
     },
 };
