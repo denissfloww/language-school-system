@@ -18,12 +18,9 @@ import {
 import { useEffect } from 'react';
 import TableBody from '@mui/material/TableBody';
 import TableBodySkeleton from '../../../components/Skeletons/TableBodySkeleton';
-import { ILessonType } from '../../../interfaces/ILessonType';
 import { ILanguage } from '../../../interfaces/ILanguage';
 import TablePagination from '@mui/material/TablePagination';
-import UpdateLessonTypeButton from '../../LessonTypeSettings/Grid/Buttons/UpdateLessonTypeButton';
 import DeleteButton from '../../../components/Buttons/DeleteButton';
-import { deleteLessonTypeAction } from '../../../redux/reducers/lessonTypes/lessonTypesReducer';
 import UpdateLanguageButton from './Buttons/UpdateLanguageButton';
 
 const LanguageGrid = () => {
