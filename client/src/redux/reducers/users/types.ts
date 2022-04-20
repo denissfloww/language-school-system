@@ -26,3 +26,8 @@ export interface ICreatedUser {
     email: string;
     roles: RoleTypes[];
 }
+
+export interface IChangePasswordDto {
+    oldPassword: string;
+    newPassword: string;
+}

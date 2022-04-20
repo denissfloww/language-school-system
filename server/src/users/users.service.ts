@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import {
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { User } from '../models/user.entity';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
@@ -11,6 +17,10 @@ import { CreateStudentDto } from '../students/dto/create-student.dto';
 import CyrillicToTranslit from 'cyrillic-to-translit-js';
 import { CreatedUserDto } from './dto/created-user.dto';
 import { TeacherService } from '../teacher/teacher.service';
+import { ChangePasswordDto } from './dto/change-password.dto';
+import { jwtConstants } from '../auth/constants';
+import { JwtService } from '@nestjs/jwt';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -21,6 +31,7 @@ export class UsersService {
     private rolesRepository: Repository<Role>,
     private studentsService: StudentsService,
     private teacherService: TeacherService,
+    private jwtService: JwtService,
     @InjectConnection() private connection: Connection,
   ) {}
 
@@ -129,4 +140,20 @@ export class UsersService {
     }
     return user;
   }
+
+  async changePassword(dto: ChangePasswordDto, userId: any) {
+    const user = await this.getUserById(userId);
+
+    const passwordEquals = await bcrypt.compare(dto.oldPassword, user.password);
+
+    if (passwordEquals) {
+      user.password = await bcrypt.hash(dto.newPassword, 5);
+      await this.usersRepository.save(user);
+      return 'ok';
+    } else {
+      throw new HttpException('Не правильный пароль!', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async updateUser(dto: UpdateUserDto) {}
 }

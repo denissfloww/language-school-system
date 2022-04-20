@@ -6,6 +6,8 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material';
 import validationSchema from './FormModel/validationSchema';
+import { useDispatch } from 'react-redux';
+import { changePasswordAction } from '../../../redux/reducers/users/usersReducer';
 
 const { formId, formField } = formModel;
 const formInitialValues = {
@@ -17,9 +19,15 @@ const formInitialValues = {
 const ChangePasswordForm = () => {
     const { oldPassword, newPassword, confirmNewPassword } = formField;
     const theme = useTheme();
+    const dispatch = useDispatch();
     function _handleSubmit(values: any, actions: any) {
-        console.log(values);
+        dispatch(changePasswordAction(values));
+        actions.setSubmitting(false);
+        actions.resetForm({
+            values: formInitialValues,
+        });
     }
+
     return (
         <>
             <Formik initialValues={formInitialValues} validationSchema={validationSchema} onSubmit={_handleSubmit}>

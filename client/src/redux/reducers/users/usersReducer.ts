@@ -64,6 +64,19 @@ export const createUserAction = (createdUser: ICreateUserData): AppThunk => {
     };
 };
 
+export const changePasswordAction = (values: any): AppThunk => {
+    return async (dispatch, getState) => {
+        try {
+            await UsersService.changePassword({
+                oldPassword: values.oldPassword,
+                newPassword: values.newPassword,
+            });
+        } catch (e: any) {
+            toast.error(getErrorMsg(e));
+        }
+    };
+};
+
 export const selectUsersState = (state: RootState) => state.users;
 
 export default usersSlice.reducer;

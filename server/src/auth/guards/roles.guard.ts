@@ -11,6 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../roles-auth.decorator';
 import { UsersService } from '../../users/users.service';
+import { jwtConstants } from '../constants';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -42,7 +43,9 @@ export class RolesGuard implements CanActivate {
         });
       }
 
-      const userJwtInfo = this.jwtService.verify(token);
+      const userJwtInfo = this.jwtService.verify(token, {
+        secret: jwtConstants.refreshTokenSecret,
+      });
       req.user = userJwtInfo;
 
       const user = this.userService.getUserById(userJwtInfo.id);
