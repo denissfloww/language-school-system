@@ -27,7 +27,6 @@ const UserInfoForm = () => {
     const { user } = useSelector(selectAuthState);
     const {validationSchema} = useSelector(selectProfileState);
     const formInitialValues = {};
-    console.log(validationSchema)
     const isStudent = user?.roles?.some(role => role.name == RoleTypes.Student);
     useEffect(() => {
         dispatch(setUserInfoValidation(getValidationUserInfoForm(Boolean(isStudent))))

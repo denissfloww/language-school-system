@@ -6,18 +6,22 @@ import { SchedulerComponent } from './SchedulerComponent';
 import { Helmet } from 'react-helmet';
 import { APP_NAME } from '../../settings';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { fetchScheduleGroups, fetchScheduleLessonTypes, selectScheduleState } from '../../redux/reducers/schedule/scheduleReducer';
+import { selectAuthState } from '../../redux/reducers/auth/authReducer';
+import { RoleTypes } from '../../interfaces/IRole';
 
 const Schedule = () => {
     const dispatch = useDispatch();
-    const [test, setTest] = useState(0);
     useEffect(() => {
         dispatch(fetchScheduleLessonTypes());
         dispatch(fetchScheduleGroups());
     }, []);
 
+    const { user } = useSelector(selectAuthState);
     const { lessonTypes, groups } = useSelector(selectScheduleState);
+
+    const isCanEdit = !user?.roles?.some(role => role.name == RoleTypes.Student);
 
     return (
         <>
@@ -38,7 +42,7 @@ const Schedule = () => {
 
                 <Grid container spacing={3}>
                     <Grid item xs={12} sx={{ margin: '15px' }}>
-                        <SchedulerComponent lessonTypes={lessonTypes} groups={groups} />
+                        <SchedulerComponent lessonTypes={lessonTypes} groups={groups} isCanEdit={isCanEdit} />
                     </Grid>
                 </Grid>
             </Box>

@@ -18,7 +18,9 @@ import {
     ViewDirective,
     ViewsDirective,
     Week,
+    DragEventArgs,
     WorkWeek,
+    ResizeEventArgs,
 } from '@syncfusion/ej2-react-schedule';
 import { DataManager, UrlAdaptor, ReturnOption, WebApiAdaptor, ODataV4Adaptor, CrudOptions, DataOptions } from '@syncfusion/ej2-data';
 import { SampleBase } from './sample-base';
@@ -28,8 +30,13 @@ import { Locale } from './locale';
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
 import { Query } from '@syncfusion/ej2-data/src/query';
 import { API_URL } from '../../constants/urls';
-import {DataResult} from "@syncfusion/ej2-react-grids";
-import TokenService from "../../services/TokenService";
+import { DataResult } from '@syncfusion/ej2-react-grids';
+import TokenService from '../../services/TokenService';
+import {
+    END_HOUR_IN_SCHEDULE_VIEW,
+    IS_CAN_EDIT_PREVIOUS_EVENT,
+    START_HOUR_IN_SCHEDULE_VIEW
+} from "../../settings";
 
 loadCldr(
     require('cldr-data/supplemental/numberingSystems.json'),
@@ -54,7 +61,7 @@ class TestAdaptor extends UrlAdaptor {
     }
 
     batchRequest(dm: DataManager, changes: CrudOptions, e: Object, query: Query, original?: Object): Object {
-        console.log(original)
+        console.log(original);
         return super.batchRequest(dm, changes, e, query, original);
     }
 
@@ -73,16 +80,11 @@ export class SchedulerComponent extends SampleBase {
     private scheduleObj: ScheduleComponent;
     private intl: any;
     private dataManager: DataManager;
-    private groupData;
 
     constructor(props: any) {
         // @ts-ignore
         super(...arguments);
         this.intl = new Internationalization();
-        this.groupData = [
-            { Name: 'Англ 1 группа', Id: 1 },
-            { Name: 'Англ 2 группа', Id: 2 },
-        ];
     }
 
     componentDidMount() {
@@ -90,13 +92,11 @@ export class SchedulerComponent extends SampleBase {
             url: `${API_URL}/schedule/loadData`,
             crudUrl: `${API_URL}/schedule/updateData`,
             adaptor: new TestAdaptor(),
-            headers: [{ 'Authorization': `Bearer ${TokenService.getAccessToken()}` }]
+            headers: [{ Authorization: `Bearer ${TokenService.getAccessToken()}` }],
         });
     }
 
-    componentDidUpdate() {
-
-    }
+    componentDidUpdate() {}
 
     getResourceData(data: Record<string, any>): Record<string, any> {
         const resources: ResourcesModel = this.scheduleObj.getResourceCollections().slice(-1)[0];
@@ -148,6 +148,10 @@ export class SchedulerComponent extends SampleBase {
         //     console.log(args.data);
         // }
 
+        if (!this.props.isCanEdit) {
+            args.cancel = true;
+        }
+
         console.log(args.requestType);
         console.log(args);
     }
@@ -174,9 +178,6 @@ export class SchedulerComponent extends SampleBase {
             // addObj.ClassTypeId = this.eventTypeObj.value;
             return addObj;
         };
-        if (e.target.id === 'mark') {
-            this.props.showMarkPage();
-        }
 
         if (e.target.id === 'add') {
             const addObj = getSlotData();
@@ -266,9 +267,15 @@ export class SchedulerComponent extends SampleBase {
                     </div>
                     <div className='time'>Начало&nbsp;:&nbsp;{props.StartTime.toLocaleString()}</div>
                     <div className='time'>Конец&nbsp;:&nbsp;{props.EndTime.toLocaleString()}</div>
+                    <div className='time'>Учитель&nbsp;:&nbsp;{this.getTeacherByGroupId(props.GroupId)}</div>
                 </div>
             </div>
         );
+    }
+
+    getTeacherByGroupId(groupId: number) {
+        const group = this.props.groups.filter((group: any) => group.Id === groupId)[0];
+        return group.TeacherName;
     }
 
     openEditor() {
@@ -281,7 +288,45 @@ export class SchedulerComponent extends SampleBase {
         this.scheduleObj.openEditor(cellData, 'Add');
     }
 
+    private onDragStart(args: DragEventArgs): void {
+        if (!this.props.isCanEdit) {
+            args.cancel = true;
+        }
+        if (!IS_CAN_EDIT_PREVIOUS_EVENT) {
+            if (args?.data?.StartTime < moment().toDate()) {
+                args.cancel = true;
+            }
+        }
+    }
+
+    private onResizeStart(args: ResizeEventArgs): void {
+        if (!this.props.isCanEdit) {
+            args.cancel = true;
+        }
+        if (!IS_CAN_EDIT_PREVIOUS_EVENT) {
+            if (args?.data?.StartTime < moment().toDate()) {
+                args.cancel = true;
+            }
+        }
+    }
+
     onPopupOpen(args: PopupOpenEventArgs) {
+        if (!this.props.isCanEdit) {
+            args.cancel = true;
+        }
+
+        if (!IS_CAN_EDIT_PREVIOUS_EVENT) {
+            if (args?.data?.name === 'cellClick') {
+                if (args.data.startTime < moment().toDate()) {
+                    args.cancel = true;
+                }
+            } else {
+                if (args?.data?.StartTime < moment().toDate()) {
+                    args.cancel = true;
+                }
+            }
+        }
+
         if (args.type === 'QuickInfo') {
             args.cancel = true;
         }
@@ -293,6 +338,14 @@ export class SchedulerComponent extends SampleBase {
             let formElement: any = args.element.querySelector('.e-schedule-form');
             let validator = formElement.ej2_instances[0];
             validator.addRules('GroupId', { required: [true, 'Обязательно для заполнения!'] });
+        }
+    }
+
+    onRenderCell(args: any) {
+        if (!IS_CAN_EDIT_PREVIOUS_EVENT) {
+            if (args.date < moment().toDate()) {
+                args.element.classList.add('e-disableCell');
+            }
         }
     }
 
@@ -372,12 +425,15 @@ export class SchedulerComponent extends SampleBase {
                                 // dataBinding={args => {
                                 //     console.log(args);
                                 // }}
+                                renderCell={this.onRenderCell.bind(this)}
                                 height='100%'
                                 timeFormat='HH:mm'
+                                dragStart={this.onDragStart.bind(this)}
+                                resizeStart={this.onResizeStart.bind(this)}
                                 locale='ru'
                                 firstDayOfWeek={this.weekstart}
-                                startHour='07:00'
-                                endHour='22:00'
+                                startHour={START_HOUR_IN_SCHEDULE_VIEW}
+                                endHour={END_HOUR_IN_SCHEDULE_VIEW}
                                 popupOpen={this.onPopupOpen.bind(this)}
                             >
                                 <ViewsDirective>
@@ -398,18 +454,20 @@ export class SchedulerComponent extends SampleBase {
                                 </ResourcesDirective>
                                 <Inject services={[Day, Week, WorkWeek, Month, Resize, DragAndDrop]} />
                             </ScheduleComponent>
-                            <SpeedDial
-                                ariaLabel='SpeedDial basic example'
-                                sx={{ position: 'absolute', bottom: 16, right: 16 }}
-                                icon={<SpeedDialIcon />}
-                            >
-                                <SpeedDialAction
-                                    key={1}
-                                    tooltipTitle='Добавить событие'
+                            {this.props.isCanEdit ? (
+                                <SpeedDial
+                                    ariaLabel='SpeedDial basic example'
+                                    sx={{ position: 'absolute', bottom: 16, right: 16 }}
                                     icon={<SpeedDialIcon />}
-                                    onClick={this.openEditor.bind(this)}
-                                />
-                            </SpeedDial>
+                                >
+                                    <SpeedDialAction
+                                        key={1}
+                                        tooltipTitle='Добавить событие'
+                                        icon={<SpeedDialIcon />}
+                                        onClick={this.openEditor.bind(this)}
+                                    />
+                                </SpeedDial>
+                            ) : null}
                         </div>
                     </div>
                 </div>
