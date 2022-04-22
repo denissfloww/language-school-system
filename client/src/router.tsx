@@ -11,6 +11,7 @@ import LessonTypeSettings from './pages/LessonTypeSettings';
 import PersonalPage from './pages/PersonalPage';
 import LanguageSettings from './pages/LanguageSettings';
 import CostSettings from './pages/CostSettings';
+import FeedsSettings from './pages/FeedsSettings';
 
 // @ts-ignore
 // eslint-disable-next-line react/display-name
@@ -43,6 +44,10 @@ const Router = () => {
                         <Route path='lesson-types' element={<LessonTypeSettings />} />
                         <Route path='languages' element={<LanguageSettings />} />
                         <Route path='costs' element={<CostSettings />} />
+                        <Route path='feeds'>
+                            <Route index element={<FeedsSettings />} />
+                            <Route path=':id' element={<FeedsSettings />} />
+                        </Route>
                         <Route
                             path='users'
                             element={

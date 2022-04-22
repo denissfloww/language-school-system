@@ -4,9 +4,12 @@ import {
   PrimaryGeneratedColumn,
   ManyToMany,
   JoinTable,
+  OneToMany,
 } from 'typeorm';
 import BaseModel from './base';
 import { Role } from './role.entity';
+import { ScheduleEvent } from './schedule-event.entity';
+import { Feed } from './feed.entity';
 
 @Entity('users')
 export class User extends BaseModel {
@@ -44,4 +47,7 @@ export class User extends BaseModel {
     inverseJoinColumns: [{ name: 'role_id' }],
   })
   roles: Role[];
+
+  @OneToMany(() => Feed, (feed) => feed.user)
+  feeds: Feed[];
 }

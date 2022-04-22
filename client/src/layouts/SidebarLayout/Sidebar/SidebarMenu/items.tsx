@@ -10,6 +10,7 @@ import { RoleTypes } from '../../../../interfaces/IRole';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import LanguageIcon from '@mui/icons-material/Language';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import FeedIcon from '@mui/icons-material/Feed';
 
 export interface IMenuItem {
     icon: ReactNode;
@@ -63,6 +64,11 @@ export const menu: IMenuItem[] = [
                 icon: <AttachMoneyIcon />,
                 title: 'Тарифы',
                 link: '/dashboard/settings/costs',
+            },
+            {
+                icon: <FeedIcon />,
+                title: 'Объявления',
+                link: '/dashboard/settings/feeds',
             },
             {
                 icon: <GroupIcon />,
