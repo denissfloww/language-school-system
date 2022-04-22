@@ -7,7 +7,13 @@ import TableHead from '@mui/material/TableHead';
 import Table from '@mui/material/Table';
 import { TableCell } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteGroupAction, fetchGroupsAction, selectGroupsState, setPage, setRowsPerPage } from '../../../redux/reducers/groups/groupsReducer';
+import {
+    deleteGroupAction,
+    fetchGroupsAction,
+    selectGroupsState,
+    setPage,
+    setRowsPerPage,
+} from '../../../redux/reducers/groups/groupsReducer';
 import { useEffect } from 'react';
 import { IGroup } from '../../../interfaces/IGroup';
 import GroupGridToolbar from './GroupGridToolbar';
@@ -59,6 +65,10 @@ const GroupGrid = () => {
             align: 'center',
         },
         {
+            text: 'Тариф',
+            align: 'center',
+        },
+        {
             text: 'Количество учеников',
             align: 'center',
         },
@@ -84,7 +94,9 @@ const GroupGrid = () => {
                                     <TableRow>
                                         {headerRows.map(value => (
                                             <>
-                                                <TableCell align={value.align}><b>{value.text}</b></TableCell>
+                                                <TableCell align={value.align}>
+                                                    <b>{value.text}</b>
+                                                </TableCell>
                                             </>
                                         ))}
                                     </TableRow>
@@ -108,6 +120,9 @@ const GroupGrid = () => {
                                                             </TableCell>
                                                             <TableCell component='th' scope='row' align='center'>
                                                                 {group.language?.name}
+                                                            </TableCell>
+                                                            <TableCell component='th' scope='row' align='center'>
+                                                                {group.cost?.name}
                                                             </TableCell>
                                                             <TableCell component='th' scope='row' align='center'>
                                                                 {group.students?.length}

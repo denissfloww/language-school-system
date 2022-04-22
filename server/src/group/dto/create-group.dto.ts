@@ -14,6 +14,10 @@ export class CreateGroupDto {
   @IsInt()
   readonly languageId: number;
 
+  @IsNotEmpty()
+  @IsInt()
+  readonly costId: number;
+
   @IsNumber({}, { each: true })
   readonly studentsIds: number[];
 }

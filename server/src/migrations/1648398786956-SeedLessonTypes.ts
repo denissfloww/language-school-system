@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class SeedLessonTypes1648398786956 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    const LessonTypesSeed = [
+    const lessonTypesSeed = [
       {
         name: 'Плановое занятие',
         description: 'Самое обычное занятие.',
@@ -15,7 +15,7 @@ export class SeedLessonTypes1648398786956 implements MigrationInterface {
       },
     ];
 
-    LessonTypesSeed.map(async (type) => {
+    lessonTypesSeed.map(async (type) => {
       await queryRunner.query(
         `INSERT INTO "lesson_types" (name, description, color) VALUES ('${type.name}', '${type.description}','${type.color}') `,
       );

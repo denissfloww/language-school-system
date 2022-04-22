@@ -35,11 +35,13 @@ export class ScheduleService {
         id: existEvent.id,
         eventId: createScheduleDto.eventId,
         eventData: createScheduleDto.data,
+        groupId: createScheduleDto.data.GroupId,
       });
     } else {
       scheduleEventData = await this.scheduleEventRepository.save({
         eventId: createScheduleDto.eventId,
         eventData: createScheduleDto.data,
+        groupId: createScheduleDto.data.GroupId,
       });
     }
 
@@ -145,6 +147,7 @@ export class ScheduleService {
         const event = new ScheduleEvent();
         event.eventId = index;
         event.eventData = value;
+        event.groupId = value.GroupId;
         await manager.save<ScheduleEvent>(event);
       }
 
@@ -171,6 +174,8 @@ export class ScheduleService {
           appointment.eventData.GroupId = value.GroupId;
           appointment.eventData.TeacherId = value.TeacherId;
           appointment.eventData.ClassTypeId = value.ClassTypeId;
+
+          appointment.groupId = value.GroupId;
 
           await manager.save<ScheduleEvent>(appointment);
         }
@@ -211,18 +216,38 @@ export class ScheduleService {
     return await this.getScheduleEventsForUser(userId);
   }
 
-  findOne(id: number) {
-    const options = RRule.parseString(
-      'FREQ=WEEKLY;BYDAY=TU,TH;INTERVAL=1;UNTIL=20220531T043000Z',
-    );
-    options.dtstart = new Date('2022-04-07T06:00:00.000Z');
-    const rule = new RRule(options);
-    const rruleSet = new RRuleSet();
-    rruleSet.rrule(rule);
-    rruleSet.exdate(moment('2022-04-07T06:30:00.000Z').toDate());
-    return rruleSet.all();
 
-    return `This action returns a #${id} schedule`;
+  async getEventsByGroup(groupId: number) {
+    const scheduleEvents = await this.scheduleEventRepository.find({
+      where: { groupId: groupId },
+    });
+
+    const rruleSet = new RRuleSet();
+
+    for (const event of scheduleEvents) {
+      if (!event.eventData.RecurrenceID) {
+        if (event.eventData.RecurrenceRule) {
+          const options = RRule.parseString(
+            event.eventData.RecurrenceRule.slice(0, -1),
+          );
+          options.dtstart = new Date(event.eventData.StartTime);
+          const rule = new RRule(options);
+          rruleSet.rrule(rule);
+          if (event.eventData.RecurrenceException) {
+            const exDates = event.eventData.RecurrenceException.split(',');
+            for (const date of exDates) {
+              rruleSet.exdate(moment(date).toDate());
+            }
+          }
+        } else {
+          rruleSet.rdate(moment(event.eventData.StartTime).toDate());
+        }
+      } else {
+        rruleSet.rdate(moment(event.eventData.StartTime).toDate());
+      }
+    }
+
+    return rruleSet.all();
   }
 
   update(id: number, updateScheduleDto: UpdateScheduleDto) {

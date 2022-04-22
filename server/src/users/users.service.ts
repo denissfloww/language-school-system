@@ -38,7 +38,7 @@ export class UsersService {
   async createUser(dto: CreateUserDto) {
     const cyrillicToTranslit = new CyrillicToTranslit();
     const login = cyrillicToTranslit.transform(
-      `${dto.firstName[0]}.${dto.lastName}`,
+      `${dto.firstName}.${dto.lastName}`,
     );
 
     const existUser = await this.usersRepository.find({

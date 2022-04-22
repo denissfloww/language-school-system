@@ -37,6 +37,10 @@ export class StudentsService {
     });
   }
 
+  async getStudentAttendanceByGroupId(groupId: number) {
+
+  }
+
   async getStudents(pageOptionsDto: PageOptionsDto) {
     const queryBuilder = this.studentsRepository
       .createQueryBuilder('student')

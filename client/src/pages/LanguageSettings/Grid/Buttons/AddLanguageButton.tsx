@@ -7,7 +7,7 @@ import LanguageDialogForm from '../../FormDialog';
 const AddLanguageButton = () => {
     const [openAddDialog, setOpenAddDialog] = useState(false);
 
-    const showAddTypeDialog = () => {
+    const showAddDialog = () => {
         setOpenAddDialog(true);
     };
 
@@ -20,7 +20,7 @@ const AddLanguageButton = () => {
             <Tooltip title='Добавить'>
                 <IconButton
                     onClick={() => {
-                        showAddTypeDialog();
+                        showAddDialog();
                     }}
                 >
                     <AddIcon />

@@ -39,6 +39,7 @@ export class GroupService {
         'teacher.user',
         'students.user',
         'language',
+        'cost',
       ],
       order: {
         createdAt: pageOptionsDto.order,
@@ -82,6 +83,7 @@ export class GroupService {
         description: createGroupDto.description,
         teacherId: createGroupDto.teacherId,
         languageId: createGroupDto.languageId,
+        costId: createGroupDto.costId,
         students: createGroupDto.studentsIds.map(
           (id) => ({ id } as unknown as Student),
         ),
@@ -104,6 +106,8 @@ export class GroupService {
     group.teacherId = updateGroupDto.teacherId;
     group.description = updateGroupDto.description;
     group.studentsIds = updateGroupDto.studentsIds;
+    group.languageId = updateGroupDto.languageId;
+    group.costId = updateGroupDto.costId;
 
     return await this.groupsRepository.save(group);
   }

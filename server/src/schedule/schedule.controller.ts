@@ -57,9 +57,9 @@ export class ScheduleController {
     return await this.scheduleService.getScheduleEventsForUser(3);
   }
 
-  @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.scheduleService.findOne(+id);
+  @Get('/events/group/:id')
+  getEventsForGroup(@Param('id', ParseIntPipe) id: number) {
+    return this.scheduleService.getEventsByGroup(+id);
   }
 
   @Patch(':id')

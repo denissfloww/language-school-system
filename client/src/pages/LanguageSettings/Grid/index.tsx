@@ -92,10 +92,10 @@ const LanguageGrid = () => {
                                                         <TableCell component='th' scope='row' align='left'>
                                                             {language.id}
                                                         </TableCell>
-                                                        <TableCell component='th' scope='row' align='left'>
+                                                        <TableCell component='th' scope='row' align='center'>
                                                             {language.name}
                                                         </TableCell>
-                                                        <TableCell component='th' scope='row' align='left'>
+                                                        <TableCell component='th' scope='row' align='center'>
                                                             {language.description}
                                                         </TableCell>
                                                         <TableCell component='th' scope='row' align='right'>

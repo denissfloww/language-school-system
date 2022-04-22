@@ -1,4 +1,10 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableColumn,
+  TableForeignKey,
+} from 'typeorm';
 
 export class ScheduleEventsTable1649089959464 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -35,6 +41,25 @@ export class ScheduleEventsTable1649089959464 implements MigrationInterface {
         ],
       }),
       true,
+    );
+
+    await queryRunner.addColumn(
+      'schedule_events',
+      new TableColumn({
+        name: 'group_id',
+        type: 'int',
+      }),
+    );
+
+    await queryRunner.createForeignKey(
+      'schedule_events',
+      new TableForeignKey({
+        columnNames: ['group_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'groups',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+      }),
     );
   }
 

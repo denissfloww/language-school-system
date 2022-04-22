@@ -24,6 +24,7 @@ import { GroupProfile } from './group/mappings/group.map';
 import { StudentProfile } from './students/student.map';
 import { ScheduleModule } from './schedule/schedule.module';
 import { LanguagesModule } from './languages/languages.module';
+import { CostsModule } from './costs/costs.module';
 
 export function DatabaseOrmModule(): DynamicModule {
   return TypeOrmModule.forRoot({ ...DatabaseConfig, autoLoadEntities: true });
@@ -51,6 +52,7 @@ export function DatabaseOrmModule(): DynamicModule {
     StudentProfile,
     ScheduleModule,
     LanguagesModule,
+    CostsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

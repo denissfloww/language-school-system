@@ -4,7 +4,7 @@ import * as bcrypt from 'bcryptjs';
 export class SeedAdminUser1649832835745 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     const hashPassword = await bcrypt.hash('admin', 5);
-    const AdminSeed = {
+    const adminSeed = {
       login: 'Admin',
       password: hashPassword,
       firstName: 'Администратор',
@@ -12,7 +12,7 @@ export class SeedAdminUser1649832835745 implements MigrationInterface {
     };
 
     await queryRunner.query(
-      `INSERT INTO "users" (login, password, first_name, last_name, birth_date) VALUES ('${AdminSeed.login}', '${AdminSeed.password}','${AdminSeed.firstName}','${AdminSeed.lastName}', '1999-01-08' ) `,
+      `INSERT INTO "users" (login, password, first_name, last_name, birth_date) VALUES ('${adminSeed.login}', '${adminSeed.password}','${adminSeed.firstName}','${adminSeed.lastName}', '1999-01-08' ) `,
     );
 
     await queryRunner.query(

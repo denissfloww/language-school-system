@@ -8,11 +8,14 @@ import {
   RelationId,
   JoinColumn,
   OneToOne,
+  OneToMany,
 } from 'typeorm';
 import BaseModel from './base';
 import { Student } from './student.entity';
 import { Teacher } from './teacher.entity';
 import { Language } from './language.entity';
+import { ScheduleEvent } from './schedule-event.entity';
+import { Cost } from './cost.entity';
 
 @Entity('groups')
 export class Group extends BaseModel {
@@ -56,4 +59,17 @@ export class Group extends BaseModel {
   })
   @JoinColumn([{ name: 'language_id', referencedColumnName: 'id' }])
   language: Language;
+
+  @Column({ name: 'cost_id' })
+  costId: number;
+
+  @ManyToOne(() => Cost, (cost) => cost.groups, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'cost_id', referencedColumnName: 'id' }])
+  cost: Cost;
+
+  @OneToMany(() => ScheduleEvent, (scheduleEvent) => scheduleEvent.group)
+  scheduleEvents: ScheduleEvent[];
 }

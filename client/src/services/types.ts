@@ -5,4 +5,5 @@ export interface IGroupCreateUpdateValues {
     studentsIds: number[];
     teacherId: string | number;
     languageId: string | number;
+    costId: string | number;
 }

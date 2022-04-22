@@ -1,6 +1,6 @@
 import formModel from './formModel';
 const {
-    formField: { name, desc, students, id, teacher, language },
+    formField: { name, desc, students, id, teacher, language, cost },
 } = formModel;
 
 export const emptyInitialValues: { [p: string]: string | { label: string; value: number }[] | undefined | number } = {
@@ -9,5 +9,6 @@ export const emptyInitialValues: { [p: string]: string | { label: string; value:
     [students.name]: [],
     [teacher.name]: undefined,
     [language.name]: undefined,
+    [cost.name]: undefined,
     [id.name]: undefined,
 };

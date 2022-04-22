@@ -16,5 +16,11 @@ export class GroupDto {
     name: string;
     description: string;
   };
+  cost: {
+    id: number | string;
+    name: string;
+    description: string;
+    lessonPrice: number;
+  };
   students: StudentDto[];
 }

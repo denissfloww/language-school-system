@@ -50,6 +50,7 @@ const GroupDialogForm = (props: IGroupDialogFormProps) => {
             id: group?.id,
             teacher: String(group?.teacher.id),
             language: String(group?.language.id),
+            cost: String(group?.cost.id)
         });
     };
 

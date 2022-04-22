@@ -23,10 +23,15 @@ export default {
             label: 'Учитель',
             requiredErrorMsg: 'Необходимо выбрать учителя!',
         },
-        language:{
+        language: {
             name: 'language',
             label: 'Язык',
-            requiredErrorMsg: 'Необходимо выбрать язык!'
-        }
+            requiredErrorMsg: 'Необходимо выбрать язык!',
+        },
+        cost: {
+            name: 'cost',
+            label: 'Тариф',
+            requiredErrorMsg: 'Необходимо выбрать тариф!',
+        },
     },
 };

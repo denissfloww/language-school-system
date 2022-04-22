@@ -8,14 +8,14 @@ import { ILanguage } from '../../../../interfaces/ILanguage';
 const UpdateLanguageButton = (props: { language: ILanguage }) => {
     const { language } = props;
 
-    const [openDialog, setOpenAddDialog] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
 
     const showDialog = () => {
-        setOpenAddDialog(true);
+      setOpenDialog(true);
     };
 
     const closeDialog = () => {
-        setOpenAddDialog(false);
+      setOpenDialog(false);
     };
     return (
         <>

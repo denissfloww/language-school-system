@@ -3,7 +3,7 @@ import { RolesEnum } from '../auth/roles.enum';
 
 export class SeedRoles1647672680951 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    const RolesSeed = [
+    const rolesSeed = [
       {
         name: RolesEnum.Student,
         label: 'Студент',
@@ -21,7 +21,7 @@ export class SeedRoles1647672680951 implements MigrationInterface {
       },
     ];
 
-    RolesSeed.map(async (role) => {
+    rolesSeed.map(async (role) => {
       await queryRunner.query(
         `INSERT INTO "roles" (name, label, description) VALUES ('${role.name}', '${role.label}', '${role.description}') `,
       );
