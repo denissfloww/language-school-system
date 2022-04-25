@@ -110,12 +110,6 @@ function Header() {
                         </ListItemIcon>
                         Выйти
                     </LogoutButton>
-                    {/*<MenuItem>*/}
-                    {/*    <ListItemIcon>*/}
-                    {/*        <Logout fontSize="small" />*/}
-                    {/*    </ListItemIcon>*/}
-                    {/*    Выйти*/}
-                    {/*</MenuItem>*/}
                 </Menu>
             </Toolbar>
         </HeaderWrapper>

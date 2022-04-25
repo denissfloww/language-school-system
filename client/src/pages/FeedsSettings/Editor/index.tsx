@@ -1,14 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.bubble.css';
 import 'react-quill/dist/quill.snow.css';
-import Typography from '@mui/material/Typography';
-// import './styles.css';
 
-export const Editor = () => {
-    const [html, setHtml] = useState('');
+
+interface IEditorProps {
+    editorValue: string;
+    setEditorValue?: (value: string) => void;
+    isReadOnly?: boolean;
+}
+
+export const Editor = (props: IEditorProps) => {
+    const { editorValue, setEditorValue, isReadOnly } = props;
 
     const handleChange = (html: any) => {
-        setHtml(html);
+        if (setEditorValue) {
+            setEditorValue(html);
+        }
     };
 
     const formats = [
@@ -18,6 +26,7 @@ export const Editor = () => {
         'bold',
         'italic',
         'underline',
+        'align',
         'strike',
         'blockquote',
         'list',
@@ -30,12 +39,13 @@ export const Editor = () => {
 
     const modules = {
         toolbar: [
-            [{ header: '1' }, { header: '2' }, { font: [] }],
+            [{ header: '1' }, { header: '2' }, { font: ['Nunito'] }],
             [{ size: [] }],
             ['bold', 'italic', 'underline', 'strike', 'blockquote'],
             [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
             ['link', 'image', 'video'],
             ['clean'],
+            [{ align: '' }, { align: 'center' }, { align: 'right' }, { align: 'justify' }],
         ],
         clipboard: {
             // toggle to add extra line breaks when pasting HTML:
@@ -46,16 +56,15 @@ export const Editor = () => {
     const placeholder = 'Напишите что нибудь...';
     return (
         <div className='text-editor'>
-            <Typography variant='h4' sx={{ mb: 6 }}>
-                Управление объявлением
-            </Typography>
             <ReactQuill
-                theme='snow'
+                theme={isReadOnly ? 'bubble' : 'snow'}
+                readOnly={isReadOnly}
                 onChange={handleChange}
-                value={html}
+                value={editorValue}
                 modules={modules}
                 formats={formats}
                 bounds={'.app'}
+                className='ql-editor'
                 placeholder={placeholder}
             />
         </div>

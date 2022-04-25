@@ -11,6 +11,7 @@ import { IMenuItem } from './items';
 import { Link, matchPath, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectAuthState } from '../../../../redux/reducers/auth/authReducer';
+import Divider from '@mui/material/Divider';
 
 interface IProps {
     item: IMenuItem;
@@ -31,7 +32,7 @@ export const MenuItem = ({ item }: IProps) => {
 
 const SingleLevel = ({ item }: IProps) => {
     const { pathname } = useLocation();
-    const match = (path: string) => (path ? !!matchPath({ path, end: false }, pathname) : false);
+    const match = (path: string) => (path ? !!matchPath({ path, end: true }, pathname) : false);
     if (item.link) {
         return (
             <ListItem button selected={match(item.link ?? '')} component={Link} to={item.link}>
@@ -61,7 +62,9 @@ const MultiLevel = ({ item }: IProps) => {
         <>
             <ListItem button onClick={handleClick}>
                 <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.title} />
+                <ListItemText>
+                    <b>{item.title}</b>
+                </ListItemText>
                 {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </ListItem>
             <Collapse in={open} timeout='auto' unmountOnExit>
@@ -71,6 +74,7 @@ const MultiLevel = ({ item }: IProps) => {
                     ))}
                 </List>
             </Collapse>
+            <Divider />
         </>
     );
 };

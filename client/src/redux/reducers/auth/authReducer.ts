@@ -57,10 +57,12 @@ export const autoLogin = (): AppThunk => {
         const loggedUser = await AuthService.getLocalStorageUserData();
         const refreshToken = TokenService.getRefreshToken();
         const accessToken = TokenService.getAccessToken();
-        const isUserExist = await AuthService.isUserExist()
+        const isUserExist = await AuthService.isUserExist();
         console.log(isUserExist);
         if (loggedUser && refreshToken && accessToken && isUserExist) {
             dispatch(setUser(loggedUser));
+        } else {
+            dispatch(logoutAction());
         }
     };
 };

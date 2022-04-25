@@ -22,7 +22,7 @@ const initialState: InitialState = {
 };
 
 const languageSlice = createSlice({
-    name: 'lessonTypes',
+    name: 'language',
     initialState,
     reducers: {
         setLanguages: (state, action: PayloadAction<IPageDataResponse<ILanguage> | undefined>) => {

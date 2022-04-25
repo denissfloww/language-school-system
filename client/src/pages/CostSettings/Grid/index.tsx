@@ -16,6 +16,7 @@ import UpdateCostButton from './Buttons/UpdateCostButton';
 import DeleteButton from '../../../components/Buttons/DeleteButton';
 import TableBodySkeleton from '../../../components/Skeletons/TableBodySkeleton';
 import TablePagination from '@mui/material/TablePagination';
+import NumberFormat from 'react-number-format';
 
 const CostGrid = () => {
     const headerRows: { text: string; align: 'left' | 'center' | 'right' }[] = [
@@ -96,7 +97,13 @@ const CostGrid = () => {
                                                                 {cost.name}
                                                             </TableCell>
                                                             <TableCell component='th' scope='row' align='center'>
-                                                                {cost.lessonPrice}
+                                                                {/*{cost.lessonPrice}*/}
+                                                                <NumberFormat
+                                                                    value={cost.lessonPrice}
+                                                                    displayType={'text'}
+                                                                    thousandSeparator={true}
+                                                                    suffix='₽'
+                                                                />
                                                             </TableCell>
                                                             <TableCell component='th' scope='row' align='center'>
                                                                 {cost.description}

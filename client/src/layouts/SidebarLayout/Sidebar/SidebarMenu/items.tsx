@@ -11,6 +11,9 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import LanguageIcon from '@mui/icons-material/Language';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import FeedIcon from '@mui/icons-material/Feed';
+import AddIcon from '@mui/icons-material/Add';
+import TableRowsIcon from '@mui/icons-material/TableRows';
+import NewspaperIcon from '@mui/icons-material/Newspaper';
 
 export interface IMenuItem {
     icon: ReactNode;
@@ -22,6 +25,13 @@ export interface IMenuItem {
 }
 
 export const menu: IMenuItem[] = [
+    {
+        icon: <NewspaperIcon />,
+        title: 'Доска объявлений',
+        link: '/dashboard/feeds/board',
+        items: [],
+        // availableRoles: [RoleTypes.Admin, RoleTypes.None, RoleTypes.Student],
+    },
     {
         icon: <CalendarTodayIcon />,
         title: 'Расписание',
@@ -68,7 +78,18 @@ export const menu: IMenuItem[] = [
             {
                 icon: <FeedIcon />,
                 title: 'Объявления',
-                link: '/dashboard/settings/feeds',
+                items: [
+                    {
+                        icon: <AddIcon />,
+                        title: 'Добавить',
+                        link: '/dashboard/settings/feeds/create',
+                    },
+                    {
+                        icon: <TableRowsIcon />,
+                        title: 'Список',
+                        link: '/dashboard/settings/feeds',
+                    },
+                ],
             },
             {
                 icon: <GroupIcon />,

@@ -10,6 +10,7 @@ import lessonTypesReducer from './reducers/lessonTypes/lessonTypesReducer';
 import profileReducer from './reducers/profile/profileReducer';
 import languageReducer from './reducers/language/languageReducer';
 import costReducer from './reducers/cost/costReducer';
+import feedsReducer from './reducers/feeds/feedsReducer';
 
 const store = configureStore({
     reducer: {
@@ -23,6 +24,7 @@ const store = configureStore({
         profile: profileReducer,
         languages: languageReducer,
         cost: costReducer,
+        feeds: feedsReducer,
     },
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware({

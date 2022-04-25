@@ -20,14 +20,14 @@ export class UserRoleTable1644750641109 implements MigrationInterface {
           },
           {
             name: 'updated_at',
-            type: 'timestamp',
-            default: 'now()',
+            type: 'timestamp with time zone',
+            default: "timezone('utc'::text, now())",
             isNullable: false,
           },
           {
             name: 'created_at',
-            type: 'timestamp',
-            default: 'now()',
+            type: 'timestamp with time zone',
+            default: "timezone('utc'::text, now())",
             isNullable: false,
           },
         ],

@@ -7,3 +7,8 @@ export interface IGroupCreateUpdateValues {
     languageId: string | number;
     costId: string | number;
 }
+
+export enum Order {
+    ASC = 'ASC',
+    DESC = 'DESC',
+}

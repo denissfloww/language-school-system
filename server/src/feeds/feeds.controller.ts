@@ -3,27 +3,35 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   ParseIntPipe,
+  Query,
+  Headers,
+  Put,
 } from '@nestjs/common';
 import { FeedsService } from './feeds.service';
 import { CreateFeedDto } from './dto/create-feed.dto';
 import { UpdateFeedDto } from './dto/update-feed.dto';
+import { PageOptionsDto } from '../common/dtos/page-options.dto';
+import { UsersService } from '../users/users.service';
 
 @Controller('feeds')
 export class FeedsController {
-  constructor(private readonly feedsService: FeedsService) {}
+  constructor(
+    private readonly feedsService: FeedsService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Post()
-  create(@Body() createFeedDto: CreateFeedDto) {
-    return this.feedsService.create(createFeedDto);
+  async create(@Body() createFeedDto: CreateFeedDto, @Headers() headers) {
+    const userId = await this.usersService.getUserIdFromHeader(headers);
+    return this.feedsService.create(createFeedDto, userId);
   }
 
   @Get()
-  findAll() {
-    return this.feedsService.findAll();
+  findAll(@Query() pageOptionsDto: PageOptionsDto) {
+    return this.feedsService.findAll(pageOptionsDto);
   }
 
   @Get(':id')
@@ -31,7 +39,7 @@ export class FeedsController {
     return this.feedsService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateFeedDto: UpdateFeedDto,

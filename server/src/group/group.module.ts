@@ -16,10 +16,6 @@ import { classes } from '@automapper/classes';
     TypeOrmModule.forFeature([Student, Group, Teacher, User]),
     RolesModule,
     StudentsModule,
-    AutomapperModule.forRoot({
-      options: [{ name: 'blah', pluginInitializer: classes }],
-      singular: true,
-    }),
   ],
   controllers: [GroupController],
   providers: [GroupService],

@@ -72,7 +72,6 @@ const Sidebar = () => {
             </Toolbar>
             <AccountBox />
             <SidebarMenu />
-            <Divider />
         </SidebarWrapper>
     );
 };

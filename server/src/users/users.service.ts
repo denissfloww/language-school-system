@@ -1,10 +1,4 @@
-import {
-  ForbiddenException,
-  HttpException,
-  HttpStatus,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { User } from '../models/user.entity';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
@@ -18,7 +12,6 @@ import CyrillicToTranslit from 'cyrillic-to-translit-js';
 import { CreatedUserDto } from './dto/created-user.dto';
 import { TeacherService } from '../teacher/teacher.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import { jwtConstants } from '../auth/constants';
 import { JwtService } from '@nestjs/jwt';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -153,6 +146,12 @@ export class UsersService {
     } else {
       throw new HttpException('Не правильный пароль!', HttpStatus.BAD_REQUEST);
     }
+  }
+
+  async getUserIdFromHeader(headers: any) {
+    const jwtToken = headers['authorization'].split(' ')[1];
+    const userJwtInfo = this.jwtService.decode(jwtToken);
+    return userJwtInfo['id'];
   }
 
   async updateUser(dto: UpdateUserDto) {}

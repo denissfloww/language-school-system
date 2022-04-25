@@ -17,11 +17,11 @@ import {
 } from '../../../redux/reducers/language/languageReducer';
 import { useEffect } from 'react';
 import TableBody from '@mui/material/TableBody';
-import TableBodySkeleton from '../../../components/Skeletons/TableBodySkeleton';
 import { ILanguage } from '../../../interfaces/ILanguage';
 import TablePagination from '@mui/material/TablePagination';
 import DeleteButton from '../../../components/Buttons/DeleteButton';
 import UpdateLanguageButton from './Buttons/UpdateLanguageButton';
+import TableBodySkeleton from "../../../components/Skeletons/TableBodySkeleton";
 
 const LanguageGrid = () => {
     const dispatch = useDispatch();

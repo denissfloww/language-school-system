@@ -11,7 +11,10 @@ import LessonTypeSettings from './pages/LessonTypeSettings';
 import PersonalPage from './pages/PersonalPage';
 import LanguageSettings from './pages/LanguageSettings';
 import CostSettings from './pages/CostSettings';
-import FeedsSettings from './pages/FeedsSettings';
+import CreateFeedPage from './pages/FeedsSettings/CreateFeedPage';
+import FeedsPage from './pages/FeedsSettings/FeedsPage';
+import UpdateFeedPage from './pages/FeedsSettings/UpdateFeedPage';
+import FeedBoardPage from './pages/FeedBoard';
 
 // @ts-ignore
 // eslint-disable-next-line react/display-name
@@ -45,8 +48,9 @@ const Router = () => {
                         <Route path='languages' element={<LanguageSettings />} />
                         <Route path='costs' element={<CostSettings />} />
                         <Route path='feeds'>
-                            <Route index element={<FeedsSettings />} />
-                            <Route path=':id' element={<FeedsSettings />} />
+                            <Route index element={<FeedsPage />} />
+                            <Route path='update/:id' element={<UpdateFeedPage />} />
+                            <Route path='create' element={<CreateFeedPage />} />
                         </Route>
                         <Route
                             path='users'
@@ -59,6 +63,7 @@ const Router = () => {
                     </Route>
                     <Route path='personal' element={<PersonalPage />} />
                     <Route path='journal' element={<Journal />} />
+                    <Route path='feeds/board' element={<FeedBoardPage />} />
                 </Route>
             </Route>
         </Routes>

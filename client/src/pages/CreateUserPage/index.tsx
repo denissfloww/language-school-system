@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
 import { Box, useTheme } from '@mui/material';
 import DashboardPage from '../../components/Pages/DashboardPage';
-import Paper from "@mui/material/Paper";
+import Paper from '@mui/material/Paper';
 
 const CreateUserPage = () => {
     const theme = useTheme();
@@ -19,7 +19,6 @@ const CreateUserPage = () => {
                 </Typography>
                 <Container maxWidth='lg' sx={{ mb: 4 }}>
                     <Paper
-
                         sx={{
                             backgroundColor: theme.palette.background.paper,
                             flexGrow: 1,
