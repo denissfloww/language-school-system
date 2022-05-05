@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Student } from '../models/student.entity';
@@ -7,12 +7,14 @@ import { PageMetaDto } from '../common/dtos/page-meta.dto';
 import { PageDto } from '../common/dtos/page.dto';
 import { PageOptionsDto } from '../common/dtos/page-options.dto';
 import { StudentDto } from './dto/students.dto';
+import { GroupService } from '../group/group.service';
 
 @Injectable()
 export class StudentsService {
   constructor(
     @InjectRepository(Student)
     private studentsRepository: Repository<Student>,
+    @Inject(forwardRef(() => GroupService)) private groupsService: GroupService,
   ) {}
 
   async createStudent(dto: CreateStudentDto) {
@@ -30,6 +32,12 @@ export class StudentsService {
     return await this.studentsRepository.findOne(id, { relations: ['groups'] });
   }
 
+  async getStudentsByIds(ids: number[]) {
+    return await this.studentsRepository.findByIds(ids, {
+      relations: ['groups'],
+    });
+  }
+
   async getStudentByUserId(userId: number) {
     return await this.studentsRepository.findOne({
       relations: ['groups'],
@@ -37,8 +45,24 @@ export class StudentsService {
     });
   }
 
-  async getStudentAttendanceByGroupId(groupId: number) {
+  async studentSave(student: Student) {
+    await this.studentsRepository.save(student);
+  }
 
+  async studentsSave(students: Student[]) {
+    await this.studentsRepository.save(students);
+  }
+
+  async getStudentAttendanceForMonth() {
+    //взять все группы одного студента
+    //взять период с предыдущего месяца 25 числа по 25 число текущего месяца
+
+    return 1;
+  }
+
+  async getStudentsByGroupId(groupId: number) {
+    const group = await this.groupsService.getGroupById(groupId);
+    return group?.students;
   }
 
   async getStudents(pageOptionsDto: PageOptionsDto) {
@@ -66,6 +90,11 @@ export class StudentsService {
         middleName: student.user.middleName,
         lastName: student.user.lastName,
         userId: student.user.id,
+        parentPhone: student.parentPhone,
+        parentEmail: student.parentEmail,
+        parentLastName: student.parentLastName,
+        parentMiddleName: student.parentMiddleName,
+        parentName: student.parentName,
       };
     });
 

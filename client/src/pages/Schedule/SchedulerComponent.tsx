@@ -279,8 +279,8 @@ export class SchedulerComponent extends SampleBase {
     }
 
     openEditor() {
-        let startTime = moment();
-        let endTime = moment().add(1, 'hours');
+        let startTime = moment().add(1, 'hours');
+        let endTime = moment().add(2, 'hours');
         let cellData = {
             startTime: startTime.toDate(),
             endTime: endTime.toDate(),
@@ -338,6 +338,7 @@ export class SchedulerComponent extends SampleBase {
             let formElement: any = args.element.querySelector('.e-schedule-form');
             let validator = formElement.ej2_instances[0];
             validator.addRules('GroupId', { required: [true, 'Обязательно для заполнения!'] });
+            validator.addRules('Subject', { required: [true, 'Обязательно для заполнения!'] });
         }
     }
 

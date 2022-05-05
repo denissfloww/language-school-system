@@ -7,6 +7,23 @@ import { toast } from 'react-toastify';
 import { getErrorMsg } from '../utils/helperFunc';
 import { toastConfig } from '../utils/toastConfig';
 
+const getUserGroups = async (userId: number) => {
+    const response = await $api
+        .get(`${API_URL}/group/user/${userId}`)
+        .then(data => {
+            return data;
+        })
+        .catch(e => {
+            if (!e.response) {
+                toast.error('Connection error', toastConfig);
+            } else {
+                toast.error(getErrorMsg(e as any), toastConfig);
+            }
+        });
+    const data: IGroup[] = response?.data;
+    return data;
+};
+
 const getGroups = async (page?: number, rowPerPage?: number) => {
     const response = await $api
         .get(`${API_URL}/group`, {
@@ -30,7 +47,7 @@ const getGroups = async (page?: number, rowPerPage?: number) => {
 };
 
 const createGroup = async (values: any) => {
-    const studentsIds: number[] = values.students.map((student: any) => {
+    const studentsIds: number[] = values.students?.map((student: any) => {
         return parseInt(student.value);
     });
 
@@ -123,5 +140,6 @@ const GroupsService = {
     getGroupById,
     updateGroup,
     deleteGroup,
+    getUserGroups,
 };
 export default GroupsService;

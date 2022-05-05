@@ -15,8 +15,9 @@ const AccountStyle = styled('div')(({ theme }) => ({
     padding: theme.spacing(2, 1.5),
     margin: theme.spacing(2, 1.0),
     borderRadius: '10px',
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor: theme.palette.grey[300],
     overflowWrap: 'break-word',
+    boxShadow: theme.sidebar.boxShadow,
 }));
 
 const AccountBox = () => {

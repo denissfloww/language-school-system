@@ -29,9 +29,9 @@ export class Group extends BaseModel {
   description: string;
 
   @RelationId((group: Group) => group.students)
-  studentsIds?: number[];
+  studentsIds: number[];
 
-  @ManyToMany(() => Student)
+  @ManyToMany((type) => Student, (student) => student.groups, {eager: true})
   @JoinTable({
     name: 'student_group',
     joinColumns: [{ name: 'group_id' }],
@@ -42,20 +42,17 @@ export class Group extends BaseModel {
   @Column({ name: 'teacher_id' })
   teacherId: number;
 
-  @ManyToOne(() => Teacher, (teacher) => teacher.groups)
+  @ManyToOne(() => Teacher, (teacher) => teacher.groups, { eager: true })
   @JoinColumn([{ name: 'teacher_id', referencedColumnName: 'id' }])
   teacher: Teacher;
 
   @Column({ name: 'language_id' })
   languageId: number;
 
-  // @ManyToOne(() => Language, (language) => language.groups, { cascade: true })
-  // @JoinColumn([{ name: 'language_id', referencedColumnName: 'id' }])
-  // language: Language;
-
   @ManyToOne(() => Language, (languages) => languages.groups, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
+    eager: true,
   })
   @JoinColumn([{ name: 'language_id', referencedColumnName: 'id' }])
   language: Language;
@@ -66,6 +63,7 @@ export class Group extends BaseModel {
   @ManyToOne(() => Cost, (cost) => cost.groups, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
+    eager: true,
   })
   @JoinColumn([{ name: 'cost_id', referencedColumnName: 'id' }])
   cost: Cost;

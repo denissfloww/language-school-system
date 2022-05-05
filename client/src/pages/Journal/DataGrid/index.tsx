@@ -1,75 +1,77 @@
-import { MenuItem, Select } from '@mui/material';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import ReactDataGrid from 'react-data-grid';
 import { Editors } from 'react-data-grid-addons';
+import moment from 'moment';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectJournalState, setJournalData } from '../../../redux/reducers/journal/journalReducer';
+import { AttendanceEnum, AttendanceEnumDisplay } from "../../../interfaces/IAttendance";
 const { DropDownEditor } = Editors;
 
-const countries = [
-    { id: 'bug', value: 'Bug', title: 'Bug', text:'Bug' },
-    { id: 'epic', value: 'Epic', title: 'Epic', text: 'Epic' },
-    { id: 'story', value: 'Story', title: 'Story', text: 'Story' },
+const AttendanceType = [
+    { id: AttendanceEnum.Attended, title: 'П', value: 'П', text: 'П' },
+    { id: AttendanceEnum.Absent, title: 'Н', value: 'Н', text: 'Н' },
+    { id: AttendanceEnum.GoodAbsent, title: 'Ну', value: 'Ну', text: 'Ну' },
 ];
 
-const IssueTypeEditor = <DropDownEditor options={countries} />;
+const AttendanceTypeEditor = <DropDownEditor options={AttendanceType} />;
 
-export default function DataGrid() {
-    const issueTypes = [
-        { id: 'bug', value: 'Bug' },
-        { id: 'epic', value: 'Epic' },
-        { id: 'story', value: 'Story' },
-    ];
+export default function JournalDataGrid() {
+    const { events, groupAttendance, journalData } = useSelector(selectJournalState);
+    const dispatch = useDispatch();
+    useEffect(() => {
+        const data = groupAttendance.map(attendance => {
+            const row: any = {
+                names: attendance.studentName,
+            };
+            attendance.attendances.forEach(att => {
+                row[att.date] = AttendanceEnumDisplay[att.result];
+            });
+            return row;
+        });
 
-    const data = [
-        { id: 0, title: 'Task 1', country: 'Bug' },
-        { id: 1, title: 'Task 2', country: 'Story' },
-        { id: 2, title: 'Task 3', country: 'Epic' },
-    ];
+        dispatch(setJournalData(data));
+    }, [groupAttendance]);
 
-    const columns = [
-        { key: 'id', name: '', width: 50, editable: true, frozen: true },
-        { key: 'title', name: 'Name', editable: true },
-        {
-            key: 'country',
-            name: 'Country',
-            editor: IssueTypeEditor,
-            // editor: (p) => {
-            //     console.log(p);
-            //     return (
-            //         <select
-            //             value={p.value}
-            //             onChange={e => {
-            //                 console.log(...p.row);
-            //                 // p.onRowChange({ ...p.row, country: e.target.value }, true);
-            //             }}
-            //         >
-            //             {countries.map(country => (
-            //                 <option key={country.id}>{country.value}</option>
-            //             ))}
-            //         </select>
-            //     );
-            // },
+    const columns = [];
+    columns.push({
+        key: 'names',
+        name: '',
+        width: 100,
+        frozen: true,
+    });
 
-            // editor: (p: any) => (
-            //     <select value={p.row.issueType} onChange={e => p.onRowChange({ ...p.row, issueType: e.target.value }, true)}>
-            //         {issueTypes.map(value => (
-            //             <option key={value.id}>{value.value}</option>
-            //         ))}
-            //     </select>
-            // ),
+    for (const event of events) {
+        columns.push({
+            key: event,
+            name: moment(event).format('DD.MM.YYYY'),
+            editor: AttendanceTypeEditor,
+            // editor: DropdownCustomEditor,
+            width: 100,
             editable: true,
-        },
-    ];
+            editorOptions: {
+                editOnClick: true,
+            },
+        });
+    }
+
+    const onGridRowsUpdated = (props: any) => {
+        console.log(props)
+        const { fromRow, toRow, updated } = props;
+        const data = journalData.slice();
+        for (let i = fromRow; i <= toRow; i++) {
+            data[i] = { ...data[i], ...updated };
+        }
+        dispatch(setJournalData(data));
+    };
 
     return (
         <ReactDataGrid
             columns={columns}
-            onGridRowsUpdated={e => {
-                console.log(e);
-            }}
+            onGridRowsUpdated={onGridRowsUpdated}
             enableCellSelect={true}
-            rowGetter={i => data[i]}
-            rowsCount={data.length}
-            minHeight={800}
+            rowGetter={i => journalData[i]}
+            rowsCount={journalData.length}
+            minHeight={900}
         />
     );
 }

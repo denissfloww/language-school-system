@@ -2,13 +2,11 @@ import { IPageDataResponse } from '../../../services/responses/types';
 import { IFeed } from '../../../interfaces/IFeed';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from '../../store';
-import LanguageService from '../../../services/LanguageService';
 import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { getErrorMsg } from '../../../utils/helperFunc';
 import { toastConfig } from '../../../utils/toastConfig';
 import FeedsService from '../../../services/FeedService';
-import { fetchLanguagesAction } from '../language/languageReducer';
 
 interface InitialState {
     feedsData?: IPageDataResponse<IFeed>;

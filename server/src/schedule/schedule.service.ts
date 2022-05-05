@@ -216,7 +216,6 @@ export class ScheduleService {
     return await this.getScheduleEventsForUser(userId);
   }
 
-
   async getEventsByGroup(groupId: number) {
     const scheduleEvents = await this.scheduleEventRepository.find({
       where: { groupId: groupId },

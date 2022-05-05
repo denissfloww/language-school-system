@@ -20,6 +20,7 @@ export const DatabaseConfig: ConnectionOptions = {
     migrationsDir: 'src/migrations',
   },
   synchronize: false,
+  logging: true,
 };
 
 export default DatabaseConfig;

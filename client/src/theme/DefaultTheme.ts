@@ -2,8 +2,8 @@ import { alpha, createTheme, lighten, darken } from '@mui/material';
 import { orange } from '@mui/material/colors';
 
 const themeColors = {
-    primary: '#e5ac00',
-    secondary: '#719f6e',
+    primary: '#298d06',
+    secondary: '#ee940d',
     success: '#44D600',
     warning: '#FFA319',
     error: '#FF1943',
@@ -47,10 +47,11 @@ const colors = {
             menuItemColor: '#9f916e',
             menuItemColorActive: themeColors.primary,
             menuItemBg: 'transparent',
-            menuItemBgActive: lighten(themeColors.primary, 0.9),
+            menuItemBgActive: lighten(themeColors.primary, 0.7),
             menuItemIconColor: lighten(themeColors.secondary, 0.3),
             menuItemIconColorActive: themeColors.primary,
             menuItemHeadingColor: darken(themeColors.secondary, 0.3),
+            boxShadow: '0px 9px 16px rgba(159, 162, 191, 0.18), 0px 2px 2px rgba(159, 162, 191, 0.32)',
         },
     },
     alpha: {
@@ -162,7 +163,7 @@ export const DefaultTheme = createTheme({
         menuItemIconColor: colors.layout.sidebar.menuItemIconColor,
         menuItemIconColorActive: colors.layout.sidebar.menuItemIconColorActive,
         menuItemHeadingColor: colors.layout.sidebar.menuItemHeadingColor,
-        boxShadow: '2px 0 3px rgba(159, 162, 191, 0.18), 1px 0 1px rgba(159, 162, 191, 0.32)',
+        boxShadow: colors.layout.sidebar.boxShadow,
         width: '280px',
     },
 

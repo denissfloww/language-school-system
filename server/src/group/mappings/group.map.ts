@@ -50,6 +50,14 @@ export class GroupProfile extends AutomapperProfile {
           mapFrom((source) => source.teacher.user.id),
         )
         .forMember(
+          (destination) => destination.teacher.email,
+          mapFrom((source) => source.teacher.user.email),
+        )
+        .forMember(
+          (destination) => destination.teacher.phone,
+          mapFrom((source) => source.teacher.user.phone),
+        )
+        .forMember(
           (destination) => destination.language.id,
           mapFrom((source) => source.language.id),
         )

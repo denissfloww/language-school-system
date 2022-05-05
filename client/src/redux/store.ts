@@ -11,6 +11,7 @@ import profileReducer from './reducers/profile/profileReducer';
 import languageReducer from './reducers/language/languageReducer';
 import costReducer from './reducers/cost/costReducer';
 import feedsReducer from './reducers/feeds/feedsReducer';
+import journalReducer from './reducers/journal/journalReducer';
 
 const store = configureStore({
     reducer: {
@@ -25,6 +26,7 @@ const store = configureStore({
         languages: languageReducer,
         cost: costReducer,
         feeds: feedsReducer,
+        journal: journalReducer,
     },
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware({

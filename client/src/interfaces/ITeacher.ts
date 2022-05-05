@@ -3,5 +3,7 @@ export interface ITeacher {
     firstName: string;
     middleName: string;
     lastName: string;
+    email: string;
+    phone: string;
     userId: number;
 }

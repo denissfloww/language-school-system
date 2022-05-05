@@ -13,7 +13,6 @@ import {
 } from '@nestjs/common';
 import { GroupService } from './group.service';
 import { CreateGroupDto } from './dto/create-group.dto';
-import { AddStudentInGroupDto } from './dto/add-student-in-group.dto';
 import { DeleteStudentFromGroup } from './dto/delete-student-from-group';
 import { PageOptionsDto } from '../common/dtos/page-options.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.auth.guard';
@@ -32,6 +31,12 @@ export class GroupController {
   @Get('/:id')
   async getGroup(@Param('id', ParseIntPipe) id: number) {
     return await this.groupsService.getGroupById(id);
+  }
+
+  // @UseGuards(JwtAuthGuard)
+  @Get('/user/:userId')
+  async getUserGroups(@Param('userId', ParseIntPipe) userId: number) {
+    return await this.groupsService.getUserGroups(userId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -53,11 +58,11 @@ export class GroupController {
     await this.groupsService.deleteGroup(id);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Post('/add/student')
-  addStudentInGroup(@Body() dto: AddStudentInGroupDto) {
-    return this.groupsService.addStudentToGroup(dto);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Post('/add/student')
+  // addStudentInGroup(@Body() dto: AddStudentInGroupDto) {
+  //   return this.groupsService.addStudentToGroup(dto);
+  // }
 
   @HttpCode(204)
   @Delete('/delete/student')

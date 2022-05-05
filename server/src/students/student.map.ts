@@ -34,6 +34,26 @@ export class StudentProfile extends AutomapperProfile {
         .forMember(
           (destination) => destination.userId,
           mapFrom((source) => source.user.id),
+        )
+        .forMember(
+          (destination) => destination.parentName,
+          mapFrom((source) => source.parentName),
+        )
+        .forMember(
+          (destination) => destination.parentMiddleName,
+          mapFrom((source) => source.parentMiddleName),
+        )
+        .forMember(
+          (destination) => destination.parentLastName,
+          mapFrom((source) => source.parentLastName),
+        )
+        .forMember(
+          (destination) => destination.parentEmail,
+          mapFrom((source) => source.parentEmail),
+        )
+        .forMember(
+          (destination) => destination.parentPhone,
+          mapFrom((source) => source.parentPhone),
         );
     };
   }

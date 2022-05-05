@@ -19,11 +19,11 @@ export class Student extends BaseModel {
   @Column({ name: 'user_id' })
   userId: number;
 
-  @OneToOne(() => User)
+  @OneToOne(() => User, { eager: true })
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
   user: User;
 
-  @ManyToMany(() => Group)
+  @ManyToMany((type) => Group, (group) => group.students)
   @JoinTable({
     name: 'student_group',
     joinColumns: [{ name: 'student_id' }],

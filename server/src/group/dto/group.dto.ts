@@ -9,7 +9,9 @@ export class GroupDto {
     firstName: string;
     middleName: string;
     lastName: string;
-    userId: number | string;
+    email: string;
+    phone?: string;
+    userId?: number | string;
   };
   language: {
     id: number | string;

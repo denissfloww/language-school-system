@@ -7,7 +7,12 @@ export class StudentsController {
   constructor(private studentsService: StudentsService) {}
 
   @Get()
-  getGroups(@Query() pageOptionsDto: PageOptionsDto) {
+  getStudents(@Query() pageOptionsDto: PageOptionsDto) {
     return this.studentsService.getStudents(pageOptionsDto);
+  }
+
+  @Get('/test')
+  test() {
+    return this.studentsService.getStudentAttendanceForMonth();
   }
 }

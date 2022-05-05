@@ -21,5 +21,6 @@ import { TeacherModule } from '../teacher/teacher.module';
   ],
   controllers: [ScheduleController],
   providers: [ScheduleService],
+  exports: [ScheduleService],
 })
 export class ScheduleModule {}

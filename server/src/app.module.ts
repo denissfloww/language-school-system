@@ -26,6 +26,9 @@ import { ScheduleModule } from './schedule/schedule.module';
 import { LanguagesModule } from './languages/languages.module';
 import { CostsModule } from './costs/costs.module';
 import { FeedsModule } from './feeds/feeds.module';
+import { AttendanceModule } from './attendance/attendance.module';
+import { MailModule } from "./mail/mail.module";
+import { CalculateModule } from './calculate/calculate.module';
 
 export function DatabaseOrmModule(): DynamicModule {
   return TypeOrmModule.forRoot({ ...DatabaseConfig, autoLoadEntities: true });
@@ -43,6 +46,7 @@ export function DatabaseOrmModule(): DynamicModule {
       singular: true,
     }),
     UsersModule,
+    MailModule,
     AuthModule,
     RolesModule,
     StudentsModule,
@@ -55,6 +59,8 @@ export function DatabaseOrmModule(): DynamicModule {
     LanguagesModule,
     CostsModule,
     FeedsModule,
+    AttendanceModule,
+    CalculateModule,
   ],
   controllers: [AppController],
   providers: [AppService],

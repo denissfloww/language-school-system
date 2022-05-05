@@ -52,11 +52,6 @@ export class ScheduleController {
     return await this.scheduleService.updateData(data, userId);
   }
 
-  @Get('/test')
-  async test() {
-    return await this.scheduleService.getScheduleEventsForUser(3);
-  }
-
   @Get('/events/group/:id')
   getEventsForGroup(@Param('id', ParseIntPipe) id: number) {
     return this.scheduleService.getEventsByGroup(+id);

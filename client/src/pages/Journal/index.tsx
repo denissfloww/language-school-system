@@ -3,146 +3,36 @@ import { Helmet } from 'react-helmet';
 import Box from '@mui/material/Box';
 import * as React from 'react';
 import Toolbar from '@mui/material/Toolbar';
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, Grid, TextField, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
-import DataGrid from "./DataGrid";
+import JournalDataGrid from './DataGrid';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import {
+    fetchEventsAction,
+    fetchJournalDataAction,
+    selectJournalState,
+    setSelectedGroupId,
+} from '../../redux/reducers/journal/journalReducer';
+import Button from '@mui/material/Button';
+import { selectAuthState } from '../../redux/reducers/auth/authReducer';
+import { RoleTypes } from '../../interfaces/IRole';
+import { Link } from 'react-router-dom';
 
 const Journal = () => {
-    const studentsWithMarks = [
-        {
-            id: 23,
-            studentName: 'Иванов Иван',
-            attendances: [
-                {
-                    date: '20.12.2021',
-                    result: 'Н',
-                },
+    const dispatch = useDispatch();
 
-                {
-                    date: '31.12.2021',
-                    result: 'Н',
-                },
-                {
-                    date: '11.01.2022',
-                    result: 'Н',
-                },
-                {
-                    date: '12.01.2021',
-                    result: 'Н',
-                },
-                {
-                    date: '15.03.2021',
-                    result: 'Н',
-                },
-                {
-                    date: '16.03.2021',
-                    result: 'Н',
-                },
-            ],
-        },
-        {
-            id: 26,
-            studentName: 'Иванов Сергей',
-            attendances: [
-                {
-                    date: '20.12.2021',
-                    result: 'Н',
-                },
-                {
-                    date: '21.12.2021',
-                    result: 'Н',
-                },
-                {
-                    date: '31.12.2021',
-                    result: 'Н',
-                },
-                {
-                    date: '11.01.2022',
-                    result: 'Н',
-                },
-                {
-                    date: '12.01.2021',
-                    result: 'Н',
-                },
-                {
-                    date: '15.03.2021',
-                    result: 'Н',
-                },
-                {
-                    date: '16.03.2021',
-                    result: 'Н',
-                },
-            ],
-        },
-        {
-            id: 27,
-            studentName: 'Сергеев Иван',
-            attendances: [
-                {
-                    date: '20.12.2021',
-                    result: 'Н',
-                },
-                {
-                    date: '21.12.2021',
-                    result: 'Н',
-                },
-                {
-                    date: '31.12.2021',
-                    result: 'Н',
-                },
-                {
-                    date: '11.01.2022',
-                    result: 'Н',
-                },
-                {
-                    date: '12.01.2021',
-                    result: 'Н',
-                },
-                {
-                    date: '15.03.2021',
-                    result: 'Н',
-                },
-                {
-                    date: '16.03.2021',
-                    result: 'Н',
-                },
-            ],
-        },
-        {
-            id: 28,
-            studentName: 'Сергеев Петр',
-            attendances: [
-                {
-                    date: '20.12.2021',
-                    result: 'Н',
-                },
-                {
-                    date: '21.12.2021',
-                    result: 'Н',
-                },
-                {
-                    date: '31.12.2021',
-                    result: 'Н',
-                },
-                {
-                    date: '11.01.2022',
-                    result: 'Н',
-                },
-                {
-                    date: '12.01.2021',
-                    result: 'Н',
-                },
-                {
-                    date: '15.03.2021',
-                    result: 'Н',
-                },
-                {
-                    date: '16.03.2021',
-                    result: 'Н',
-                },
-            ],
-        },
-    ];
+    const { groups, isLoading } = useSelector(selectJournalState);
+    const { user } = useSelector(selectAuthState);
+    const handleGroupChange = (event: any, value: any) => {
+        dispatch(setSelectedGroupId(+value.value));
+        dispatch(fetchEventsAction(+value.value));
+    };
+
+    useEffect(() => {
+        dispatch(fetchJournalDataAction());
+    }, []);
+
     return (
         <>
             <Helmet>
@@ -152,7 +42,7 @@ const Journal = () => {
             <Box
                 component='main'
                 sx={{
-                    // backgroundColor: theme => (theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900]),
+                    backgroundColor: theme => (theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900]),
                     flexGrow: 1,
                     height: '100%',
                     overflow: 'auto',
@@ -161,32 +51,45 @@ const Journal = () => {
                 }}
             >
                 <Toolbar />
+                {!isLoading ? (
+                    <>
+                        {groups.length ? (
+                            <>
+                                <Autocomplete
+                                    disablePortal
+                                    options={groups}
+                                    onChange={handleGroupChange}
+                                    defaultValue={groups[0]}
+                                    sx={{ width: 300, mb: 3 }}
+                                    renderInput={params => <TextField {...params} label='Группа' />}
+                                />
 
-                <Autocomplete
-                    disablePortal
-                    options={top100Films}
-                    sx={{ width: 300, mb: 3 }}
-                    renderInput={params => <TextField {...params} label='Группа' />}
-                />
-
-
-                <Paper style={{ height: '85%', width: '100%' }}>
-                    <DataGrid/>
-                </Paper>
+                                <Paper style={{ height: '85%', width: '100%' }}>
+                                    <JournalDataGrid />
+                                </Paper>
+                            </>
+                        ) : (
+                            <Grid container>
+                                <Grid item container>
+                                    <Typography variant='h6'>
+                                        Отсутствуют группы. Для добавления новой группы перейдите в раздел управления группами или свяжитесь
+                                        с администратором.
+                                    </Typography>
+                                </Grid>
+                                {user?.roles.some(role => role.name == RoleTypes.Admin) ? (
+                                    <Grid item container sx={{ mt: 2 }}>
+                                        <Button variant='contained' component={Link} to='/dashboard/settings/groups'>
+                                            Управление группами
+                                        </Button>
+                                    </Grid>
+                                ) : null}
+                            </Grid>
+                        )}
+                    </>
+                ) : null}
             </Box>
         </>
     );
 };
-
-
-const top100Films = [
-    { label: 'The Shawshank Redemption', year: 1994 },
-    { label: 'The Godfather', year: 1972 },
-    { label: 'The Godfather: Part II', year: 1974 },
-    { label: 'The Dark Knight', year: 2008 },
-    { label: '12 Angry Men', year: 1957 },
-    { label: "Schindler's List", year: 1993 },
-    { label: 'Pulp Fiction', year: 1994 },
-];
 
 export default Journal;

@@ -37,9 +37,11 @@ const SidebarWrapper = styled(MuiDrawer, {
         '.MuiListItem-root': {
             borderRadius: '10px',
             '&.Mui-active, &:hover': {
+                boxShadow: theme.sidebar.boxShadow,
                 background: theme.sidebar.menuItemBgActive,
             },
             '&.Mui-selected': {
+                boxShadow: theme.sidebar.boxShadow,
                 color: theme.sidebar.menuItemColorActive,
                 background: theme.sidebar.menuItemBgActive,
                 '.MuiListItemIcon-root': {
