@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
@@ -17,22 +17,26 @@ export class ScheduleService {
   constructor(
     @InjectRepository(ScheduleEvent)
     private scheduleEventRepository: Repository<ScheduleEvent>,
+    @Inject(forwardRef(() => UsersService))
     private userService: UsersService,
     @InjectRepository(Group)
     private groupRepository: Repository<Group>,
     @InjectConnection() private connection: Connection,
+    @Inject(forwardRef(() => StudentsService))
     private studentsService: StudentsService,
     private teachersService: TeacherService,
   ) {}
 
   async create(createScheduleDto: CreateScheduleDto) {
-    const existEvent = await this.scheduleEventRepository.findOne({
-      eventId: createScheduleDto.eventId,
+    const existEvent = await this.scheduleEventRepository.find({
+      where: {
+        eventId: createScheduleDto.eventId,
+      },
     });
     let scheduleEventData;
-    if (existEvent) {
+    if (existEvent.length) {
       scheduleEventData = await this.scheduleEventRepository.save({
-        id: existEvent.id,
+        id: existEvent[0].id,
         eventId: createScheduleDto.eventId,
         eventData: createScheduleDto.data,
         groupId: createScheduleDto.data.GroupId,
@@ -136,12 +140,13 @@ export class ScheduleService {
       ) {
         const value = param.action == 'insert' ? param.value : param.added[0];
 
-        const lastEvent = await manager.findOne<ScheduleEvent>(ScheduleEvent, {
+        const lastEvent = await manager.find<ScheduleEvent>(ScheduleEvent, {
           order: { id: 'DESC' },
+          take: 1,
         });
         let index = 1;
-        if (lastEvent) {
-          index = lastEvent.eventId + 1;
+        if (lastEvent.length) {
+          index = lastEvent[0].eventId + 1;
         }
         value.Id = index;
         const event = new ScheduleEvent();
@@ -157,7 +162,9 @@ export class ScheduleService {
       ) {
         const value = param.action == 'update' ? param.value : param.changed[0];
         const filterData = await manager.find<ScheduleEvent>(ScheduleEvent, {
-          eventId: value.Id,
+          where: {
+            eventId: value.Id,
+          },
         });
         if (filterData.length > 0) {
           const appointment = filterData.find(
@@ -191,7 +198,9 @@ export class ScheduleService {
           const appointment = await manager.findOne<ScheduleEvent>(
             ScheduleEvent,
             {
-              eventId: key,
+              where: {
+                eventId: key,
+              },
             },
           );
 
@@ -203,7 +212,9 @@ export class ScheduleService {
             const appointment = await manager.findOne<ScheduleEvent>(
               ScheduleEvent,
               {
-                eventId: apps.Id,
+                where: {
+                  eventId: apps.Id,
+                },
               },
             );
 

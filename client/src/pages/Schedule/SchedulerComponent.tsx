@@ -32,11 +32,7 @@ import { Query } from '@syncfusion/ej2-data/src/query';
 import { API_URL } from '../../constants/urls';
 import { DataResult } from '@syncfusion/ej2-react-grids';
 import TokenService from '../../services/TokenService';
-import {
-    END_HOUR_IN_SCHEDULE_VIEW,
-    IS_CAN_EDIT_PREVIOUS_EVENT,
-    START_HOUR_IN_SCHEDULE_VIEW
-} from "../../settings";
+import { END_HOUR_IN_SCHEDULE_VIEW, IS_CAN_EDIT_PREVIOUS_EVENT, START_HOUR_IN_SCHEDULE_VIEW } from '../../settings';
 
 loadCldr(
     require('cldr-data/supplemental/numberingSystems.json'),
@@ -149,7 +145,9 @@ export class SchedulerComponent extends SampleBase {
         // }
 
         if (!this.props.isCanEdit) {
-            args.cancel = true;
+            if (!(args.requestType == "viewNavigate" || args.requestType == "dateNavigate")) {
+                args.cancel = true;
+            }
         }
 
         console.log(args.requestType);

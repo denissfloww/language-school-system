@@ -42,6 +42,18 @@ export class AuthService {
     return this.getTokens(payload);
   }
 
+  async updateJwtTokenPayload(userId: number) {
+    const user = await this.usersService.getUserById(userId);
+
+    const payload = AuthService.getUserPayloadData(user);
+    const newJwt = this.jwtService.sign(payload, {
+      secret: jwtConstants.accessTokenSecret,
+      expiresIn: '10h',
+    });
+
+    return { access_token: newJwt };
+  }
+
   private static getUserPayloadData(user: User) {
     const roles = user.roles.map((role) => {
       return {

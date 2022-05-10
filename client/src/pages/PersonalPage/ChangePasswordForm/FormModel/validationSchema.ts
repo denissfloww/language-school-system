@@ -7,9 +7,9 @@ const {
 
 export default Yup.object().shape({
     [oldPassword.name]: Yup.string()
-        .required(`${oldPassword.requiredErrorMsg}`)
-        .min(8, oldPassword.lengthErrorMsg)
-        .matches(/[a-zA-Z]/, oldPassword.validationErrorMsg),
+        .required(`${oldPassword.requiredErrorMsg}`),
+        // .min(8, oldPassword.lengthErrorMsg)
+        // .matches(/[a-zA-Z]/, oldPassword.validationErrorMsg),
     [newPassword.name]: Yup.string()
         .required(`${newPassword.requiredErrorMsg}`)
         .min(8, newPassword.lengthErrorMsg)

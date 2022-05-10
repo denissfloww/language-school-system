@@ -14,6 +14,10 @@ import { TeacherService } from '../teacher/teacher.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { JwtService } from '@nestjs/jwt';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { UserDto } from './dto/user.dto';
+import moment from 'moment';
 
 @Injectable()
 export class UsersService {
@@ -26,77 +30,83 @@ export class UsersService {
     private teacherService: TeacherService,
     private jwtService: JwtService,
     @InjectConnection() private connection: Connection,
+    @InjectMapper()
+    private readonly mapper: Mapper,
   ) {}
 
   async createUser(dto: CreateUserDto) {
-    const cyrillicToTranslit = new CyrillicToTranslit();
-    const login = cyrillicToTranslit.transform(
-      `${dto.firstName}.${dto.lastName}`,
-    );
+    return await this.usersRepository.manager.transaction(
+      async (transactionalEntityManager) => {
+        const cyrillicToTranslit = new CyrillicToTranslit();
+        const login = cyrillicToTranslit.transform(
+          `${dto.firstName}.${dto.lastName}`,
+        );
 
-    const existUser = await this.usersRepository.find({
-      where: {
-        login: login,
+        const existUser = await this.usersRepository.find({
+          where: {
+            login: login,
+          },
+        });
+        if (existUser.length > 0) {
+          throw new HttpException(
+            'Пользователь с такими данными уже существует!',
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+
+        const randomPassword = Math.random().toString(36).slice(-8);
+        const hashPassword = await bcrypt.hash(randomPassword, 5);
+
+        const roles: Role[] = [];
+        for (const roleName of dto.roles) {
+          const role = await this.rolesRepository.findOne({
+            where: { name: roleName },
+          });
+
+          roles.push(role);
+        }
+
+        const user = await this.usersRepository.save({
+          firstName: dto.firstName,
+          lastName: dto.lastName,
+          middleName: dto.middleName,
+          login: login,
+          password: hashPassword,
+          roles: roles,
+          phone: dto.phone,
+          email: dto.email,
+          birthDate: dto.birthDate,
+        });
+
+        if (dto.roles.includes(RolesEnum.Student)) {
+          const studentDto: CreateStudentDto = {
+            parentEmail: dto.parentEmail,
+            parentLastName: dto.parentLastName,
+            parentMiddleName: dto.parentMiddleName,
+            parentName: dto.parentName,
+            parentPhone: dto.parentPhone,
+            userId: user.id,
+          };
+          await this.studentsService.createStudent(studentDto);
+        }
+
+        if (dto.roles.includes(RolesEnum.Teacher)) {
+          await this.teacherService.createTeacher(user.id);
+        }
+
+        const createdUser: CreatedUserDto = {
+          id: String(user.id),
+          login: user.login,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          middleName: user.middleName,
+          password: randomPassword,
+          roles: dto.roles,
+        };
+
+        return createdUser;
       },
-    });
-    if (existUser.length > 0) {
-      throw new HttpException(
-        'Пользователь с такими данными уже существует!',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    const randomPassword = Math.random().toString(36).slice(-8);
-    const hashPassword = await bcrypt.hash(randomPassword, 5);
-
-    const roles: Role[] = [];
-    for (const roleName of dto.roles) {
-      const role = await this.rolesRepository.findOne({
-        where: { name: roleName },
-      });
-
-      roles.push(role);
-    }
-
-    const user = await this.usersRepository.save({
-      firstName: dto.firstName,
-      lastName: dto.lastName,
-      middleName: dto.middleName,
-      login: login,
-      password: hashPassword,
-      roles: roles,
-      phone: dto.phone,
-      email: dto.email,
-      birthDate: dto.birthDate,
-    });
-
-    if (dto.roles.includes(RolesEnum.Student)) {
-      const studentDto: CreateStudentDto = {
-        parentEmail: dto.parentEmail,
-        parentLastName: dto.parentLastName,
-        parentMiddleName: dto.parentMiddleName,
-        parentName: dto.parentName,
-        parentPhone: dto.parentPhone,
-        userId: parseInt(user.id),
-      };
-      await this.studentsService.createStudent(studentDto);
-    }
-
-    if (dto.roles.includes(RolesEnum.Teacher)) {
-      await this.teacherService.createTeacher(parseInt(user.id));
-    }
-
-    const createdUser: CreatedUserDto = {
-      id: user.id,
-      login: user.login,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      middleName: user.middleName,
-      password: randomPassword,
-      roles: dto.roles,
-    };
-
-    return createdUser;
+    );
   }
 
   async deleteUser(id: number) {
@@ -111,10 +121,12 @@ export class UsersService {
   }
 
   async getUserByLogin(login: string) {
-    const user = await this.usersRepository.findOne(
-      { login: login },
-      { relations: ['roles'] },
-    );
+    const user = await this.usersRepository.findOne({
+      where: {
+        login: login,
+      },
+      relations: ['roles'],
+    });
     if (!user) {
       throw new HttpException(
         'Пользователь с данным логином не найден!',
@@ -125,13 +137,24 @@ export class UsersService {
   }
 
   async getUserById(id: number) {
-    const user = await this.usersRepository.findOne(id, {
-      relations: ['roles'],
+    const user = await this.usersRepository.findOne({
+      where: {
+        id: id,
+      },
+      relations: ['roles', 'student'],
     });
     if (!user) {
       throw new HttpException('Пользователь не найден!', HttpStatus.NOT_FOUND);
     }
+
     return user;
+  }
+
+  async getUserDtoById(id: number) {
+    const user = await this.getUserById(id);
+    const userDto = this.mapper.map(user, UserDto, User);
+
+    return userDto;
   }
 
   async changePassword(dto: ChangePasswordDto, userId: any) {
@@ -154,5 +177,33 @@ export class UsersService {
     return userJwtInfo['id'];
   }
 
-  async updateUser(dto: UpdateUserDto) {}
+  async updateUser(id: number, dto: UpdateUserDto) {
+    await this.usersRepository.manager.transaction(
+      async (transactionalEntityManager) => {
+        const user = await this.getUserById(id);
+        user.firstName = dto.firstName;
+        user.middleName = dto.middleName;
+        user.lastName = dto.lastName;
+        user.birthDate = moment(dto.birthDate).toDate();
+        user.phone = dto.phone;
+        user.email = dto.email;
+
+        if (user.roles.some((role) => role.name == RolesEnum.Student)) {
+          const student = await this.studentsService.getStudentByUserId(id);
+          await this.studentsService.updateStudent(
+            {
+              parentEmail: dto.parentEmail,
+              parentLastName: dto.parentLastName,
+              parentMiddleName: dto.parentMiddleName,
+              parentName: dto.parentName,
+              parentPhone: dto.parentPhone,
+            },
+            student.id,
+          );
+        }
+
+        await transactionalEntityManager.save<User>(user);
+      },
+    );
+  }
 }

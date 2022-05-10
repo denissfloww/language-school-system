@@ -15,7 +15,6 @@ import { StudentsModule } from './students/students.module';
 import { GroupModule } from './group/group.module';
 import { TeacherModule } from './teacher/teacher.module';
 
-import DatabaseConfig from './config/database.config';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { LessonTypesModule } from './lesson-types/lesson-types.module';
 import { AutomapperModule } from '@automapper/nestjs';
@@ -27,11 +26,14 @@ import { LanguagesModule } from './languages/languages.module';
 import { CostsModule } from './costs/costs.module';
 import { FeedsModule } from './feeds/feeds.module';
 import { AttendanceModule } from './attendance/attendance.module';
-import { MailModule } from "./mail/mail.module";
+import { MailModule } from './mail/mail.module';
 import { CalculateModule } from './calculate/calculate.module';
+import { TasksModule } from './tasks/tasks.module';
+import { connectionApp } from './config/database.config';
+import { UserProfile } from "./users/mappings/user.map";
 
 export function DatabaseOrmModule(): DynamicModule {
-  return TypeOrmModule.forRoot({ ...DatabaseConfig, autoLoadEntities: true });
+  return TypeOrmModule.forRoot({ ...connectionApp, autoLoadEntities: true });
 }
 
 @Module({
@@ -54,6 +56,7 @@ export function DatabaseOrmModule(): DynamicModule {
     TeacherModule,
     LessonTypesModule,
     GroupProfile,
+    UserProfile,
     StudentProfile,
     ScheduleModule,
     LanguagesModule,
@@ -61,6 +64,7 @@ export function DatabaseOrmModule(): DynamicModule {
     FeedsModule,
     AttendanceModule,
     CalculateModule,
+    TasksModule,
   ],
   controllers: [AppController],
   providers: [AppService],

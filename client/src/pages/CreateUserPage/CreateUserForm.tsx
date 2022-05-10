@@ -19,10 +19,6 @@ const steps = ['Основные данные', 'Роли', 'Контактна�
 const { formId, formField } = formModel;
 
 function _renderStepContent(step: number, props: any) {
-    // const isStudent = props?.values?.roles?.some((value: { label: string; value: string }) => {
-    //     return value.value == RoleTypes.Student;
-    // });
-
     const isStudent = props?.values?.roles == RoleTypes.Student;
 
     const dispatch = useDispatch();

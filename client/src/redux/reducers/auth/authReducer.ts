@@ -44,10 +44,8 @@ export const loginAction = (creditionals: ICreditionals): AppThunk => {
         try {
             const user = await AuthService.login(creditionals);
             dispatch(setUser(user));
-            console.log(user);
         } catch (e: any) {
             dispatch(setAuthError(getErrorMsg(e)));
-            //console.log(getErrorMsg(e));
         }
     };
 };
@@ -61,8 +59,21 @@ export const autoLogin = (): AppThunk => {
         console.log(isUserExist);
         if (loggedUser && refreshToken && accessToken && isUserExist) {
             dispatch(setUser(loggedUser));
+            dispatch(updateUserData());
         } else {
             dispatch(logoutAction());
+        }
+    };
+};
+
+export const updateUserData = (): AppThunk => {
+    return async dispatch => {
+        const accessToken = await AuthService.updateJwtToken();
+        const userData = await AuthService.getCurrentUserFromJwtToken(accessToken);
+
+        if (userData) {
+            dispatch(setUser(userData));
+            await AuthService.saveCurrentUserToLocalStorage(userData);
         }
     };
 };

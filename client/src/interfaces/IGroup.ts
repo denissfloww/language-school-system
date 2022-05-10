@@ -11,4 +11,6 @@ export interface IGroup {
     teacher: ITeacher;
     language: ILanguage;
     cost: ICost;
+    priceNextMonth: number;
+    month: number;
 }

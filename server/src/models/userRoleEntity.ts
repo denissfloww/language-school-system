@@ -4,6 +4,7 @@ import {
   OneToOne,
   PrimaryColumn,
   JoinColumn,
+  Column,
 } from 'typeorm';
 import BaseModel from './base';
 import { User } from './user.entity';
@@ -14,10 +15,10 @@ export class UserRoleEntity extends BaseModel {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @PrimaryColumn('int', { name: 'user_id' })
+  @Column('int', { name: 'user_id' })
   userId: number;
 
-  @PrimaryColumn('int', { name: 'role_id' })
+  @Column('int', { name: 'role_id' })
   roleId: number;
 
   @OneToOne(() => User)

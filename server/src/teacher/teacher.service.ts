@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 import { PageOptionsDto } from '../common/dtos/page-options.dto';
 import { PageMetaDto } from '../common/dtos/page-meta.dto';
 import { PageDto } from '../common/dtos/page.dto';
-import { GroupDto } from '../group/dto/group.dto';
 import { TeacherDto } from './dtos/teacher.dto';
 
 @Injectable()
@@ -30,8 +29,8 @@ export class TeacherService {
 
     if (skip) {
       queryBuilder
-        .orderBy('teacher.createdAt', pageOptionsDto.order)
-        .skip(skip)
+        .orderBy('teacher.created_at', pageOptionsDto.order)
+        .skip(isNaN(skip) ? undefined : skip)
         .take(pageOptionsDto.take);
     }
 

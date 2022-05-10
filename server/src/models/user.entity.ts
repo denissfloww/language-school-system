@@ -5,16 +5,19 @@ import {
   ManyToMany,
   JoinTable,
   OneToMany,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import BaseModel from './base';
 import { Role } from './role.entity';
 import { ScheduleEvent } from './schedule-event.entity';
 import { Feed } from './feed.entity';
+import { Student } from './student.entity';
 
 @Entity('users')
 export class User extends BaseModel {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id: number;
 
   @Column()
   login: string;
@@ -39,6 +42,9 @@ export class User extends BaseModel {
 
   @Column({ name: 'birth_date' })
   birthDate: Date;
+
+  @OneToOne(() => Student, (student) => student.user)
+  student: Student | null;
 
   @ManyToMany(() => Role)
   @JoinTable({

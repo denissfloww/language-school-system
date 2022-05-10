@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
@@ -18,12 +18,16 @@ import { Mapper } from '@automapper/core';
 import { UsersService } from '../users/users.service';
 import { RolesEnum } from '../auth/roles.enum';
 import { TeacherService } from '../teacher/teacher.service';
+import { StudentGroup } from '../models/student.group.entity';
+import { CalculateService } from '../calculate/calculate.service';
 
 @Injectable()
 export class GroupService {
   constructor(
     @InjectRepository(Group)
     private groupsRepository: Repository<Group>,
+    @InjectRepository(StudentGroup)
+    private studentGroupRepository: Repository<StudentGroup>,
     @Inject(forwardRef(() => StudentsService))
     private studentsService: StudentsService,
     private connection: Connection,
@@ -35,7 +39,13 @@ export class GroupService {
     private teacherService: TeacherService,
     @Inject(forwardRef(() => StudentsService))
     private studentService: StudentsService,
+    @Inject(forwardRef(() => CalculateService))
+    private calculateService: CalculateService,
   ) {}
+
+  async getGroupIds() {
+    return await this.groupsRepository.find();
+  }
 
   async getGroups(pageOptionsDto: PageOptionsDto) {
     const skip =
@@ -54,7 +64,7 @@ export class GroupService {
         createdAt: pageOptionsDto.order,
       },
       take: pageOptionsDto.take,
-      skip: skip,
+      skip: isNaN(skip) ? undefined : skip,
     });
 
     const pageMetaDto = new PageMetaDto({ itemCount: count, pageOptionsDto });
@@ -84,7 +94,7 @@ export class GroupService {
     if (user.roles.some((role) => role.name == RolesEnum.Teacher)) {
       const teacher = await this.teacherService.getTeacherByUserId(userId);
       const groups = await this.groupsRepository.find({
-        where: { teacherId: teacher.id },
+        where: { teacherId: parseInt(teacher.id) },
       });
 
       return this.mapper.mapArray(groups, GroupDto, Group);
@@ -93,12 +103,27 @@ export class GroupService {
       const student = await this.studentsService.getStudentByUserId(userId);
       const groups = student.groups;
 
-      return this.mapper.mapArray(groups, GroupDto, Group);
+      const groupDtos = this.mapper.mapArray(groups, GroupDto, Group);
+      for (const groupDto of groupDtos) {
+        Logger.debug(student.id);
+        const nextMonthCalculate =
+          await this.calculateService.monthlyStudentCalculateByGroup(
+            student.id,
+            Number(groupDto.id),
+          );
+        groupDto.priceNextMonth = nextMonthCalculate.priceNextMonth;
+
+        groupDto.month = nextMonthCalculate.calculateMonth;
+      }
+      return groupDtos;
     }
   }
 
   async getGroupById(id: number) {
-    const group = await this.groupsRepository.findOne(id, {
+    const group = await this.groupsRepository.findOne({
+      where: {
+        id: id,
+      },
       relations: [
         'teacher',
         'students',
@@ -118,19 +143,27 @@ export class GroupService {
 
   async createGroup(createGroupDto: CreateGroupDto) {
     const existGroup = await this.groupsRepository.findOne({
-      name: createGroupDto.name,
+      where: {
+        name: createGroupDto.name,
+      },
     });
     if (!existGroup) {
-      return await this.groupsRepository.save({
+      const group = await this.groupsRepository.save({
         name: createGroupDto.name,
         description: createGroupDto.description,
         teacherId: createGroupDto.teacherId,
         languageId: createGroupDto.languageId,
         costId: createGroupDto.costId,
-        students: createGroupDto.studentsIds.map((id) => {
-          return { id } as unknown as Student;
-        }),
       });
+
+      for (const id of createGroupDto.studentsIds) {
+        await this.studentGroupRepository.save({
+          studentId: id,
+          groupId: group.id,
+        });
+      }
+
+      return group;
     }
     throw new AlreadyExistException();
   }
@@ -140,18 +173,26 @@ export class GroupService {
   }
 
   async updateGroup(updateGroupDto: UpdateGroupDto) {
-    const group = await this.groupsRepository.findOne(updateGroupDto.id);
+    const group = await this.groupsRepository.findOne({
+      where: {
+        id: updateGroupDto.id,
+      },
+      relations: ['students'],
+    });
 
-    group.students = updateGroupDto.studentsIds.map(
-      (id) => ({ id } as unknown as Student),
+    const students = await this.studentsService.getStudentsByIds(
+      updateGroupDto.studentsIds,
     );
+
+    group.students = students;
     group.name = updateGroupDto.name;
     group.teacherId = updateGroupDto.teacherId;
     group.description = updateGroupDto.description;
-    group.studentsIds = updateGroupDto.studentsIds;
     group.languageId = updateGroupDto.languageId;
     group.costId = updateGroupDto.costId;
 
+    Logger.debug(group.studentsIds);
+    // return await group.save();
     return await this.groupsRepository.save(group);
   }
 
@@ -176,7 +217,10 @@ export class GroupService {
   // }
 
   async deleteStudentFromGroup(dto: DeleteStudentFromGroup) {
-    const group = await this.groupsRepository.findOne(dto.groupId, {
+    const group = await this.groupsRepository.findOne({
+      where: {
+        id: dto.groupId,
+      },
       relations: ['students'],
     });
     const currentStudent = await this.studentsService.getStudentById(
@@ -189,7 +233,7 @@ export class GroupService {
       .remove(currentStudent);
   }
 
-  async getGroupsByStudentId(studentId: number) {
+  async getStudentGroups(studentId: number) {
     const student = await this.studentsService.getStudentById(studentId);
     return student.groups;
   }

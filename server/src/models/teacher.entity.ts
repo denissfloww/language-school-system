@@ -4,7 +4,7 @@ import {
   OneToOne,
   JoinColumn,
   OneToMany,
-  PrimaryColumn,
+  Column,
 } from 'typeorm';
 import BaseModel from './base';
 import { User } from './user.entity';
@@ -15,7 +15,7 @@ export class Teacher extends BaseModel {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @PrimaryColumn({ name: 'user_id' })
+  @Column({ name: 'user_id' })
   userId: number;
 
   @OneToOne(() => User, { eager: true })

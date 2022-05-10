@@ -37,7 +37,7 @@ export class FeedsService {
         createdAt: pageOptionsDto.order,
       },
       take: pageOptionsDto.take,
-      skip: skip,
+      skip: isNaN(skip) ? undefined : skip,
     });
 
     const pageMetaDto = new PageMetaDto({ itemCount: count, pageOptionsDto });
@@ -48,7 +48,9 @@ export class FeedsService {
   }
 
   async findOne(id: number) {
-    const feed = await this.feedRepository.findOne(id);
+    const feed = await this.feedRepository.findOne({
+      where: { id: String(id) },
+    });
 
     if (feed) {
       return feed;
@@ -58,7 +60,9 @@ export class FeedsService {
   }
 
   async update(id: number, updateFeedDto: UpdateFeedDto) {
-    const feed = await this.feedRepository.findOne(id);
+    const feed = await this.feedRepository.findOne({
+      where: { id: String(id) },
+    });
 
     if (feed) {
       await this.feedRepository.update(id, {
@@ -72,7 +76,11 @@ export class FeedsService {
   }
 
   async remove(id: number) {
-    const feed = await this.feedRepository.findOne(id);
+    const feed = await this.feedRepository.findOne({
+      where: {
+        id: String(id),
+      },
+    });
 
     if (feed) {
       await this.feedRepository.remove(feed);

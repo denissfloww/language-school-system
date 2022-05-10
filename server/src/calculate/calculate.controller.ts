@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { CalculateService } from './calculate.service';
 import { CreateCalculateDto } from './dto/create-calculate.dto';
 import { UpdateCalculateDto } from './dto/update-calculate.dto';
@@ -12,9 +21,21 @@ export class CalculateController {
     return this.calculateService.create(createCalculateDto);
   }
 
-  @Get()
-  findAll() {
-    return this.calculateService.findAll();
+  @Get('student/:studentId/groups')
+  monthlyStudentCalculateInAllGroups(
+    @Param('studentId', ParseIntPipe) studentId: number,
+  ) {
+    return this.calculateService.monthlyStudentCalculateInAllGroups(studentId);
+  }
+
+  // @Get()
+  // findAll() {
+  //   return this.calculateService.findAll();
+  // }
+
+  @Get('groups')
+  async calculateAllGroupsPayment() {
+    return this.calculateService.calculateAllGroupsPayment();
   }
 
   @Get(':id')
@@ -23,7 +44,10 @@ export class CalculateController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCalculateDto: UpdateCalculateDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateCalculateDto: UpdateCalculateDto,
+  ) {
     return this.calculateService.update(+id, updateCalculateDto);
   }
 

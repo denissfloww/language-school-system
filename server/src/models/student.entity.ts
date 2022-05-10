@@ -14,7 +14,7 @@ import { Group } from './group.entity';
 @Entity('students')
 export class Student extends BaseModel {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column({ name: 'user_id' })
   userId: number;
@@ -23,13 +23,22 @@ export class Student extends BaseModel {
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
   user: User;
 
-  @ManyToMany((type) => Group, (group) => group.students)
+  @ManyToMany((type) => Group, {
+    eager: true,
+    cascade: true,
+  })
+  // @JoinTable({
+  //   name: 'student_group',
+  //   joinColumn: { name: 'student_id' },
+  //   inverseJoinColumn: { name: 'group_id' },
+  // })
   @JoinTable({
     name: 'student_group',
-    joinColumns: [{ name: 'student_id' }],
-    inverseJoinColumns: [{ name: 'group_id' }],
+    joinColumns: [{ name: 'student_id', referencedColumnName: 'id' }],
+    inverseJoinColumns: [{ name: 'group_id', referencedColumnName: 'id' }],
   })
   groups: Group[];
+
 
   @Column({ name: 'parent_name' })
   parentName: string;

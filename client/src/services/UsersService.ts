@@ -1,6 +1,5 @@
 import { IUser } from '../interfaces/IUser';
 import { IChangePasswordDto, ICreatedUser, ICreateUserData } from '../redux/reducers/users/types';
-import { RoleTypes } from '../interfaces/IRole';
 import $api from './http';
 import { API_URL } from '../constants/urls';
 import { toast } from 'react-toastify';
@@ -8,29 +7,66 @@ import { toastConfig } from '../utils/toastConfig';
 import { getErrorMsg } from '../utils/helperFunc';
 
 const getUsers = () => {
-    const users: IUser[] = [
-        {
-            id: 1,
-            firstName: 'Денис',
-            lastName: 'Денис',
-            middleName: 'Денис',
-            role: RoleTypes.Admin,
-        },
-    ];
+    const users: IUser[] = [];
 
     return users;
 };
 
-const createUser = async (user: ICreateUserData) => {
-    console.log(user);
+const getUserById = async (userId: number) => {
+    const response = await $api
+        .get(`${API_URL}/users/${userId}`)
+        .then(data => {
+            return data;
+        })
+        .catch(e => {
+            if (!e.response) {
+                toast.error('Connection error', toastConfig);
+            } else {
+                toast.error(getErrorMsg(e as any), toastConfig);
+            }
+        });
+    const data: IUser = response?.data;
+    return data;
+};
 
+const createUser = async (user: ICreateUserData) => {
     const response = await $api.post('/users', {
         ...user,
     });
-
     const createdUser: ICreatedUser = response.data;
-
     return createdUser;
+};
+
+const updateUser = async (userId: number, values: any) => {
+    const updateValues = {
+        birthDate: values.birthDate,
+        email: values.email,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        middleName: values.middleName,
+        parentEmail: values.parentEmail,
+        parentLastName: values.parentLastName,
+        parentMiddleName: values.parentMiddleName,
+        parentName: values.parentName,
+        parentPhone: values.parentPhone,
+        phone: values.phone,
+    };
+    const response = await $api
+        .put(`${API_URL}/users/${userId}`, {
+            ...updateValues,
+        })
+        .then(data => {
+            if (data.status == 200 || data.status == 204) {
+                toast.success('Успешно обновлено!', toastConfig);
+            }
+        })
+        .catch(e => {
+            if (!e.response) {
+                toast.error('Connection error', toastConfig);
+            } else {
+                toast.error(getErrorMsg(e as any), toastConfig);
+            }
+        });
 };
 
 const changePassword = async (dto: IChangePasswordDto) => {
@@ -56,5 +92,7 @@ const StudentsService = {
     getUsers,
     createUser,
     changePassword,
+    updateUser,
+    getUserById,
 };
 export default StudentsService;

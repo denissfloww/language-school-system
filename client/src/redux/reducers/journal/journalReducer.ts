@@ -8,7 +8,7 @@ import ScheduleService from '../../../services/ScheduleService';
 import GroupsService from '../../../services/GroupsService';
 import { IAutoCompleteValues } from '../../../interfaces/displayed/type';
 import JournalService from '../../../services/JournalService';
-import { IAttendance } from '../../../interfaces/IAttendance';
+import { AttendanceEnum, AttendanceEnumDisplay, IAttendance } from '../../../interfaces/IAttendance';
 
 interface InitialState {
     isLoading: boolean;
@@ -57,7 +57,8 @@ const journalReducer = createSlice({
     },
 });
 
-export const { setEvents, setJournalLoading, setGroups, setSelectedGroupId, setDataGridLoading, setAttendance, setJournalData } = journalReducer.actions;
+export const { setEvents, setJournalLoading, setGroups, setSelectedGroupId, setDataGridLoading, setAttendance, setJournalData } =
+    journalReducer.actions;
 
 export const fetchEventsAction = (groupId: number): AppThunk => {
     return async dispatch => {
@@ -77,23 +78,23 @@ export const fetchEventsAction = (groupId: number): AppThunk => {
     };
 };
 
-export const fetchJournalData = (): AppThunk => {
+export const fetchJournalAttendanceAction = (): AppThunk => {
     return async (dispatch, getState) => {
         try {
             const { groupAttendance } = getState().journal;
 
             const data = groupAttendance.map(attendance => {
                 const row: any = {
-                    names: attendance.studentName,
+                    studentId: attendance.studentId,
+                    studentName: attendance.studentName,
                 };
                 attendance.attendances.forEach(att => {
-                    row[att.date] = att.result;
+                    row[att.date] = AttendanceEnumDisplay[att.result];
                 });
                 return row;
             });
 
-            dispatch(setJournalData(data))
-
+            dispatch(setJournalData(data));
         } catch (e) {
             const err = e as AxiosError;
             if (err.response) {
@@ -130,6 +131,7 @@ export const fetchJournalDataAction = (): AppThunk => {
                 });
                 dispatch(fetchEventsAction(groups[0].id));
                 dispatch(fetchGroupAttendanceAction(groups[0].id));
+                dispatch(setSelectedGroupId(groups[0].id));
                 dispatch(setGroups(groupsValues));
             } else {
                 dispatch(setGroups([]));

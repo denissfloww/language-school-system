@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Student } from '../models/student.entity';
@@ -8,6 +8,7 @@ import { PageDto } from '../common/dtos/page.dto';
 import { PageOptionsDto } from '../common/dtos/page-options.dto';
 import { StudentDto } from './dto/students.dto';
 import { GroupService } from '../group/group.service';
+import { UpdateStudentDto } from './dto/update-student.dto';
 
 @Injectable()
 export class StudentsService {
@@ -29,13 +30,14 @@ export class StudentsService {
   }
 
   async getStudentById(id: number) {
-    return await this.studentsRepository.findOne(id, { relations: ['groups'] });
+    return await this.studentsRepository.findOne({
+      where: { id: id },
+      relations: ['groups', 'user'],
+    });
   }
 
   async getStudentsByIds(ids: number[]) {
-    return await this.studentsRepository.findByIds(ids, {
-      relations: ['groups'],
-    });
+    return await this.studentsRepository.findByIds(ids);
   }
 
   async getStudentByUserId(userId: number) {
@@ -47,6 +49,24 @@ export class StudentsService {
 
   async studentSave(student: Student) {
     await this.studentsRepository.save(student);
+  }
+
+  async updateStudent(dto: UpdateStudentDto, studentId: number) {
+    await this.studentsRepository.manager.transaction(
+      async (transactionalEntityManager) => {
+        const student = await this.studentsRepository.findOne({
+          where: { id: studentId },
+        });
+
+        student.parentName = dto.parentName;
+        student.parentMiddleName = dto.parentMiddleName;
+        student.parentLastName = dto.parentLastName;
+        student.parentPhone = dto.parentPhone;
+        student.parentEmail = dto.parentEmail;
+
+        await transactionalEntityManager.save<Student>(student);
+      },
+    );
   }
 
   async studentsSave(students: Student[]) {
@@ -75,8 +95,8 @@ export class StudentsService {
 
     if (skip) {
       queryBuilder
-        .orderBy('student.createdAt', pageOptionsDto.order)
-        .skip(skip)
+        .orderBy('student.created_at', pageOptionsDto.order)
+        .skip(isNaN(skip) ? undefined : skip)
         .take(pageOptionsDto.take);
     }
 

@@ -4,6 +4,8 @@ export class GroupDto {
   id: number | string;
   name: string;
   description: string;
+  priceNextMonth?: number;
+  month: string;
   teacher: {
     id: number | string;
     firstName: string;

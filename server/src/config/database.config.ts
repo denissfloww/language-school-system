@@ -1,4 +1,4 @@
-import { ConnectionOptions } from 'typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 
@@ -7,7 +7,8 @@ const data: any = dotenv.parse(fs.readFileSync(`.${env}.env`));
 
 // console.log(__dirname + '../migrations/**/*{.ts,.js}');
 
-export const DatabaseConfig: ConnectionOptions = {
+
+export const connectionApp: DataSourceOptions = {
   type: 'postgres',
   host: data.POSTGRES_HOST,
   port: parseInt(data.POSTGRES_PORT),
@@ -16,11 +17,13 @@ export const DatabaseConfig: ConnectionOptions = {
   database: data.POSTGRES_DATABASE,
   entities: [__dirname + '/../models/**/*.entity{.ts,.js}'],
   migrations: [__dirname + '/../migrations/**/*{.ts,.js}'],
-  cli: {
-    migrationsDir: 'src/migrations',
-  },
+  // cli: {
+  //   migrationsDir: 'src/migrations',
+  // },
   synchronize: false,
   logging: true,
 };
 
-export default DatabaseConfig;
+export const connectionSource = new DataSource({ ...connectionApp });
+
+// export default DatabaseConfig;

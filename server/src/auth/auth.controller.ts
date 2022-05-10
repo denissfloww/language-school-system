@@ -27,6 +27,16 @@ export class AuthController {
     return this.authService.isUserExist(userId);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post('/jwt/update')
+  async updateJwtPayload(@Headers() headers) {
+    const jwtToken = headers['authorization'].split(' ')[1];
+    const userJwtInfo = this.jwtService.decode(jwtToken);
+    const userId = userJwtInfo['id'];
+
+    return await this.authService.updateJwtTokenPayload(userId);
+  }
+
   @UseGuards(JwtRefreshTokenGuard)
   @Post('/refresh-token')
   async refreshToken(@Body() token: RefreshTokenDto) {

@@ -12,6 +12,7 @@ interface InitialState {
     createdUser?: ICreatedUser;
     isLoading: boolean;
     validationSchema: any[];
+    user?: IUser;
 }
 
 const initialState: InitialState = {
@@ -36,10 +37,13 @@ const usersSlice = createSlice({
         setValidationSchema: (state, action: PayloadAction<any[]>) => {
             state.validationSchema = action.payload;
         },
+        setUser: (state, action: PayloadAction<IUser>) => {
+            state.user = action.payload;
+        },
     },
 });
 
-export const { setUsers, setCreatedUserData, setValidationSchema } = usersSlice.actions;
+export const { setUsers, setCreatedUserData, setValidationSchema, setUser } = usersSlice.actions;
 
 export const fetchUsers = (): AppThunk => {
     return async dispatch => {
@@ -55,7 +59,6 @@ export const fetchUsers = (): AppThunk => {
 export const createUserAction = (createdUser: ICreateUserData): AppThunk => {
     return async dispatch => {
         try {
-            // toast('Wow so easy!');
             const createdUserData = await UsersService.createUser(createdUser);
             dispatch(setCreatedUserData(createdUserData));
         } catch (e: any) {
@@ -71,6 +74,20 @@ export const changePasswordAction = (values: any): AppThunk => {
                 oldPassword: values.oldPassword,
                 newPassword: values.newPassword,
             });
+        } catch (e: any) {
+            toast.error(getErrorMsg(e));
+        }
+    };
+};
+
+export const fetchCurrentUserInfoByIdAction = (): AppThunk => {
+    return async (dispatch, getState) => {
+        try {
+            const { user: currentUser } = getState().auth;
+            if (currentUser) {
+                const user = await UsersService.getUserById(currentUser.id);
+                dispatch(setUser(user));
+            }
         } catch (e: any) {
             toast.error(getErrorMsg(e));
         }

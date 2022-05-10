@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import BaseModel from './base';
 import { User } from './user.entity';
+import { RolesEnum } from '../auth/roles.enum';
 
 @Entity('roles')
 export class Role extends BaseModel {
@@ -14,7 +15,7 @@ export class Role extends BaseModel {
   id: string;
 
   @Column()
-  name: string;
+  name: RolesEnum;
 
   @Column()
   description: string;

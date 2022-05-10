@@ -20,7 +20,7 @@ import { Cost } from './cost.entity';
 @Entity('groups')
 export class Group extends BaseModel {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column()
   name: string;
@@ -31,11 +31,11 @@ export class Group extends BaseModel {
   @RelationId((group: Group) => group.students)
   studentsIds: number[];
 
-  @ManyToMany((type) => Student, (student) => student.groups, {eager: true})
+  @ManyToMany((type) => Student)
   @JoinTable({
     name: 'student_group',
-    joinColumns: [{ name: 'group_id' }],
-    inverseJoinColumns: [{ name: 'student_id' }],
+    joinColumns: [{ name: 'group_id', referencedColumnName: 'id' }],
+    inverseJoinColumns: [{ name: 'student_id', referencedColumnName: 'id' }],
   })
   students: Student[];
 

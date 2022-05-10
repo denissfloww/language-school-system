@@ -20,6 +20,13 @@ export class AttendanceController {
     return this.attendanceService.getGroupAttendance(groupId);
   }
 
+  @Get('/student/:studentId')
+  getStudentAttendancesFromAllGroups(
+    @Param('studentId', ParseIntPipe) studentId: number,
+  ) {
+    return this.attendanceService.getStudentAttendanceFromAllGroups(studentId);
+  }
+
   @Post()
   async putAttendance(@Body() putAttendanceDto: PutAttendanceDto) {
     await this.attendanceService.putAttendance(

@@ -1,5 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
-import { RolesEnum } from '../../auth/roles.enum';
+import { IsEmail, IsMobilePhone, IsNotEmpty } from 'class-validator';
 
 export class UpdateUserDto {
   @IsNotEmpty()
@@ -11,8 +10,21 @@ export class UpdateUserDto {
   readonly lastName: string;
 
   @IsNotEmpty()
-  readonly password: string;
+  readonly birthDate: string;
 
-  @IsNotEmpty()
-  readonly role: RolesEnum;
+  @IsMobilePhone('any')
+  readonly phone?: string;
+
+  @IsEmail()
+  readonly email?: string;
+
+  readonly parentName?: string;
+
+  readonly parentMiddleName?: string;
+
+  readonly parentLastName?: string;
+
+  readonly parentEmail?: string;
+
+  readonly parentPhone?: string;
 }

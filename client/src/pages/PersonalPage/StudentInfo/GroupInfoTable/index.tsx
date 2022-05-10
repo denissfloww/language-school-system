@@ -12,6 +12,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserStudentGroupsAction, selectProfileState } from '../../../../redux/reducers/profile/profileReducer';
 import TableBodySkeleton from '../../../../components/Skeletons/TableBodySkeleton';
 import { useEffect } from 'react';
+import moment from 'moment';
+import 'moment/locale/ru';
 
 const StudentGroupInfoTable = () => {
     const { isGridLoading, studentGroups } = useSelector(selectProfileState);
@@ -37,7 +39,11 @@ const StudentGroupInfoTable = () => {
             align: 'left',
         },
         {
-            text: 'Сумма к оплате на май',
+            text: 'Сумма к оплате',
+            align: 'left',
+        },
+        {
+            text: 'Месяц оплаты',
             align: 'left',
         },
     ];
@@ -81,12 +87,13 @@ const StudentGroupInfoTable = () => {
                                                     </TableCell>
                                                     <TableCell>
                                                         <NumberFormat
-                                                            value={'5000'}
+                                                            value={group.priceNextMonth}
                                                             displayType={'text'}
                                                             thousandSeparator={true}
                                                             suffix='₽'
                                                         />
                                                     </TableCell>
+                                                    <TableCell>{moment().locale('ru').month(group.month).format('MMMM')}</TableCell>
                                                 </TableRow>
                                             </>
                                         ))}

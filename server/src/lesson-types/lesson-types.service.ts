@@ -31,7 +31,7 @@ export class LessonTypesService {
         createdAt: pageOptionsDto.order,
       },
       take: pageOptionsDto.take,
-      skip: skip,
+      skip: isNaN(skip) ? undefined : skip,
     });
 
     const pageMetaDto = new PageMetaDto({ itemCount: count, pageOptionsDto });
@@ -39,7 +39,9 @@ export class LessonTypesService {
   }
 
   async findOne(id: number) {
-    const lessonType = await this.lessonTypesRepository.findOne(id);
+    const lessonType = await this.lessonTypesRepository.findOne({
+      where: { id: String(id) },
+    });
 
     if (lessonType) {
       return lessonType;
@@ -49,7 +51,9 @@ export class LessonTypesService {
   }
 
   async update(id: number, updateLessonTypeDto: UpdateLessonTypeDto) {
-    const lessonType = await this.lessonTypesRepository.findOne(id);
+    const lessonType = await this.lessonTypesRepository.findOne({
+      where: { id: String(id) },
+    });
 
     if (lessonType) {
       await this.lessonTypesRepository.update(id, {
@@ -63,7 +67,9 @@ export class LessonTypesService {
   }
 
   async remove(id: number) {
-    const lessonType = await this.lessonTypesRepository.findOne(id);
+    const lessonType = await this.lessonTypesRepository.findOne({
+      where: { id: String(id) },
+    });
 
     if (lessonType) {
       await this.lessonTypesRepository.remove(lessonType);

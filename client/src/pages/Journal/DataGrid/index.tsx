@@ -3,38 +3,32 @@ import ReactDataGrid from 'react-data-grid';
 import { Editors } from 'react-data-grid-addons';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectJournalState, setJournalData } from '../../../redux/reducers/journal/journalReducer';
-import { AttendanceEnum, AttendanceEnumDisplay } from "../../../interfaces/IAttendance";
-const { DropDownEditor } = Editors;
+import { fetchJournalAttendanceAction, selectJournalState, setJournalData } from '../../../redux/reducers/journal/journalReducer';
+import { AttendanceEnum, AttendanceType } from '../../../interfaces/IAttendance';
+import _ from 'lodash';
+import JournalService from '../../../services/JournalService';
 
-const AttendanceType = [
-    { id: AttendanceEnum.Attended, title: 'П', value: 'П', text: 'П' },
-    { id: AttendanceEnum.Absent, title: 'Н', value: 'Н', text: 'Н' },
-    { id: AttendanceEnum.GoodAbsent, title: 'Ну', value: 'Ну', text: 'Ну' },
-];
+const { DropDownEditor } = Editors;
 
 const AttendanceTypeEditor = <DropDownEditor options={AttendanceType} />;
 
 export default function JournalDataGrid() {
-    const { events, groupAttendance, journalData } = useSelector(selectJournalState);
+    const { events, groupAttendance, journalData, selectedGroupId } = useSelector(selectJournalState);
     const dispatch = useDispatch();
     useEffect(() => {
-        const data = groupAttendance.map(attendance => {
-            const row: any = {
-                names: attendance.studentName,
-            };
-            attendance.attendances.forEach(att => {
-                row[att.date] = AttendanceEnumDisplay[att.result];
-            });
-            return row;
-        });
-
-        dispatch(setJournalData(data));
+        dispatch(fetchJournalAttendanceAction());
     }, [groupAttendance]);
 
     const columns = [];
     columns.push({
-        key: 'names',
+        key: 'studentId',
+        name: '',
+        width: 0,
+        hidden: true,
+    });
+
+    columns.push({
+        key: 'studentName',
         name: '',
         width: 100,
         frozen: true,
@@ -45,7 +39,6 @@ export default function JournalDataGrid() {
             key: event,
             name: moment(event).format('DD.MM.YYYY'),
             editor: AttendanceTypeEditor,
-            // editor: DropdownCustomEditor,
             width: 100,
             editable: true,
             editorOptions: {
@@ -54,20 +47,31 @@ export default function JournalDataGrid() {
         });
     }
 
-    const onGridRowsUpdated = (props: any) => {
-        console.log(props)
-        const { fromRow, toRow, updated } = props;
+    const onGridRowsUpdated = async (props: any) => {
+        console.log(props);
+        const { fromRow, toRow, updated, fromRowData } = props;
         const data = journalData.slice();
         for (let i = fromRow; i <= toRow; i++) {
             data[i] = { ...data[i], ...updated };
         }
         dispatch(setJournalData(data));
+
+        const studentId = +fromRowData.studentId;
+        const eventDate = props.cellKey;
+        const groupId = Number(selectedGroupId);
+        const attendanceMark = AttendanceType.find(attendance => attendance.value === updated[props.cellKey])?.id;
+
+        await JournalService.putAttendance(studentId, groupId, eventDate, attendanceMark ?? AttendanceEnum.None);
     };
+
+    const debouncedGridRowsUpdateCb = _.debounce((props: any) => {
+        onGridRowsUpdated(props);
+    }, 300);
 
     return (
         <ReactDataGrid
             columns={columns}
-            onGridRowsUpdated={onGridRowsUpdated}
+            onGridRowsUpdated={debouncedGridRowsUpdateCb}
             enableCellSelect={true}
             rowGetter={i => journalData[i]}
             rowsCount={journalData.length}
