@@ -41,24 +41,24 @@ export class UserProfile extends AutomapperProfile {
           mapFrom((source) => source.phone),
         )
         .forMember(
-          (destination) => destination.student.parentName,
-          mapFrom((source) => source.student.parentName),
+          (destination) => destination.student?.parentName,
+          mapFrom((source) => source.student?.parentName),
         )
         .forMember(
-          (destination) => destination.student.parentMiddleName,
-          mapFrom((source) => source.student.parentMiddleName),
+          (destination) => destination.student?.parentMiddleName,
+          mapFrom((source) => source.student?.parentMiddleName),
         )
         .forMember(
-          (destination) => destination.student.parentLastName,
-          mapFrom((source) => source.student.parentLastName),
+          (destination) => destination.student?.parentLastName,
+          mapFrom((source) => source.student?.parentLastName),
         )
         .forMember(
-          (destination) => destination.student.parentEmail,
-          mapFrom((source) => source.student.parentEmail),
+          (destination) => destination.student?.parentEmail,
+          mapFrom((source) => source.student?.parentEmail),
         )
         .forMember(
-          (destination) => destination.student.parentPhone,
-          mapFrom((source) => source.student.parentPhone),
+          (destination) => destination.student?.parentPhone,
+          mapFrom((source) => source.student?.parentPhone),
         )
       ;
     };

@@ -1,23 +1,23 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { User } from '../models/user.entity';
-import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
-import { Connection, Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
-import { Role } from '../models/role.entity';
-import * as bcrypt from 'bcryptjs';
-import { RolesEnum } from '../auth/roles.enum';
-import { StudentsService } from '../students/students.service';
-import { CreateStudentDto } from '../students/dto/create-student.dto';
-import CyrillicToTranslit from 'cyrillic-to-translit-js';
-import { CreatedUserDto } from './dto/created-user.dto';
-import { TeacherService } from '../teacher/teacher.service';
-import { ChangePasswordDto } from './dto/change-password.dto';
-import { JwtService } from '@nestjs/jwt';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { InjectMapper } from '@automapper/nestjs';
-import { Mapper } from '@automapper/core';
-import { UserDto } from './dto/user.dto';
-import moment from 'moment';
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { User } from "../models/user.entity";
+import { InjectConnection, InjectRepository } from "@nestjs/typeorm";
+import { Connection, Repository } from "typeorm";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { Role } from "../models/role.entity";
+import * as bcrypt from "bcryptjs";
+import { RolesEnum } from "../auth/roles.enum";
+import { StudentsService } from "../students/students.service";
+import { CreateStudentDto } from "../students/dto/create-student.dto";
+import CyrillicToTranslit from "cyrillic-to-translit-js";
+import { CreatedUserDto } from "./dto/created-user.dto";
+import { TeacherService } from "../teacher/teacher.service";
+import { ChangePasswordDto } from "./dto/change-password.dto";
+import { JwtService } from "@nestjs/jwt";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import { InjectMapper } from "@automapper/nestjs";
+import { Mapper } from "@automapper/core";
+import { UserDto } from "./dto/user.dto";
+import moment from "moment";
 
 @Injectable()
 export class UsersService {
@@ -116,8 +116,16 @@ export class UsersService {
   }
 
   async getAllUsers() {
-    const users = await this.usersRepository.find({ relations: ['roles'] });
+    const users = await this.usersRepository.find({
+      relations: ['roles', 'student'],
+    });
     return users;
+  }
+
+  async getAllUserDtos() {
+    const users = await this.getAllUsers();
+
+    return this.mapper.mapArray(users, UserDto, User);
   }
 
   async getUserByLogin(login: string) {

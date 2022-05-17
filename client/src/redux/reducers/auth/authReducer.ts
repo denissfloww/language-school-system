@@ -7,14 +7,13 @@ import { ICurrentUser } from '../../../interfaces/ICurrentUser';
 import TokenService from '../../../services/TokenService';
 
 interface InitialState {
-    user: ICurrentUser | null;
+    user?: ICurrentUser;
     error?: string;
     isLoading: boolean;
 }
 
 const initialState: InitialState = {
-    user: null,
-    isLoading: false,
+    isLoading: true,
 };
 
 const authSlice = createSlice({
@@ -29,7 +28,7 @@ const authSlice = createSlice({
             state.error = action.payload;
         },
         removeUser: state => {
-            state.user = null;
+            state.user = undefined;
         },
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.isLoading = action.payload;
@@ -37,7 +36,7 @@ const authSlice = createSlice({
     },
 });
 
-export const { setUser, setAuthError, removeUser } = authSlice.actions;
+export const { setUser, setAuthError, removeUser, setLoading } = authSlice.actions;
 
 export const loginAction = (creditionals: ICreditionals): AppThunk => {
     return async dispatch => {
@@ -52,17 +51,19 @@ export const loginAction = (creditionals: ICreditionals): AppThunk => {
 
 export const autoLogin = (): AppThunk => {
     return async dispatch => {
+        dispatch(setLoading(true));
         const loggedUser = await AuthService.getLocalStorageUserData();
         const refreshToken = TokenService.getRefreshToken();
         const accessToken = TokenService.getAccessToken();
         const isUserExist = await AuthService.isUserExist();
-        console.log(isUserExist);
         if (loggedUser && refreshToken && accessToken && isUserExist) {
             dispatch(setUser(loggedUser));
             dispatch(updateUserData());
         } else {
             dispatch(logoutAction());
         }
+
+        dispatch(setLoading(false));
     };
 };
 

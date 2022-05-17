@@ -15,6 +15,7 @@ import TeacherGroupInfoTable from '../TeacherInfo/GroupInfoTable';
 import { useSelector } from 'react-redux';
 import { selectAuthState } from '../../../redux/reducers/auth/authReducer';
 import { RoleTypes } from '../../../interfaces/IRole';
+import StudentAttendanceInfo from '../StudentInfo/AttendanceInfo';
 
 const PersonalPageTabs = () => {
     const theme = useTheme();
@@ -59,9 +60,14 @@ const PersonalPageTabs = () => {
                             </Grid>
                         ) : null}
                         {user?.roles.some(role => role.name == RoleTypes.Student) ? (
-                            <Grid item md={12}>
-                                <StudentGroupInfoTable />
-                            </Grid>
+                            <>
+                                <Grid item md={12}>
+                                    <StudentGroupInfoTable />
+                                </Grid>
+                                <Grid item md={12}>
+                                    <StudentAttendanceInfo />
+                                </Grid>
+                            </>
                         ) : null}
                     </Grid>
                 </TabPanel>

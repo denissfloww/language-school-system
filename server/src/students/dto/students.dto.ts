@@ -9,4 +9,5 @@ export class StudentDto {
   parentMiddleName: string;
   parentEmail: string;
   parentPhone: string;
+  groupsPayment?: any;
 }

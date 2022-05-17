@@ -9,4 +9,13 @@ export interface IStudent {
     parentLastName: string;
     parentEmail: string;
     parentPhone: string;
+    groupsPayment: {
+        groupId: number;
+        groupName: string;
+        price: {
+            priceNextMonth: number;
+            calculateMonth: string;
+        };
+        month: string;
+    }[];
 }

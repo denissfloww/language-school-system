@@ -283,6 +283,7 @@ export class SchedulerComponent extends SampleBase {
             startTime: startTime.toDate(),
             endTime: endTime.toDate(),
         };
+
         this.scheduleObj.openEditor(cellData, 'Add');
     }
 

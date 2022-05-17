@@ -9,6 +9,9 @@ import { PageOptionsDto } from '../common/dtos/page-options.dto';
 import { StudentDto } from './dto/students.dto';
 import { GroupService } from '../group/group.service';
 import { UpdateStudentDto } from './dto/update-student.dto';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { CalculateService } from '../calculate/calculate.service';
 
 @Injectable()
 export class StudentsService {
@@ -16,6 +19,10 @@ export class StudentsService {
     @InjectRepository(Student)
     private studentsRepository: Repository<Student>,
     @Inject(forwardRef(() => GroupService)) private groupsService: GroupService,
+    @Inject(forwardRef(() => CalculateService))
+    private calculateService: CalculateService,
+    @InjectMapper()
+    private readonly mapper: Mapper,
   ) {}
 
   async createStudent(dto: CreateStudentDto) {
@@ -45,6 +52,11 @@ export class StudentsService {
       relations: ['groups'],
       where: { userId: userId },
     });
+  }
+
+  async getStudentDtoByUserId(userId: number) {
+    const student = await this.getStudentByUserId(userId);
+    return this.mapper.map(student, StudentDto, Student);
   }
 
   async studentSave(student: Student) {
@@ -103,8 +115,15 @@ export class StudentsService {
     const itemCount = await queryBuilder.getCount();
     const { entities } = await queryBuilder.getRawAndEntities();
 
-    const dtos: StudentDto[] = entities.map((student) => {
-      return {
+    const dtos: StudentDto[] = [];
+    for (const student of entities) {
+      Logger.debug(student.id);
+      const groupsPayment =
+        await this.calculateService.monthlyStudentCalculateInAllGroups(
+          student.id,
+        );
+
+      dtos.push({
         id: student.id,
         firstName: student.user.firstName,
         middleName: student.user.middleName,
@@ -115,8 +134,26 @@ export class StudentsService {
         parentLastName: student.parentLastName,
         parentMiddleName: student.parentMiddleName,
         parentName: student.parentName,
-      };
-    });
+        groupsPayment: groupsPayment,
+      });
+    }
+
+    // const dtos: StudentDto[] = entities.map((student) => {
+    //   const lessonPrice =
+    //     this.calculateService.monthlyStudentCalculateInAllGroups(student.id);
+    //   return {
+    //     id: student.id,
+    //     firstName: student.user.firstName,
+    //     middleName: student.user.middleName,
+    //     lastName: student.user.lastName,
+    //     userId: student.user.id,
+    //     parentPhone: student.parentPhone,
+    //     parentEmail: student.parentEmail,
+    //     parentLastName: student.parentLastName,
+    //     parentMiddleName: student.parentMiddleName,
+    //     parentName: student.parentName,
+    //   };
+    // });
 
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
 

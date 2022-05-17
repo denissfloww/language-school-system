@@ -7,12 +7,16 @@ import { getErrorMsg } from '../../../utils/helperFunc';
 import { toastConfig } from '../../../utils/toastConfig';
 import GroupsService from '../../../services/GroupsService';
 import { IGroup } from '../../../interfaces/IGroup';
+import { IStudentAttendance } from '../../../pages/PersonalPage/StudentInfo/AttendanceInfo/types';
+import JournalService from '../../../services/JournalService';
+import StudentsService from '../../../services/StudentsService';
 
 interface InitialState {
     validationSchema: any[];
     studentGroups: IGroup[];
     teacherGroups: IGroup[];
     isGridLoading: boolean;
+    attendanceStudentData: IStudentAttendance[];
 }
 
 const initialState: InitialState = {
@@ -20,6 +24,7 @@ const initialState: InitialState = {
     studentGroups: [],
     teacherGroups: [],
     isGridLoading: false,
+    attendanceStudentData: [],
 };
 
 const profileSlice = createSlice({
@@ -38,10 +43,13 @@ const profileSlice = createSlice({
         setGridLoading: (state, action: PayloadAction<boolean>) => {
             state.isGridLoading = action.payload;
         },
+        setStudentAttendanceData: (state, action: PayloadAction<IStudentAttendance[]>) => {
+            state.attendanceStudentData = action.payload;
+        },
     },
 });
 
-export const { setUserInfoValidation, setStudentGroups, setGridLoading, setTeacherGroups } = profileSlice.actions;
+export const { setUserInfoValidation, setStudentGroups, setGridLoading, setTeacherGroups, setStudentAttendanceData } = profileSlice.actions;
 
 export const fetchUserStudentGroupsAction = (): AppThunk => {
     return async (dispatch, getState) => {
@@ -52,6 +60,22 @@ export const fetchUserStudentGroupsAction = (): AppThunk => {
 
             dispatch(setStudentGroups(studentGroups));
             dispatch(setGridLoading(false));
+        } catch (e) {
+            const err = e as AxiosError;
+            if (err.response) {
+                toast.error(getErrorMsg(e as any), toastConfig);
+            }
+        }
+    };
+};
+
+export const fetchStudentAttendanceDataAction = (): AppThunk => {
+    return async (dispatch, getState) => {
+        try {
+            const { user } = getState().auth;
+            const student = await StudentsService.getStudentByUserId(Number(user?.id));
+            const studentAttendance = await JournalService.getStudentAttendancesFromAllGroups(student.id);
+            dispatch(setStudentAttendanceData(studentAttendance));
         } catch (e) {
             const err = e as AxiosError;
             if (err.response) {

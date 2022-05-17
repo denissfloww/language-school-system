@@ -89,7 +89,10 @@ export class AttendanceService {
     throw new NotFoundException();
   }
 
-  async getStudentGroupAttendance(studentId: number | string, groupId: number) {
+  async getStudentGroupAttendanceEntities(
+    studentId: number | string,
+    groupId: number,
+  ) {
     const attendances = await this.attendanceRepository
       .createQueryBuilder('attendance')
       .where('attendance.groupId = :groupId', { groupId: groupId })
@@ -99,12 +102,27 @@ export class AttendanceService {
     return attendances;
   }
 
+  async getStudentAttendacesByGroupId(studentId: number, groupId: number) {
+    const student = await this.studentsService.getStudentById(studentId);
+    const events = await this.scheduleService.getEventsByGroup(groupId);
+
+    return await this.getStudentAttendanceInGroup(
+      {
+        id: student.id,
+        firstName: student.user.firstName,
+        lastName: student.user.lastName,
+      },
+      groupId,
+      events,
+    );
+  }
+
   async getStudentAttendanceInGroup(
     student: { id: number; lastName: string; firstName: string },
     groupId: number,
     events: Date[],
   ) {
-    const studentAttendances = await this.getStudentGroupAttendance(
+    const studentAttendances = await this.getStudentGroupAttendanceEntities(
       student.id,
       groupId,
     );

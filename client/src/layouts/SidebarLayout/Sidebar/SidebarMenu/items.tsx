@@ -14,6 +14,7 @@ import FeedIcon from '@mui/icons-material/Feed';
 import AddIcon from '@mui/icons-material/Add';
 import TableRowsIcon from '@mui/icons-material/TableRows';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
+import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 
 export interface IMenuItem {
     icon: ReactNode;
@@ -92,7 +93,7 @@ export const menu: IMenuItem[] = [
                 ],
             },
             {
-                icon: <GroupIcon />,
+                icon: <SupervisedUserCircleIcon/>,
                 title: 'Пользователи',
                 link: '/dashboard/settings/users',
             },

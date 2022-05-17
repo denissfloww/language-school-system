@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { CreateCalculateDto } from './dto/create-calculate.dto';
 import { UpdateCalculateDto } from './dto/update-calculate.dto';
 import { MailerService } from '@nestjs-modules/mailer';
@@ -54,6 +54,7 @@ export class CalculateService {
 
       results.push({
         groupId: group.id,
+        groupName: group.name,
         price: price,
         month: calculateDateDto.month,
       });

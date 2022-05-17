@@ -50,11 +50,11 @@ export class UsersController {
   }
 
   @Get()
-  @Roles(RolesEnum.Admin)
-  @UseGuards(JwtAuthGuard)
+  // @Roles(RolesEnum.Admin)
+  // @UseGuards(JwtAuthGuard)
   getAllUsers() {
     try {
-      return this.userService.getAllUsers();
+      return this.userService.getAllUserDtos();
     } catch (e) {
       Logger.log(e);
     }

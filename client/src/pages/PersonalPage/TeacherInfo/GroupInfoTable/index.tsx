@@ -67,18 +67,6 @@ const TeacherGroupInfoTable = () => {
     );
 };
 
-// interface IGroupRowProps {
-//     name: string;
-//     id: number;
-//     students: {
-//         id: number;
-//         studentName: string;
-//         parentName: string;
-//         parentEmail: string;
-//         parentPhone: string;
-//     }[];
-// }
-
 function GroupRow(props: { row: IGroup }) {
     const [open, setOpen] = React.useState(false);
     const { name, id, students } = props.row;

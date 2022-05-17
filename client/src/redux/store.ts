@@ -12,6 +12,7 @@ import languageReducer from './reducers/language/languageReducer';
 import costReducer from './reducers/cost/costReducer';
 import feedsReducer from './reducers/feeds/feedsReducer';
 import journalReducer from './reducers/journal/journalReducer';
+import studentsReducer from './reducers/students/studentsReducer';
 
 const store = configureStore({
     reducer: {
@@ -27,6 +28,7 @@ const store = configureStore({
         cost: costReducer,
         feeds: feedsReducer,
         journal: journalReducer,
+        students: studentsReducer,
     },
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware({
