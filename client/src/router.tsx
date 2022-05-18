@@ -17,6 +17,7 @@ import UpdateFeedPage from './pages/FeedsSettings/UpdateFeedPage';
 import FeedBoardPage from './pages/FeedBoard';
 import AuthService from './services/AuthService';
 import AttendanceInfo from './pages/PersonalPage/StudentInfo/AttendanceInfo';
+import UpdateUserPage from './pages/UsersSettings/UpdateUserPage';
 
 // @ts-ignore
 // eslint-disable-next-line react/display-name
@@ -54,14 +55,17 @@ const Router = () => {
                             <Route path='update/:id' element={<UpdateFeedPage />} />
                             <Route path='create' element={<CreateFeedPage />} />
                         </Route>
-                        <Route
-                            path='users'
-                            element={
-                                <RoleGuardRouter roles={[RoleTypes.Admin, RoleTypes.Teacher]}>
-                                    <UserSettings />
-                                </RoleGuardRouter>
-                            }
-                        />
+                        <Route path='users'>
+                            <Route
+                                index
+                                element={
+                                    <RoleGuardRouter roles={[RoleTypes.Admin, RoleTypes.Teacher]}>
+                                        <UserSettings />
+                                    </RoleGuardRouter>
+                                }
+                            />
+                            <Route path='update/:id' element={<UpdateUserPage />} />
+                        </Route>
                     </Route>
                     <Route path='personal'>
                         <Route index element={<PersonalPage />} />

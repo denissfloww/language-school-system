@@ -28,10 +28,10 @@ export class CalculateController {
     return this.calculateService.monthlyStudentCalculateInAllGroups(studentId);
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.calculateService.findAll();
-  // }
+  @Get('/email/test')
+  findAll() {
+    return this.calculateService.findAll();
+  }
 
   @Get('groups')
   async calculateAllGroupsPayment() {

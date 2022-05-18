@@ -14,7 +14,9 @@ import { fetchUsers, selectUsersState } from '../../../redux/reducers/users/user
 import { IUser } from '../../../interfaces/IUser';
 import DeleteGroupButton from './Buttons/DeleteGroupButton';
 import UpdateUserButton from './Buttons/UpdateButton';
-import { RoleTypesDisplay } from "../../../interfaces/IRole";
+import TableBodySkeleton from '../../../components/Skeletons/TableBodySkeleton';
+import DeleteButton from "../../../components/Buttons/DeleteButton";
+import { deleteGroupAction } from "../../../redux/reducers/groups/groupsReducer";
 
 const UsersGrid = () => {
     const dispatch = useDispatch();
@@ -28,41 +30,67 @@ const UsersGrid = () => {
                 <Paper sx={{ width: '100%', mb: 2 }}>
                     <UsersGridToolbar />
                     <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 1000 }} aria-labelledby='tableTitle' size='medium'>
+                        <Table sx={{ minWidth: 1000 }} size='medium'>
                             <TableHead>
                                 <TableRow>
                                     <TableCell align='left'>Код</TableCell>
                                     <TableCell align='center'>Имя</TableCell>
-                                    <TableCell align='center'>Фамилия</TableCell>
                                     <TableCell align='center'>Отчество</TableCell>
-                                    <TableCell align='center'>Роль</TableCell>
+                                    <TableCell align='center'>Фамилия</TableCell>
+                                    <TableCell align='center'>Роли</TableCell>
                                     <TableCell align='right'>Действия</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {users.map((user: IUser) => (
-                                    <TableRow key={user.id} sx={{ '& > *': { borderBottom: 'unset' } }}>
-                                        <TableCell component='th' scope='row' align='left'>
-                                            {user.id}
-                                        </TableCell>
-                                        <TableCell component='th' scope='row' align='center'>
-                                            {user.firstName}
-                                        </TableCell>
-                                        <TableCell component='th' scope='row' align='center'>
-                                            {user.middleName}
-                                        </TableCell>
-                                        <TableCell component='th' scope='row' align='center'>
-                                            {user.lastName}
-                                        </TableCell>
-                                        <TableCell component='th' scope='row' align='center'>
-                                            {RoleTypesDisplay[user.role]}
-                                        </TableCell>
-                                        <TableCell component='th' scope='row' align='right'>
-                                            <DeleteGroupButton userId={user.id} />
-                                            <UpdateUserButton userId={user.id} />
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
+                                {users ? (
+                                    <>
+                                        {users.data.length ? (
+                                            <>
+                                                {users.data?.map((user: IUser) => (
+                                                    <TableRow key={user.id}>
+                                                        <TableCell component='th' scope='row' align='left'>
+                                                            {user.id}
+                                                        </TableCell>
+                                                        <TableCell component='th' scope='row' align='center'>
+                                                            {user.firstName}
+                                                        </TableCell>
+                                                        <TableCell component='th' scope='row' align='center'>
+                                                            {user.middleName}
+                                                        </TableCell>
+                                                        <TableCell component='th' scope='row' align='center'>
+                                                            {user.lastName}
+                                                        </TableCell>
+                                                        <TableCell component='th' scope='row' align='center'>
+                                                            {user.roles.map(role => (
+                                                                <>{role.label} </>
+                                                            ))}
+                                                            {/*{RoleTypesDisplay[user.role]}*/}
+                                                        </TableCell>
+                                                        <TableCell component='th' scope='row' align='right'>
+                                                            <UpdateUserButton userId={user.id} />
+                                                            <DeleteButton
+                                                              id={user.id}
+                                                              confirmationText='Вы действительно хотите удалить пользователя?'
+                                                              title='Удалить пользователя?'
+                                                              onDeleteMethod={() => {
+                                                                  console.log('делете')
+                                                              }}
+                                                            />
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </>
+                                        ) : (
+                                            <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+                                                <TableCell key={4} component='th' scope='row' align='center'>
+                                                    Отсутствуют данные
+                                                </TableCell>
+                                            </TableRow>
+                                        )}
+                                    </>
+                                ) : (
+                                    <TableBodySkeleton columnsCount={7} />
+                                )}
                             </TableBody>
                         </Table>
                     </TableContainer>

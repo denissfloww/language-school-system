@@ -5,11 +5,28 @@ import { API_URL } from '../constants/urls';
 import { toast } from 'react-toastify';
 import { toastConfig } from '../utils/toastConfig';
 import { getErrorMsg } from '../utils/helperFunc';
+import { IPageDataResponse } from './responses/types';
 
-const getUsers = () => {
-    const users: IUser[] = [];
-
-    return users;
+const getUsers = async (page?: number, rowPerPage?: number) => {
+    const response = await $api
+        .get(`${API_URL}/users`, {
+            params: {
+                page: page ?? null,
+                take: rowPerPage ?? null,
+            },
+        })
+        .then(data => {
+            return data;
+        })
+        .catch(e => {
+            if (!e.response) {
+                toast.error('Connection error', toastConfig);
+            } else {
+                toast.error(getErrorMsg(e as any), toastConfig);
+            }
+        });
+    const data: IPageDataResponse<IUser> = response?.data;
+    return data;
 };
 
 const getUserById = async (userId: number) => {

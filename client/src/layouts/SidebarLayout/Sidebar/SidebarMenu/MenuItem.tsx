@@ -21,7 +21,8 @@ export const MenuItem = ({ item }: IProps) => {
     const { user } = useSelector(selectAuthState);
     let userHasRole: boolean | undefined = true;
     if (item.availableRoles) {
-        userHasRole = user?.roles.every(val => item.availableRoles?.includes(val.name));
+        const intersection: any = user?.roles.filter(element => item.availableRoles?.includes(element.name));
+        userHasRole = intersection.length > 0;
     }
     if (userHasRole) {
         const Component = hasChildren(item) ? MultiLevel : SingleLevel;

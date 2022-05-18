@@ -30,7 +30,8 @@ import { MailModule } from './mail/mail.module';
 import { CalculateModule } from './calculate/calculate.module';
 import { TasksModule } from './tasks/tasks.module';
 import { connectionApp } from './config/database.config';
-import { UserProfile } from "./users/mappings/user.map";
+import { UserProfile } from './users/mappings/user.map';
+import { RoleProfile } from './roles/mappings/role.map';
 
 export function DatabaseOrmModule(): DynamicModule {
   return TypeOrmModule.forRoot({ ...connectionApp, autoLoadEntities: true });
@@ -57,6 +58,7 @@ export function DatabaseOrmModule(): DynamicModule {
     LessonTypesModule,
     GroupProfile,
     UserProfile,
+    RoleProfile,
     StudentProfile,
     ScheduleModule,
     LanguagesModule,

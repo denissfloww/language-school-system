@@ -11,6 +11,7 @@ import {
   Headers,
   Param,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
@@ -22,6 +23,7 @@ import { RolesEnum } from '../auth/roles.enum';
 import { JwtService } from '@nestjs/jwt';
 import { UpdateLanguageDto } from '../languages/dto/update-language.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PageOptionsDto } from '../common/dtos/page-options.dto';
 
 @Controller('users')
 export class UsersController {
@@ -52,9 +54,9 @@ export class UsersController {
   @Get()
   // @Roles(RolesEnum.Admin)
   // @UseGuards(JwtAuthGuard)
-  getAllUsers() {
+  getAllUsers(@Query() pageOptionsDto: PageOptionsDto) {
     try {
-      return this.userService.getAllUserDtos();
+      return this.userService.getAllUserDtos(pageOptionsDto);
     } catch (e) {
       Logger.log(e);
     }

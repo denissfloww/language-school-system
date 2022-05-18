@@ -95,6 +95,7 @@ export class GroupService {
       const teacher = await this.teacherService.getTeacherByUserId(userId);
       const groups = await this.groupsRepository.find({
         where: { teacherId: parseInt(teacher.id) },
+        relations: ['students'],
       });
 
       return this.mapper.mapArray(groups, GroupDto, Group);

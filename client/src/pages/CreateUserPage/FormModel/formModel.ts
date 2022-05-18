@@ -1,5 +1,5 @@
 export default {
-    formId: 'createUserForm',
+    formId: 'createUpdateUserForm',
     formField: {
         firstName: {
             name: 'firstName',
@@ -66,5 +66,9 @@ export default {
             requiredErrorMsg: 'Введите электронную почту',
             validateErrorMsg: 'Введите корректный формат электронной почты',
         },
+        newPassword: {
+            name: 'newPassword',
+            label: 'Новый пароль*',
+        }
     },
 };

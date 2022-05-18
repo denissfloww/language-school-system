@@ -179,7 +179,7 @@ export class CalculateService {
       .sendMail({
         to: 'denbugackoff21@gmail.com',
         from: 'denisbugackoff@yandex.ru',
-        subject: 'Тест',
+        subject: 'TIGER CLUB',
         template: 'index',
       })
       .then((success) => {

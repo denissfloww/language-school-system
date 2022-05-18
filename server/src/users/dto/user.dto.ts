@@ -1,3 +1,5 @@
+import { RoleDto } from '../../roles/dto/role.dto';
+
 export class UserDto {
   id: number;
   firstName: string;
@@ -6,6 +8,7 @@ export class UserDto {
   email?: string;
   birthDate: Date;
   phone?: string;
+  roles: RoleDto[];
   student?: {
     parentName: string;
     parentMiddleName: string;

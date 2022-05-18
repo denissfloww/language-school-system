@@ -109,7 +109,7 @@ export const fetchFormDataAction = (): AppThunk => {
             });
 
             const teachersValues: IAutoCompleteValues[] = teachers.data.map(teacher => {
-                return { label: `${teacher.lastName} ${teacher.middleName ?? ''} ${teacher.firstName}`, value: String(teacher.id) };
+                return { label: `${teacher.lastName} ${teacher.firstName} ${teacher.middleName ?? ''}`, value: String(teacher.id) };
             });
 
             const languagesValues: IAutoCompleteValues[] = languages.data.map(language => {

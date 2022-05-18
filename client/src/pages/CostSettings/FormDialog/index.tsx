@@ -52,7 +52,7 @@ const CostDialogForm = (props: ICostDialogFormProps) => {
 
     return (
         <Dialog open={open} onClose={close} fullWidth={true} maxWidth='sm'>
-            <DialogTitle>{cost ? 'Изменение языка' : 'Добавление нового языка'}</DialogTitle>
+            <DialogTitle>{cost ? 'Изменение тарифа' : 'Добавление нового тарифа'}</DialogTitle>
             <Formik onSubmit={_handleSubmit} initialValues={initValues} validationSchema={validationSchema} validateOnChange>
                 {({ isSubmitting }) => (
                     <Form id={formId}>

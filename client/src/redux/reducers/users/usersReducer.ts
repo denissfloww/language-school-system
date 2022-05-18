@@ -6,9 +6,10 @@ import { ICreatedUser, ICreateUserData } from './types';
 import { toast } from 'react-toastify';
 import { getErrorMsg } from '../../../utils/helperFunc';
 import { getCurrentValidation } from '../../../pages/CreateUserPage/FormModel/validationSchema';
+import { IPageDataResponse } from '../../../services/responses/types';
 
 interface InitialState {
-    users: IUser[];
+    users?: IPageDataResponse<IUser>;
     createdUser?: ICreatedUser;
     isLoading: boolean;
     validationSchema: any[];
@@ -16,7 +17,6 @@ interface InitialState {
 }
 
 const initialState: InitialState = {
-    users: [],
     isLoading: false,
     validationSchema: getCurrentValidation(false),
 };
@@ -25,7 +25,7 @@ const usersSlice = createSlice({
     name: 'users',
     initialState,
     reducers: {
-        setUsers: (state, action: PayloadAction<IUser[]>) => {
+        setUsers: (state, action: PayloadAction<IPageDataResponse<IUser>>) => {
             state.users = action.payload;
         },
         setCreatedUserData: (state, action: PayloadAction<ICreatedUser>) => {
@@ -48,7 +48,7 @@ export const { setUsers, setCreatedUserData, setValidationSchema, setUser } = us
 export const fetchUsers = (): AppThunk => {
     return async dispatch => {
         try {
-            const users = UsersService.getUsers();
+            const users = await UsersService.getUsers();
             dispatch(setUsers(users));
         } catch (e) {
             console.log(e);

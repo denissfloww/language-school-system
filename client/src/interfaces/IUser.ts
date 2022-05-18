@@ -1,4 +1,4 @@
-import { RoleTypes } from './IRole';
+import { IRole, RoleTypes } from "./IRole";
 
 export interface IUser {
     id: number;
@@ -6,6 +6,7 @@ export interface IUser {
     middleName?: string;
     lastName: string;
     role: RoleTypes;
+    roles: IRole[];
     password?: string;
     birthDate: Date;
     phone?: string;

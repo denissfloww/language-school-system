@@ -1,4 +1,5 @@
 export interface IRole {
+    id: number | string;
     name: RoleTypes;
     label: string;
     description: string;

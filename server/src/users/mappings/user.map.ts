@@ -1,7 +1,9 @@
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
-import { mapFrom, Mapper } from '@automapper/core';
+import { mapFrom, Mapper, mapWith } from '@automapper/core';
 import { UserDto } from '../dto/user.dto';
 import { User } from '../../models/user.entity';
+import { RoleDto } from '../../roles/dto/role.dto';
+import { Role } from '../../models/role.entity';
 
 export class UserProfile extends AutomapperProfile {
   constructor(@InjectMapper() mapper: Mapper) {
@@ -60,7 +62,10 @@ export class UserProfile extends AutomapperProfile {
           (destination) => destination.student?.parentPhone,
           mapFrom((source) => source.student?.parentPhone),
         )
-      ;
+        .forMember(
+          (destination) => destination.roles,
+          mapWith(RoleDto, Role, (source) => source.roles),
+        );
     };
   }
 }

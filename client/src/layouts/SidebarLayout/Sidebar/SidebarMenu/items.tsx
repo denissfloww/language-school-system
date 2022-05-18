@@ -1,20 +1,20 @@
-import SettingsIcon from '@mui/icons-material/Settings';
-import GroupIcon from '@mui/icons-material/Group';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import GroupsIcon from '@mui/icons-material/Groups';
-import PersonAddAltSharpIcon from '@mui/icons-material/PersonAddAltSharp';
-import ImportContactsIcon from '@mui/icons-material/ImportContacts';
-import SchoolIcon from '@mui/icons-material/School';
-import React, { ReactNode } from 'react';
-import { RoleTypes } from '../../../../interfaces/IRole';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import LanguageIcon from '@mui/icons-material/Language';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import FeedIcon from '@mui/icons-material/Feed';
-import AddIcon from '@mui/icons-material/Add';
-import TableRowsIcon from '@mui/icons-material/TableRows';
-import NewspaperIcon from '@mui/icons-material/Newspaper';
-import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
+import SettingsIcon from "@mui/icons-material/Settings";
+import GroupIcon from "@mui/icons-material/Group";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import GroupsIcon from "@mui/icons-material/Groups";
+import PersonAddAltSharpIcon from "@mui/icons-material/PersonAddAltSharp";
+import ImportContactsIcon from "@mui/icons-material/ImportContacts";
+import SchoolIcon from "@mui/icons-material/School";
+import React, { ReactNode } from "react";
+import { RoleTypes } from "../../../../interfaces/IRole";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import LanguageIcon from "@mui/icons-material/Language";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import FeedIcon from "@mui/icons-material/Feed";
+import AddIcon from "@mui/icons-material/Add";
+import TableRowsIcon from "@mui/icons-material/TableRows";
+import NewspaperIcon from "@mui/icons-material/Newspaper";
+import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 
 export interface IMenuItem {
     icon: ReactNode;
@@ -45,10 +45,12 @@ export const menu: IMenuItem[] = [
         title: 'Журнал',
         link: '/dashboard/journal',
         items: [],
+        availableRoles: [RoleTypes.Admin, RoleTypes.Teacher],
     },
     {
         icon: <SettingsIcon />,
         title: 'Настройки',
+        availableRoles: [RoleTypes.Admin],
         defaultOpen: true,
         items: [
             {

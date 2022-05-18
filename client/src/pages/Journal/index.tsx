@@ -9,11 +9,12 @@ import JournalDataGrid from './DataGrid';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import {
-    fetchEventsAction,
-    fetchJournalDataAction,
-    selectJournalState,
-    setSelectedGroupId,
-} from '../../redux/reducers/journal/journalReducer';
+  fetchEventsAction, fetchGroupAttendanceAction,
+  fetchJournalAttendanceAction,
+  fetchJournalDataAction,
+  selectJournalState,
+  setSelectedGroupId
+} from "../../redux/reducers/journal/journalReducer";
 import Button from '@mui/material/Button';
 import { selectAuthState } from '../../redux/reducers/auth/authReducer';
 import { RoleTypes } from '../../interfaces/IRole';
@@ -27,6 +28,7 @@ const Journal = () => {
     const handleGroupChange = (event: any, value: any) => {
         dispatch(setSelectedGroupId(+value.value));
         dispatch(fetchEventsAction(+value.value));
+        dispatch(fetchGroupAttendanceAction(+value.value))
     };
 
     useEffect(() => {

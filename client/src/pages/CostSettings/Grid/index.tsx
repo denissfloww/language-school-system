@@ -112,8 +112,8 @@ const CostGrid = () => {
                                                                 <UpdateCostButton cost={cost} />
                                                                 <DeleteButton
                                                                     id={cost.id}
-                                                                    title='Удалить язык?'
-                                                                    confirmationText='Вы действительно хотите удалить язык? Удалятся все группы с данным языком'
+                                                                    title='Удалить тариф?'
+                                                                    confirmationText='Вы действительно хотите удалить тариф? Удалятся все группы с данным тарифом'
                                                                     onDeleteMethod={() => {
                                                                         dispatch(deleteCostAction(cost.id));
                                                                     }}
