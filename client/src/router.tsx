@@ -15,9 +15,12 @@ import CreateFeedPage from './pages/FeedsSettings/CreateFeedPage';
 import FeedsPage from './pages/FeedsSettings/FeedsPage';
 import UpdateFeedPage from './pages/FeedsSettings/UpdateFeedPage';
 import FeedBoardPage from './pages/FeedBoard';
-import AuthService from './services/AuthService';
-import AttendanceInfo from './pages/PersonalPage/StudentInfo/AttendanceInfo';
 import UpdateUserPage from './pages/UsersSettings/UpdateUserPage';
+import StudentReport from './pages/StudentsSettings/StudentReport';
+import StudentTestsPage from './pages/StudentTestsPage';
+import CreateTestPage from './pages/StudentTestsPage/CreateTestPage';
+import UpdateTestPage from './pages/StudentTestsPage/UpdateTestPage';
+import ReportSettingsPage from './pages/ReportSettings';
 
 // @ts-ignore
 // eslint-disable-next-line react/display-name
@@ -41,11 +44,21 @@ const Router = () => {
             <Route element={<ProtectedAuthRoute />}>
                 <Route path='/' element={<Navigate replace to='/dashboard/schedule' />} />
                 <Route path='dashboard' element={<SidebarLayout />}>
-                    {/*<Route path='*' element={<Navigate to='/dashboard/schedule' replace />} />*/}
                     <Route path='schedule' element={<Schedule />} />
+                    <Route path='tests'>
+                        <Route index element={<StudentTestsPage />} />
+                        <Route path='create' element={<CreateTestPage />} />
+                        <Route path='update/:testId' element={<UpdateTestPage />} />
+                    </Route>
+                    <Route path='reports'>
+                        <Route index element={<ReportSettingsPage />} />
+                    </Route>
+                    <Route path='students'>
+                        <Route index element={<StudentsSettings />} />
+                        <Route path=':studentId/report/add' element={<StudentReport />} />
+                    </Route>
                     <Route path='settings'>
                         <Route path='groups' element={<GroupSettings />} />
-                        <Route path='students' element={<StudentsSettings />} />
                         <Route path='user/create' element={<CreateUserPage />} />
                         <Route path='lesson-types' element={<LessonTypeSettings />} />
                         <Route path='languages' element={<LanguageSettings />} />

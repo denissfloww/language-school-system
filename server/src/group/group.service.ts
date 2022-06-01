@@ -102,22 +102,33 @@ export class GroupService {
     }
     if (user.roles.some((role) => role.name == RolesEnum.Student)) {
       const student = await this.studentsService.getStudentByUserId(userId);
-      const groups = student.groups;
 
-      const groupDtos = this.mapper.mapArray(groups, GroupDto, Group);
-      for (const groupDto of groupDtos) {
-        Logger.debug(student.id);
-        const nextMonthCalculate =
-          await this.calculateService.monthlyStudentCalculateByGroup(
-            student.id,
-            Number(groupDto.id),
-          );
-        groupDto.priceNextMonth = nextMonthCalculate.priceNextMonth;
-
-        groupDto.month = nextMonthCalculate.calculateMonth;
-      }
-      return groupDtos;
+      return this.getStudentGroupsDtos(student.id);
     }
+  }
+
+  async getStudentGroupsDtos(studentId: number) {
+    const student = await this.studentsService.getStudentById(studentId);
+
+    if (!student || !student.groups.length) {
+      throw new NotFoundException();
+    }
+
+    const groups = student.groups;
+
+    const groupDtos = this.mapper.mapArray(groups, GroupDto, Group);
+    for (const groupDto of groupDtos) {
+      Logger.debug(student.id);
+      const nextMonthCalculate =
+        await this.calculateService.monthlyStudentCalculateByGroup(
+          student.id,
+          Number(groupDto.id),
+        );
+      groupDto.priceNextMonth = nextMonthCalculate.priceNextMonth;
+
+      groupDto.month = nextMonthCalculate.calculateMonth;
+    }
+    return groupDtos;
   }
 
   async getGroupById(id: number) {

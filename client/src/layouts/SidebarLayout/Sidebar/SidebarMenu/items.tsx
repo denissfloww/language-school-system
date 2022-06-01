@@ -1,20 +1,22 @@
-import SettingsIcon from "@mui/icons-material/Settings";
-import GroupIcon from "@mui/icons-material/Group";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import GroupsIcon from "@mui/icons-material/Groups";
-import PersonAddAltSharpIcon from "@mui/icons-material/PersonAddAltSharp";
-import ImportContactsIcon from "@mui/icons-material/ImportContacts";
-import SchoolIcon from "@mui/icons-material/School";
-import React, { ReactNode } from "react";
-import { RoleTypes } from "../../../../interfaces/IRole";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import LanguageIcon from "@mui/icons-material/Language";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import FeedIcon from "@mui/icons-material/Feed";
-import AddIcon from "@mui/icons-material/Add";
-import TableRowsIcon from "@mui/icons-material/TableRows";
-import NewspaperIcon from "@mui/icons-material/Newspaper";
-import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
+import SettingsIcon from '@mui/icons-material/Settings';
+import GroupIcon from '@mui/icons-material/Group';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import GroupsIcon from '@mui/icons-material/Groups';
+import PersonAddAltSharpIcon from '@mui/icons-material/PersonAddAltSharp';
+import ImportContactsIcon from '@mui/icons-material/ImportContacts';
+import SchoolIcon from '@mui/icons-material/School';
+import React, { ReactNode } from 'react';
+import { RoleTypes } from '../../../../interfaces/IRole';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import LanguageIcon from '@mui/icons-material/Language';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import FeedIcon from '@mui/icons-material/Feed';
+import AddIcon from '@mui/icons-material/Add';
+import TableRowsIcon from '@mui/icons-material/TableRows';
+import NewspaperIcon from '@mui/icons-material/Newspaper';
+import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
+import QuizIcon from '@mui/icons-material/Quiz';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 
 export interface IMenuItem {
     icon: ReactNode;
@@ -45,6 +47,24 @@ export const menu: IMenuItem[] = [
         title: 'Журнал',
         link: '/dashboard/journal',
         items: [],
+        availableRoles: [RoleTypes.Admin, RoleTypes.Teacher],
+    },
+    {
+        icon: <GroupIcon />,
+        title: 'Ученики',
+        link: '/dashboard/students',
+        availableRoles: [RoleTypes.Admin, RoleTypes.Teacher],
+    },
+    {
+        icon: <QuizIcon />,
+        title: 'Тесты',
+        link: '/dashboard/tests',
+        availableRoles: [RoleTypes.Admin, RoleTypes.Teacher],
+    },
+    {
+        icon: <AssessmentIcon />,
+        title: 'Отчёты',
+        link: '/dashboard/reports',
         availableRoles: [RoleTypes.Admin, RoleTypes.Teacher],
     },
     {
@@ -95,14 +115,9 @@ export const menu: IMenuItem[] = [
                 ],
             },
             {
-                icon: <SupervisedUserCircleIcon/>,
+                icon: <SupervisedUserCircleIcon />,
                 title: 'Пользователи',
                 link: '/dashboard/settings/users',
-            },
-            {
-                icon: <GroupIcon />,
-                title: 'Ученики',
-                link: '/dashboard/settings/students',
             },
         ],
     },

@@ -7,7 +7,7 @@ import { Cron } from '@nestjs/schedule';
 export class TasksService {
   private readonly logger = new Logger(TasksService.name);
 
-  @Cron('* * * 25 * *')
+  // @Cron('* * * 25 * *')
   test() {
     this.logger.debug('Called when the current second is 45');
   }

@@ -17,7 +17,7 @@ const { formId, formField } = formModel;
 const UpdateUserForm = () => {
     const theme = useTheme();
     const dispatch = useDispatch();
-    const { firstName, middleName, lastName, birthDate, role, parentPhone, parentName, parentMiddleName, parentLastName, parentEmail } =
+    const { firstName, middleName, lastName, birthDate, role, parentPhone, parentName, parentMiddleName, parentLastName, parentEmail, email, phone } =
         formField;
     function _handleSubmit(values: any, actions: any) {
         console.log('бан');
@@ -87,27 +87,38 @@ const UpdateUserForm = () => {
                                         fullwidth
                                     />
                                 </Grid>
+                                {/*<Grid item xs={12} md={6} sx={{ mt: 2 }}>*/}
+                                {/*    <InputField name={parentLastName.name} label={parentLastName.label} fullWidth />*/}
+                                {/*</Grid>*/}
+                                {/*<Grid item xs={12} md={6}>*/}
+                                {/*    <InputField name={parentName.name} label={parentName.label} fullWidth />*/}
+                                {/*</Grid>*/}
+                                {/*<Grid item xs={12} md={6}>*/}
+                                {/*    <InputField name={parentMiddleName.name} label={parentMiddleName.label} fullWidth />*/}
+                                {/*</Grid>*/}
+                                {/*<Grid item xs={12} md={6}>*/}
+                                {/*    <InputField name={parentEmail.name} label={parentEmail.label} fullWidth />*/}
+                                {/*</Grid>*/}
+                                {/*<Grid item xs={12} md={12} sx={{ textAlign: 'center' }}>*/}
+                                {/*    <Typography variant='subtitle1' gutterBottom>*/}
+                                {/*        {parentPhone.label}*/}
+                                {/*    </Typography>*/}
+                                {/*    <InputField*/}
+                                {/*        name={parentPhone.name}*/}
+                                {/*        InputProps={{*/}
+                                {/*            inputComponent: PhoneMask as any,*/}
+                                {/*        }}*/}
+                                {/*    />*/}
+                                {/*</Grid>*/}
                                 <Grid item xs={12} md={6} sx={{ mt: 2 }}>
-                                    <InputField name={parentLastName.name} label={parentLastName.label} fullWidth />
+                                    <InputField name={email.name} label={email.label} fullWidth />
                                 </Grid>
-                                <Grid item xs={12} md={6}>
-                                    <InputField name={parentName.name} label={parentName.label} fullWidth />
-                                </Grid>
-                                <Grid item xs={12} md={6}>
-                                    <InputField name={parentMiddleName.name} label={parentMiddleName.label} fullWidth />
-                                </Grid>
-                                <Grid item xs={12} md={6}>
-                                    <InputField name={parentEmail.name} label={parentEmail.label} fullWidth />
-                                </Grid>
-                                <Grid item xs={12} md={12} sx={{ textAlign: 'center' }}>
-                                    <Typography variant='subtitle1' gutterBottom>
-                                        {parentPhone.label}
-                                    </Typography>
+                                <Grid item xs={12} md={12}>
                                     <InputField
-                                        name={parentPhone.name}
-                                        InputProps={{
-                                            inputComponent: PhoneMask as any,
-                                        }}
+                                      name={phone.name}
+                                      InputProps={{
+                                          inputComponent: PhoneMask as any,
+                                      }}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={12}>

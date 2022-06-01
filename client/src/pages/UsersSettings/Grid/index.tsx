@@ -12,11 +12,12 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUsers, selectUsersState } from '../../../redux/reducers/users/usersReducer';
 import { IUser } from '../../../interfaces/IUser';
-import DeleteGroupButton from './Buttons/DeleteGroupButton';
 import UpdateUserButton from './Buttons/UpdateButton';
 import TableBodySkeleton from '../../../components/Skeletons/TableBodySkeleton';
-import DeleteButton from "../../../components/Buttons/DeleteButton";
-import { deleteGroupAction } from "../../../redux/reducers/groups/groupsReducer";
+import DeleteButton from '../../../components/Buttons/DeleteButton';
+import IconButton from '@mui/material/IconButton';
+import { Link } from 'react-router-dom';
+import EditIcon from '@mui/icons-material/Edit';
 
 const UsersGrid = () => {
     const dispatch = useDispatch();
@@ -67,14 +68,16 @@ const UsersGrid = () => {
                                                             {/*{RoleTypesDisplay[user.role]}*/}
                                                         </TableCell>
                                                         <TableCell component='th' scope='row' align='right'>
-                                                            <UpdateUserButton userId={user.id} />
+                                                            <IconButton to={`/dashboard/settings/users/update/${user.id}`} component={Link}>
+                                                                <EditIcon />
+                                                            </IconButton>
                                                             <DeleteButton
-                                                              id={user.id}
-                                                              confirmationText='Вы действительно хотите удалить пользователя?'
-                                                              title='Удалить пользователя?'
-                                                              onDeleteMethod={() => {
-                                                                  console.log('делете')
-                                                              }}
+                                                                id={user.id}
+                                                                confirmationText='Вы действительно хотите удалить пользователя?'
+                                                                title='Удалить пользователя?'
+                                                                onDeleteMethod={() => {
+                                                                    console.log('делете');
+                                                                }}
                                                             />
                                                         </TableCell>
                                                     </TableRow>

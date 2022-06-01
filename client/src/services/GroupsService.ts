@@ -24,6 +24,23 @@ const getUserGroups = async (userId: number) => {
     return data;
 };
 
+const getStudentGroups = async (studentId: number) => {
+    const response = await $api
+        .get(`${API_URL}/group/student/${studentId}`)
+        .then(data => {
+            return data;
+        })
+        .catch(e => {
+            if (!e.response) {
+                toast.error('Connection error', toastConfig);
+            } else {
+                toast.error(getErrorMsg(e as any), toastConfig);
+            }
+        });
+    const data: IGroup[] = response?.data;
+    return data;
+};
+
 const getGroups = async (page?: number, rowPerPage?: number) => {
     const response = await $api
         .get(`${API_URL}/group`, {
@@ -141,5 +158,6 @@ const GroupsService = {
     updateGroup,
     deleteGroup,
     getUserGroups,
+    getStudentGroups,
 };
 export default GroupsService;

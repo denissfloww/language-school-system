@@ -6,10 +6,13 @@ import {
   JoinColumn,
   ManyToMany,
   JoinTable,
+  OneToMany,
 } from 'typeorm';
 import BaseModel from './base';
 import { User } from './user.entity';
 import { Group } from './group.entity';
+import { ScheduleEvent } from './schedule-event.entity';
+import { Report } from './report.entity';
 
 @Entity('students')
 export class Student extends BaseModel {
@@ -39,7 +42,6 @@ export class Student extends BaseModel {
   })
   groups: Group[];
 
-
   @Column({ name: 'parent_name' })
   parentName: string;
 
@@ -54,4 +56,7 @@ export class Student extends BaseModel {
 
   @Column({ name: 'parent_phone' })
   parentPhone: string;
+
+  @OneToMany(() => Report, (report) => report.student)
+  reports: Report[];
 }

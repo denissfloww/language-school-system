@@ -16,6 +16,7 @@ import { Teacher } from './teacher.entity';
 import { Language } from './language.entity';
 import { ScheduleEvent } from './schedule-event.entity';
 import { Cost } from './cost.entity';
+import { Report } from './report.entity';
 
 @Entity('groups')
 export class Group extends BaseModel {
@@ -70,4 +71,7 @@ export class Group extends BaseModel {
 
   @OneToMany(() => ScheduleEvent, (scheduleEvent) => scheduleEvent.group)
   scheduleEvents: ScheduleEvent[];
+
+  @OneToMany(() => Report, (report) => report.group)
+  reports: Report[];
 }

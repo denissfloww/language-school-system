@@ -16,6 +16,11 @@ export class StudentsController {
     return await this.studentsService.getStudentDtoByUserId(userId);
   }
 
+  @Get(':id')
+  async getStudentById(@Param('id', ParseIntPipe) id: number) {
+    return await this.studentsService.getStudentDtoById(id);
+  }
+
   @Get('/test')
   test() {
     return this.studentsService.getStudentAttendanceForMonth();

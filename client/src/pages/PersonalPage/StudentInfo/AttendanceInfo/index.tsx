@@ -12,62 +12,6 @@ import { fetchStudentAttendanceDataAction, selectProfileState } from '../../../.
 const StudentAttendanceInfo = () => {
     const theme = useTheme();
     const dispatch = useDispatch();
-    const testData: IStudentAttendance[] = [
-        {
-            groupId: 1,
-            groupName: '345dfg',
-            attendances: {
-                studentId: '2',
-                studentName: 'Тестовый Т',
-                attendances: [
-                    {
-                        id: 5,
-                        date: '2022-05-09T10:00:00.000Z',
-                        result: 'goodAbsent',
-                    },
-                    {
-                        id: 6,
-                        date: '2022-05-11T10:00:00.000Z',
-                        result: 'attended',
-                    },
-                    {
-                        id: 7,
-                        date: '2022-05-16T10:00:00.000Z',
-                        result: 'attended',
-                    },
-                    {
-                        id: 8,
-                        date: '2022-05-18T10:00:00.000Z',
-                        result: 'attended',
-                    },
-                    {
-                        date: '2022-05-23T10:00:00.000Z',
-                        result: '',
-                    },
-                    {
-                        date: '2022-05-25T10:00:00.000Z',
-                        result: '',
-                    },
-                    {
-                        date: '2022-05-30T10:00:00.000Z',
-                        result: '',
-                    },
-                    {
-                        date: '2022-06-01T10:00:00.000Z',
-                        result: '',
-                    },
-                    {
-                        date: '2022-06-06T10:00:00.000Z',
-                        result: '',
-                    },
-                    {
-                        date: '2022-06-08T10:00:00.000Z',
-                        result: '',
-                    },
-                ],
-            },
-        },
-    ];
     useEffect(() => {
         dispatch(fetchStudentAttendanceDataAction());
     }, []);
@@ -78,10 +22,10 @@ const StudentAttendanceInfo = () => {
         <>
             {attendanceStudentData.length ? (
                 <>
-                    <Typography variant='h6'>Успеваемость по группам</Typography>
+                    <Typography variant='h6' sx={{textAlign:'center'}}>Посещаемость по группам</Typography>
                     {attendanceStudentData.map(studentAttendance => (
                         <>
-                            <Paper sx={{ p: 2, mt: 2 }}>
+                            <Paper sx={{ p: 2 }}>
                                 <Typography variant='subtitle1'>
                                     Группа: <b>{studentAttendance.groupName}</b>
                                 </Typography>
@@ -120,7 +64,7 @@ const StudentAttendanceDataGrid = (props: { attendanceData: IStudentAttendance }
                 rowGetter={i => gridData[i]}
                 rowsCount={gridData.length}
                 minHeight={100}
-                minWidth={1025}
+                minWidth={1000}
             />
         </>
     );

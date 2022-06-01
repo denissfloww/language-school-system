@@ -105,11 +105,11 @@ const changePassword = async (dto: IChangePasswordDto) => {
         });
 };
 
-const StudentsService = {
+const UsersService = {
     getUsers,
     createUser,
     changePassword,
     updateUser,
     getUserById,
 };
-export default StudentsService;
+export default UsersService;

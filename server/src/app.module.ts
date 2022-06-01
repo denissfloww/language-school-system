@@ -9,7 +9,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RolesModule } from './roles/roles.module';
 import { StudentsModule } from './students/students.module';
 import { GroupModule } from './group/group.module';
@@ -29,12 +29,20 @@ import { AttendanceModule } from './attendance/attendance.module';
 import { MailModule } from './mail/mail.module';
 import { CalculateModule } from './calculate/calculate.module';
 import { TasksModule } from './tasks/tasks.module';
-import { connectionApp } from './config/database.config';
+// import { connectionApp } from './config/database.config';
 import { UserProfile } from './users/mappings/user.map';
 import { RoleProfile } from './roles/mappings/role.map';
+import { TestsModule } from './tests/tests.module';
+import { ReportsModule } from './reports/reports.module';
+import dbConfiguration from './config/database.config';
 
 export function DatabaseOrmModule(): DynamicModule {
-  return TypeOrmModule.forRoot({ ...connectionApp, autoLoadEntities: true });
+  return TypeOrmModule.forRootAsync({
+    inject: [ConfigService],
+    useFactory: async (configService: ConfigService) => ({
+      ...configService.get('database'),
+    }),
+  });
 }
 
 @Module({
@@ -42,6 +50,7 @@ export function DatabaseOrmModule(): DynamicModule {
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.${process.env.NODE_ENV}.env`,
+      load: [dbConfiguration],
     }),
     DatabaseOrmModule(),
     AutomapperModule.forRoot({
@@ -67,6 +76,8 @@ export function DatabaseOrmModule(): DynamicModule {
     AttendanceModule,
     CalculateModule,
     TasksModule,
+    TestsModule,
+    ReportsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

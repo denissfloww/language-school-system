@@ -9,3 +9,11 @@ export interface IPageDataResponse<T> {
         hasNextPage: boolean;
     };
 }
+
+export interface INewPageDataResponse<T> {
+    data: T[];
+    count: number;
+    total: number;
+    page: number;
+    pageCount: number;
+}

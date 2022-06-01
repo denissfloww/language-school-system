@@ -1,3 +1,5 @@
+import { IUser } from './IUser';
+
 export interface IStudent {
     id: number;
     firstName: string;
@@ -9,6 +11,7 @@ export interface IStudent {
     parentLastName: string;
     parentEmail: string;
     parentPhone: string;
+    user: IUser;
     groupsPayment: {
         groupId: number;
         groupName: string;

@@ -39,6 +39,11 @@ export class GroupController {
     return await this.groupsService.getUserGroups(userId);
   }
 
+  @Get('/student/:studentId')
+  async getStudentGroups(@Param('studentId', ParseIntPipe) studentId: number) {
+    return await this.groupsService.getStudentGroupsDtos(studentId);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Post()
   createGroup(@Body() createGroupDto: CreateGroupDto) {

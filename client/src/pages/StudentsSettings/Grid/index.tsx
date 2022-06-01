@@ -1,6 +1,6 @@
 import Paper from '@mui/material/Paper';
 import TableRow from '@mui/material/TableRow';
-import { TableCell } from '@mui/material';
+import { TableCell, Tooltip } from '@mui/material';
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import TableContainer from '@mui/material/TableContainer';
@@ -14,18 +14,17 @@ import NumberFormat from 'react-number-format';
 import IconButton from '@mui/material/IconButton';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 import { IStudent } from '../../../interfaces/IStudent';
 import moment from 'moment';
+import TableBodySkeleton from '../../../components/Skeletons/TableBodySkeleton';
+import { Link } from 'react-router-dom';
 
 const StudentsGrid = () => {
     const dispatch = useDispatch();
     const headerRows: { text: string; align: 'left' | 'center' | 'right' }[] = [
-        {
-            text: '',
-            align: 'left',
-        },
         {
             text: 'Код',
             align: 'left',
@@ -46,8 +45,16 @@ const StudentsGrid = () => {
             text: 'Email родителя',
             align: 'center',
         },
+        {
+            text: '',
+            align: 'center',
+        },
+        {
+            text: '',
+            align: 'center',
+        },
     ];
-    const { students } = useSelector(selectStudentsState);
+    const { students, isStudentsLoading } = useSelector(selectStudentsState);
     const fetchStudentsData = () => {
         dispatch(fetchStudents());
     };
@@ -73,11 +80,27 @@ const StudentsGrid = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {students?.map(student => (
+                            {!isStudentsLoading && students ? (
                                 <>
-                                    <StudentGroupRow student={student} />
+                                    {students.length ? (
+                                        <>
+                                            {students?.map(student => (
+                                                <>
+                                                    <StudentGroupRow student={student} />
+                                                </>
+                                            ))}
+                                        </>
+                                    ) : (
+                                        <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+                                            <TableCell key={4} component='th' scope='row' align='center'>
+                                                Отсутствуют данные
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
                                 </>
-                            ))}
+                            ) : (
+                                <TableBodySkeleton columnsCount={headerRows.length} />
+                            )}
                         </TableBody>
                     </Table>
                 </TableContainer>
@@ -92,11 +115,6 @@ const StudentGroupRow = (props: { student: IStudent }) => {
     return (
         <>
             <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-                <TableCell>
-                    <IconButton size='small' onClick={() => setOpen(!open)}>
-                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                    </IconButton>
-                </TableCell>
                 <TableCell component='th' scope='row' align='left'>
                     {student.id}
                 </TableCell>
@@ -112,9 +130,23 @@ const StudentGroupRow = (props: { student: IStudent }) => {
                 <TableCell component='th' scope='row' align='center'>
                     {student.parentEmail}
                 </TableCell>
+                <TableCell component='th' scope='row'>
+                    <Tooltip title='Открыть список групп'>
+                        <IconButton size='small' onClick={() => setOpen(!open)}>
+                            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                        </IconButton>
+                    </Tooltip>
+                </TableCell>
+                <TableCell component='th' scope='row'>
+                    <Tooltip title='Новый отчет по успеваемости'>
+                        <IconButton size='small' to={`/dashboard/students/${student.id}/report/add`} component={Link}>
+                            <AssessmentIcon />
+                        </IconButton>
+                    </Tooltip>
+                </TableCell>
             </TableRow>
             <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0, borderBottom: 'none' }} colSpan={6}>
                     <Collapse in={open} timeout='auto' unmountOnExit>
                         <Box sx={{ margin: 1 }}>
                             <Typography variant='h6' gutterBottom component='div'>
@@ -137,10 +169,10 @@ const StudentGroupRow = (props: { student: IStudent }) => {
                                                     {groupPayment.groupId}
                                                 </TableCell>
                                                 <TableCell>{groupPayment.groupName}</TableCell>
-                                                <TableCell align='right' sx={{ fontWeight:'bold' }}>
+                                                <TableCell align='right' sx={{ fontWeight: 'bold' }}>
                                                     {moment().locale('ru').month(groupPayment.price.calculateMonth).format('MMMM')}
                                                 </TableCell>
-                                                <TableCell align='right' sx={{ color: '#a61e1e', fontWeight:'bold' }}>
+                                                <TableCell align='right' sx={{ color: '#a61e1e', fontWeight: 'bold' }}>
                                                     <NumberFormat
                                                         value={groupPayment.price.priceNextMonth}
                                                         displayType={'text'}
@@ -151,22 +183,6 @@ const StudentGroupRow = (props: { student: IStudent }) => {
                                             </TableRow>
                                         </>
                                     ))}
-                                    {/*{students?.map(student => (*/}
-                                    {/*    <TableRow key={student.id}>*/}
-                                    {/*        <TableCell component='th' scope='row'>*/}
-                                    {/*            {student.firstName} {student.middleName} {student.lastName}*/}
-                                    {/*        </TableCell>*/}
-                                    {/*        <TableCell>{student.parentName}</TableCell>*/}
-                                    {/*        <TableCell align='right'>{student.parentEmail}</TableCell>*/}
-                                    {/*        <TableCell align='right'>*/}
-                                    {/*            <NumberFormat*/}
-                                    {/*                value={student.parentPhone}*/}
-                                    {/*                displayType={'text'}*/}
-                                    {/*                format='+ 7 (###) ### ##-##'*/}
-                                    {/*            />*/}
-                                    {/*        </TableCell>*/}
-                                    {/*    </TableRow>*/}
-                                    {/*))}*/}
                                 </TableBody>
                             </Table>
                         </Box>

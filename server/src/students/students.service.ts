@@ -12,6 +12,7 @@ import { UpdateStudentDto } from './dto/update-student.dto';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { CalculateService } from '../calculate/calculate.service';
+import { NotFoundException } from '../exceptions/not-found.exception';
 
 @Injectable()
 export class StudentsService {
@@ -39,8 +40,18 @@ export class StudentsService {
   async getStudentById(id: number) {
     return await this.studentsRepository.findOne({
       where: { id: id },
-      relations: ['groups', 'user'],
+      relations: ['groups', 'user', 'reports', 'reports.group', 'reports.test'],
     });
+  }
+
+  async getStudentDtoById(id: number) {
+    const student = await this.getStudentById(id);
+
+    if (student) {
+      return this.mapper.map(student, StudentDto, Student);
+    }
+
+    throw new NotFoundException();
   }
 
   async getStudentsByIds(ids: number[]) {

@@ -19,7 +19,7 @@ const UpdatePasswordForm = () => {
                     <Form id='updateUserPassword'>
                         <Grid container spacing={3}>
                             <Grid item xs={12} sm={6}>
-                                <InputField margin='dense' name='newPassword' label='Новый пароль' fullWidth />
+                                <InputField name='newPassword' label='Новый пароль' fullWidth />
                             </Grid>
                             <Grid item xs={12} sm={12}>
                                 <Button
@@ -27,7 +27,7 @@ const UpdatePasswordForm = () => {
                                     type='submit'
                                     variant='contained'
                                     color='primary'
-                                    sx={{ marginTop: theme.spacing(3), marginLeft: theme.spacing(1) }}
+
                                 >
                                     Изменить
                                 </Button>

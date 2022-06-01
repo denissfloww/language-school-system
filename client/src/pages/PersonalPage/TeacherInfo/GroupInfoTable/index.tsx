@@ -107,7 +107,7 @@ function GroupRow(props: { row: IGroup }) {
                                             <TableCell component='th' scope='row'>
                                                 {student.firstName} {student.middleName} {student.lastName}
                                             </TableCell>
-                                            <TableCell>{student.parentName}</TableCell>
+                                            <TableCell>{student.parentName} {student.parentMiddleName} {student.lastName}</TableCell>
                                             <TableCell align='right'>{student.parentEmail}</TableCell>
                                             <TableCell align='right'>
                                                 <NumberFormat

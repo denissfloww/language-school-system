@@ -32,10 +32,11 @@ export const UserInformationForm = (props: IProps) => {
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DatePicker
                             onChange={(value: any) => {
-                                console.log(formikProps)
-                                formikProps.setFieldValue('birthDate', value)}
-                            }
+                                console.log(formikProps);
+                                formikProps.setFieldValue('birthDate', value);
+                            }}
                             inputFormat='dd.MM.yyyy'
+                            mask={'__.__.____'}
                             value={formikProps.values.birthDate}
                             renderInput={(params: any) => (
                                 <TextField

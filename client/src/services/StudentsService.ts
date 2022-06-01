@@ -42,8 +42,21 @@ const getStudentByUserId = async (userId: number) => {
     return response?.data as IStudent;
 };
 
+const getStudentById = async (studentId: number) => {
+    const response = await $api.get(`${API_URL}/students/${studentId}`).catch(e => {
+        if (!e.response) {
+            toast.error('Connection error', toastConfig);
+        } else {
+            toast.error(getErrorMsg(e as any), toastConfig);
+        }
+    });
+
+    return response?.data as IStudent;
+};
+
 const StudentsService = {
     getStudents,
     getStudentByUserId,
+    getStudentById,
 };
 export default StudentsService;

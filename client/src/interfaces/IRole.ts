@@ -12,6 +12,10 @@ export enum RoleTypes {
     Teacher = 'teacher',
 }
 
+export function allRoles() {
+    return [RoleTypes.Student, RoleTypes.Teacher, RoleTypes.Admin];
+}
+
 export let RoleTypesDisplay: { [index: string]: string } = {};
 RoleTypesDisplay[RoleTypes.None] = 'None';
 RoleTypesDisplay[RoleTypes.Admin] = 'Администратор';
