@@ -11,6 +11,7 @@ import { AttendanceMarkEnum } from './AttendanceMarkEnum';
 import moment from 'moment';
 import { NotFoundException } from '../exceptions/not-found.exception';
 import { GroupStudentAttendanceDto } from './dto/group-student-attendance.dto';
+import { Student } from '../models/student.entity';
 
 @Injectable()
 export class AttendanceService {
@@ -55,11 +56,7 @@ export class AttendanceService {
     for (const group of student.groups) {
       const events = await this.scheduleService.getEventsByGroup(group.id);
       const studentAttendance = await this.getStudentAttendanceInGroup(
-        {
-          id: student.id,
-          firstName: student.user.firstName,
-          lastName: student.user.lastName,
-        },
+        student,
         group.id,
         events,
       );
@@ -106,19 +103,11 @@ export class AttendanceService {
     const student = await this.studentsService.getStudentById(studentId);
     const events = await this.scheduleService.getEventsByGroup(groupId);
 
-    return await this.getStudentAttendanceInGroup(
-      {
-        id: student.id,
-        firstName: student.user.firstName,
-        lastName: student.user.lastName,
-      },
-      groupId,
-      events,
-    );
+    return await this.getStudentAttendanceInGroup(student, groupId, events);
   }
 
   async getStudentAttendanceInGroup(
-    student: { id: number; lastName: string; firstName: string },
+    student: Student,
     groupId: number,
     events: Date[],
   ) {
@@ -155,8 +144,14 @@ export class AttendanceService {
     }
 
     const studentAttendance: StudentAttendanceDto = {
+      parentEmail: student.parentEmail,
+      parentLastName: student.parentLastName,
+      parentMiddleName: student.parentMiddleName,
+      parentName: student.parentName,
+      parentPhone: student.parentPhone,
+      studentLastName: student.user.lastName,
       studentId: String(student.id),
-      studentName: `${student.lastName} ${student.firstName[0]}`,
+      studentName: student.user.firstName,
       attendances: attendanceArray,
     };
     return studentAttendance;
@@ -169,13 +164,12 @@ export class AttendanceService {
 
     const attendances: StudentAttendanceDto[] = [];
 
-    for (const student of students) {
+    for (const studentDto of students) {
+      const student = await this.studentsService.getStudentById(
+        Number(studentDto.id),
+      );
       const studentAttendance = await this.getStudentAttendanceInGroup(
-        {
-          id: Number(student.id),
-          firstName: student.firstName,
-          lastName: student.lastName,
-        },
+        student,
         groupId,
         events,
       );

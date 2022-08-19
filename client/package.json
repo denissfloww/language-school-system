@@ -10,6 +10,7 @@
     "@mui/material": "^5.2.8",
     "@mui/x-data-grid": "^5.6.1",
     "@mui/x-data-grid-generator": "^5.7.0",
+    "@nestjsx/crud-request": "^5.0.0-alpha.3",
     "@reduxjs/toolkit": "^1.7.2",
     "@syncfusion/ej2": "19.4.43",
     "@syncfusion/ej2-base": "^19.4.42",

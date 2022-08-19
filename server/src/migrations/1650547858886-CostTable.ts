@@ -1,11 +1,4 @@
-import {
-  MigrationInterface,
-  QueryRunner,
-  Table,
-  TableColumn,
-  TableForeignKey,
-  TableIndex,
-} from 'typeorm';
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class CostTable1650547858886 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -44,36 +37,14 @@ export class CostTable1650547858886 implements MigrationInterface {
             default: "timezone('utc'::text, now())",
             isNullable: false,
           },
+          {
+            name: 'deleted_at',
+            type: 'timestamp with time zone',
+            isNullable: true,
+          },
         ],
       }),
       true,
-    );
-
-    await queryRunner.createIndex(
-      'costs',
-      new TableIndex({
-        name: 'IDX_COST_NAME',
-        columnNames: ['name'],
-      }),
-    );
-
-    await queryRunner.addColumn(
-      'groups',
-      new TableColumn({
-        name: 'cost_id',
-        type: 'int',
-      }),
-    );
-
-    await queryRunner.createForeignKey(
-      'groups',
-      new TableForeignKey({
-        columnNames: ['cost_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'costs',
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-      }),
     );
   }
 

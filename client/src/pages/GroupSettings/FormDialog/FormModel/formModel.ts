@@ -13,7 +13,7 @@ export default {
         students: {
             name: 'students',
             label: 'Ученики',
-            requiredErrorMsg: 'Необходимо выыбрать учеников!',
+            requiredErrorMsg: 'Необходимо выбрать учеников!',
         },
         id: {
             name: 'id',
@@ -27,11 +27,6 @@ export default {
             name: 'language',
             label: 'Язык',
             requiredErrorMsg: 'Необходимо выбрать язык!',
-        },
-        cost: {
-            name: 'cost',
-            label: 'Тариф',
-            requiredErrorMsg: 'Необходимо выбрать тариф!',
         },
     },
 };

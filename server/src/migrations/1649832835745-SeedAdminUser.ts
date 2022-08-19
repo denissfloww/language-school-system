@@ -16,9 +16,11 @@ export class SeedAdminUser1649832835745 implements MigrationInterface {
     );
 
     await queryRunner.query(
-      `INSERT INTO "user_role" (user_id, role_id) VALUES ('1','2') `,
+      `INSERT INTO "users_roles_roles" (user_id, role_id) VALUES ('1','2') `,
     );
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {}
+  public async down(queryRunner: QueryRunner): Promise<void> {
+
+  }
 }

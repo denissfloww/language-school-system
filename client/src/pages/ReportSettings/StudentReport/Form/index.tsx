@@ -21,6 +21,7 @@ import StudentTestsService from '../../../../services/StudentTestsService';
 import { ITest } from '../../../../interfaces/ITest';
 import ReportService from '../../../../services/ReportService';
 import { useNavigate } from 'react-router-dom';
+import { IReport } from '../../../../interfaces/IReport';
 
 const { formId, formField } = studentReportFormModel;
 
@@ -40,10 +41,12 @@ const StudentReportForm = (props: { reportId?: number; studentId: number }) => {
             testId: values.isTest ? Number(values.test) : null,
         };
         if (reportId) {
-            console.log(values);
+            ReportService.updateReport(reportId, data).then(() => {
+                navigate('/dashboard/reports');
+            });
         } else {
             ReportService.createReport(data).then(() => {
-                navigate(-1);
+                navigate('/dashboard/reports');
             });
         }
     }
@@ -53,15 +56,32 @@ const StudentReportForm = (props: { reportId?: number; studentId: number }) => {
     const [student, setStudent] = useState<IStudent>();
     const [tests, setTests] = useState<ITest[]>([]);
     const [loading, setLoading] = useState(false);
-    const [initialValues, setInitialValues] = useState({
+    const [report, setReport] = useState<IReport>();
+    const [initialValues, setInitialValues] = useState<{ [p: string]: string | boolean }>({
         [reportDate.name]: '',
         [description.name]: '',
         [group.name]: '',
+        [isTest.name]: false,
         [testScore.name]: '',
         [test.name]: '',
     });
     useEffect(() => {
         setLoading(true);
+        if (reportId) {
+            ReportService.getReportById(reportId).then(r => {
+                const initialValues: { [p: string]: string | boolean } = {
+                    [description.name]: r.description,
+                    [reportDate.name]: r.reportDate,
+                    [group.name]: String(r.group.id),
+                };
+                if (r.test) {
+                    initialValues[isTest.name] = true;
+                    initialValues[testScore.name] = String(r.testScored);
+                    initialValues[test.name] = String(r.test.id);
+                }
+                setInitialValues(initialValues);
+            });
+        }
         GroupsService.getStudentGroups(studentId).then(groups => {
             const groupsValues: IAutoCompleteValues[] = groups.map((group: IGroup) => {
                 return { label: group.name, value: String(group.id) };
@@ -102,7 +122,7 @@ const StudentReportForm = (props: { reportId?: number; studentId: number }) => {
                         Ученик: {student?.firstName} {student?.lastName}
                     </Typography>
                     <Formik
-                        // enableReinitialize={true}
+                        enableReinitialize={true}
                         initialValues={initialValues}
                         onSubmit={_handleSubmit}
                         validateOnChange
@@ -129,7 +149,7 @@ const StudentReportForm = (props: { reportId?: number; studentId: number }) => {
                                                         {...params}
                                                         name={reportDate.name}
                                                         label={reportDate.label}
-                                                        error={!!formikProps.errors.reportDate && formikProps.touched.reportDate}
+                                                        error={Boolean(formikProps.errors.reportDate && formikProps.touched.reportDate)}
                                                         helperText={formikProps.errors.reportDate}
                                                         fullWidth
                                                     />
@@ -181,7 +201,6 @@ const StudentReportForm = (props: { reportId?: number; studentId: number }) => {
                                             </Typography>
                                         </Grid>
                                     ) : null}
-
                                     <Grid item xs={12} sm={12}>
                                         <InputField
                                             margin='dense'
@@ -200,7 +219,7 @@ const StudentReportForm = (props: { reportId?: number; studentId: number }) => {
                                             color='primary'
                                             sx={{ marginTop: theme.spacing(3), marginLeft: theme.spacing(1) }}
                                         >
-                                            Добавить
+                                            {reportId ? 'Изменить' : 'Добавить'}
                                         </Button>
                                     </Grid>
                                 </Grid>

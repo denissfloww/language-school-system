@@ -61,7 +61,7 @@ const UpdateUserForm = () => {
                                                     {...params}
                                                     name={birthDate.name}
                                                     label={birthDate.label}
-                                                    error={!!formikProps.errors.birthDate && formikProps.touched.birthDate}
+                                                    error={Boolean(formikProps.errors.birthDate && formikProps.touched.birthDate)}
                                                     helperText={formikProps.errors.birthDate}
                                                     fullWidth
                                                 />

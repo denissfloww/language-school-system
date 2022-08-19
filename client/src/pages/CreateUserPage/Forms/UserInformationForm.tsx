@@ -4,6 +4,8 @@ import * as React from 'react';
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { TextField } from '@mui/material';
+import { at } from 'lodash';
+import { useField } from 'formik';
 
 interface IProps {
     formField?: any;
@@ -32,7 +34,6 @@ export const UserInformationForm = (props: IProps) => {
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DatePicker
                             onChange={(value: any) => {
-                                console.log(formikProps);
                                 formikProps.setFieldValue('birthDate', value);
                             }}
                             inputFormat='dd.MM.yyyy'
@@ -43,8 +44,12 @@ export const UserInformationForm = (props: IProps) => {
                                     {...params}
                                     name={birthDate.name}
                                     label={birthDate.label}
-                                    error={!!formikProps.errors.birthDate && formikProps.touched.birthDate}
-                                    helperText={formikProps.errors.birthDate}
+                                    error={Boolean(formikProps.errors.birthDate && formikProps.touched.birthDate)}
+                                    helperText={() => {
+                                        return formikProps.touched.birthDate && formikProps.values.birthDate == ''
+                                            ? formikProps.errors.birthDate
+                                            : '';
+                                    }}
                                     fullWidth
                                 />
                             )}

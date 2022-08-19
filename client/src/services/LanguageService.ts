@@ -1,17 +1,17 @@
 import { API_URL } from '../constants/urls';
-import { IPageDataResponse } from './responses/types';
+import { INewPageDataResponse } from './responses/types';
 import $api from './http';
 import { ILanguage } from '../interfaces/ILanguage';
 import { toast } from 'react-toastify';
 import { toastConfig } from '../utils/toastConfig';
 import { getErrorMsg } from '../utils/helperFunc';
 
-const getLanguages = async (page?: number, rowPerPage?: number) => {
+const getLanguages = async (page?: number, limit?: number) => {
     const response = await $api
         .get(`${API_URL}/languages`, {
             params: {
                 page: page ?? null,
-                take: rowPerPage ?? null,
+                take: limit ?? null,
             },
         })
         .catch(e => {
@@ -22,7 +22,7 @@ const getLanguages = async (page?: number, rowPerPage?: number) => {
             }
         });
 
-    const data: IPageDataResponse<ILanguage> = response?.data;
+    const data: INewPageDataResponse<ILanguage> = response?.data;
     return data;
 };
 

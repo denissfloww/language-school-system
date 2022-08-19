@@ -1,9 +1,13 @@
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import type { Mapper } from '@automapper/core';
 import { Injectable } from '@nestjs/common';
-import { mapFrom } from '@automapper/core';
+import { mapFrom, mapWith } from '@automapper/core';
 import { Student } from '../models/student.entity';
 import { StudentDto } from './dto/students.dto';
+import { UserDto } from '../users/dto/user.dto';
+import { User } from '../models/user.entity';
+import { GroupDto } from '../group/dto/group.dto';
+import { Group } from '../models/group.entity';
 
 @Injectable()
 export class StudentProfile extends AutomapperProfile {
@@ -54,6 +58,14 @@ export class StudentProfile extends AutomapperProfile {
         .forMember(
           (destination) => destination.parentPhone,
           mapFrom((source) => source.parentPhone),
+        )
+        .forMember(
+          (destination) => destination.user,
+          mapWith(UserDto, User, (source) => source.user),
+        )
+        .forMember(
+          (destination) => destination.groups,
+          mapWith(GroupDto, Group, (source) => source.groups),
         );
     };
   }

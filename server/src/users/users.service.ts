@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpService,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { User } from '../models/user.entity';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
@@ -19,10 +24,10 @@ import { Mapper } from '@automapper/core';
 import { UserDto } from './dto/user.dto';
 import moment from 'moment';
 import { PageMetaDto } from '../common/dtos/page-meta.dto';
-import { GroupDto } from '../group/dto/group.dto';
-import { Group } from '../models/group.entity';
 import { PageDto } from '../common/dtos/page.dto';
 import { PageOptionsDto } from '../common/dtos/page-options.dto';
+import { RolesService } from '../roles/roles.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService {
@@ -32,7 +37,10 @@ export class UsersService {
     @InjectRepository(Role)
     private rolesRepository: Repository<Role>,
     private studentsService: StudentsService,
+    private rolesService: RolesService,
     private teacherService: TeacherService,
+    private httpService: HttpService,
+    private configService: ConfigService,
     private jwtService: JwtService,
     @InjectConnection() private connection: Connection,
     @InjectMapper()
@@ -40,78 +48,97 @@ export class UsersService {
   ) {}
 
   async createUser(dto: CreateUserDto) {
-    return await this.usersRepository.manager.transaction(
-      async (transactionalEntityManager) => {
-        const cyrillicToTranslit = new CyrillicToTranslit();
-        const login = cyrillicToTranslit.transform(
-          `${dto.firstName}.${dto.lastName}`,
+    return await this.connection.transaction(async (manager) => {
+      const login = await UsersService.generateLogin(
+        dto.firstName,
+        dto.lastName,
+      );
+
+      if (await this.checkExistUserByLogin(login)) {
+        throw new HttpException(
+          'Пользователь с такими данными уже существует!',
+          HttpStatus.BAD_REQUEST,
         );
+      }
 
-        const existUser = await this.usersRepository.find({
-          where: {
-            login: login,
-          },
-        });
-        if (existUser.length > 0) {
-          throw new HttpException(
-            'Пользователь с такими данными уже существует!',
-            HttpStatus.BAD_REQUEST,
-          );
-        }
+      const randomPassword = Math.random().toString(36).slice(-8);
+      const hashPassword = await bcrypt.hash(randomPassword, 5);
 
-        const randomPassword = Math.random().toString(36).slice(-8);
-        const hashPassword = await bcrypt.hash(randomPassword, 5);
+      const user = await manager.getRepository(User).save({
+        firstName: dto.firstName,
+        lastName: dto.lastName,
+        middleName: dto.middleName,
+        login: login,
+        password: hashPassword,
+        phone: dto.phone,
+        email: dto.email,
+        birthDate: dto.birthDate,
+        roles: await this.rolesService.getRolesByEnumArray(dto.roles),
+      });
 
-        const roles: Role[] = [];
-        for (const roleName of dto.roles) {
-          const role = await this.rolesRepository.findOne({
-            where: { name: roleName },
-          });
-
-          roles.push(role);
-        }
-
-        const user = await this.usersRepository.save({
-          firstName: dto.firstName,
-          lastName: dto.lastName,
-          middleName: dto.middleName,
-          login: login,
-          password: hashPassword,
-          roles: roles,
-          phone: dto.phone,
-          email: dto.email,
-          birthDate: dto.birthDate,
-        });
-
-        if (dto.roles.includes(RolesEnum.Student)) {
-          const studentDto: CreateStudentDto = {
-            parentEmail: dto.parentEmail,
-            parentLastName: dto.parentLastName,
-            parentMiddleName: dto.parentMiddleName,
-            parentName: dto.parentName,
-            parentPhone: dto.parentPhone,
-            userId: user.id,
-          };
-          await this.studentsService.createStudent(studentDto);
-        }
-
-        if (dto.roles.includes(RolesEnum.Teacher)) {
-          await this.teacherService.createTeacher(user.id);
-        }
-
-        const createdUser: CreatedUserDto = {
-          id: String(user.id),
-          login: user.login,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          middleName: user.middleName,
-          password: randomPassword,
-          roles: dto.roles,
+      if (dto.roles.includes(RolesEnum.Student)) {
+        const studentDto: CreateStudentDto = {
+          parentEmail: dto.parentEmail,
+          parentLastName: dto.parentLastName,
+          parentMiddleName: dto.parentMiddleName,
+          parentName: dto.parentName,
+          parentPhone: dto.parentPhone,
+          userId: user.id,
         };
+        await this.studentsService.createStudentWithManager(
+          studentDto,
+          manager,
+        );
+      }
 
-        return createdUser;
+      if (dto.roles.includes(RolesEnum.Teacher)) {
+        await this.teacherService.createTeacherWithManager(user.id, manager);
+      }
+
+      const createdUser: CreatedUserDto = {
+        id: String(user.id),
+        login: user.login,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        middleName: user.middleName,
+        creditionalsNoteLink: await this.generateCreditionalsNoteLink(
+          login,
+          randomPassword,
+        ),
+        roles: dto.roles,
+      };
+
+      return createdUser;
+    });
+  }
+
+  async generateCreditionalsNoteLink(login: string, password: string) {
+    const response = await this.httpService.axiosRef.post(
+      this.configService.get<string>('SAFE_NOTE_API_HOST'),
+      {
+        note: `login: ${login}\npassword: ${password} `,
+        lifetime: this.configService.get<string>('SAFE_NOTE_LIFETIME'),
+        read_count: this.configService.get<string>('SAFE_NOTE_READ_COUNT'),
       },
     );
+
+    return response.data.link;
+  }
+
+  async checkExistUserByLogin(login: string) {
+    const existUser = await this.usersRepository.find({
+      where: {
+        login: login,
+      },
+    });
+
+    return existUser.length > 0;
+  }
+
+  private static async generateLogin(firstName: string, lastName: string) {
+    const cyrillicToTranslit = new CyrillicToTranslit();
+
+    return cyrillicToTranslit.transform(`${firstName}.${lastName}`);
   }
 
   async deleteUser(id: number) {
@@ -121,10 +148,9 @@ export class UsersService {
   }
 
   async getAllUsers() {
-    const users = await this.usersRepository.find({
+    return await this.usersRepository.find({
       relations: ['roles', 'student'],
     });
-    return users;
   }
 
   async getAllUserDtos(pageOptionsDto: PageOptionsDto) {

@@ -18,7 +18,7 @@ export class Teacher extends BaseModel {
   @Column({ name: 'user_id' })
   userId: number;
 
-  @OneToOne(() => User, { eager: true })
+  @OneToOne(() => User)
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
   user: User;
 

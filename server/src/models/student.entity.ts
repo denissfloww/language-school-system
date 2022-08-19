@@ -11,8 +11,8 @@ import {
 import BaseModel from './base';
 import { User } from './user.entity';
 import { Group } from './group.entity';
-import { ScheduleEvent } from './schedule-event.entity';
 import { Report } from './report.entity';
+import { CalculatedPayment } from './calculated.payment.entity';
 
 @Entity('students')
 export class Student extends BaseModel {
@@ -26,19 +26,11 @@ export class Student extends BaseModel {
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
   user: User;
 
-  @ManyToMany((type) => Group, {
-    eager: true,
-    cascade: true,
-  })
-  // @JoinTable({
-  //   name: 'student_group',
-  //   joinColumn: { name: 'student_id' },
-  //   inverseJoinColumn: { name: 'group_id' },
-  // })
+  @ManyToMany(() => Group)
   @JoinTable({
-    name: 'student_group',
-    joinColumns: [{ name: 'student_id', referencedColumnName: 'id' }],
-    inverseJoinColumns: [{ name: 'group_id', referencedColumnName: 'id' }],
+    name: 'students_groups_groups',
+    joinColumn: { name: 'student_id' },
+    inverseJoinColumn: { name: 'group_id' },
   })
   groups: Group[];
 
@@ -59,4 +51,10 @@ export class Student extends BaseModel {
 
   @OneToMany(() => Report, (report) => report.student)
   reports: Report[];
+
+  @OneToMany(
+    () => CalculatedPayment,
+    (calculatedPayment) => calculatedPayment.student,
+  )
+  calculatedPayments: CalculatedPayment[];
 }

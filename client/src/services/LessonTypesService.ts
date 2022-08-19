@@ -3,15 +3,15 @@ import { API_URL } from '../constants/urls';
 import { toast } from 'react-toastify';
 import { toastConfig } from '../utils/toastConfig';
 import { getErrorMsg } from '../utils/helperFunc';
-import { IPageDataResponse } from './responses/types';
+import { INewPageDataResponse } from './responses/types';
 import { ILessonType } from '../interfaces/ILessonType';
 
-const getLessonTypes = async (page?: number, rowPerPage?: number) => {
+const getLessonTypes = async (page?: number, limit?: number) => {
     const response = await $api
         .get(`${API_URL}/lesson-types`, {
             params: {
                 page: page ?? null,
-                take: rowPerPage ?? null,
+                limit: limit ?? null,
             },
         })
         .catch(e => {
@@ -21,7 +21,7 @@ const getLessonTypes = async (page?: number, rowPerPage?: number) => {
                 toast.error(getErrorMsg(e as any), toastConfig);
             }
         });
-    const data: IPageDataResponse<ILessonType> = response?.data;
+    const data: INewPageDataResponse<ILessonType> = response?.data;
     console.log(data);
     return data;
 };

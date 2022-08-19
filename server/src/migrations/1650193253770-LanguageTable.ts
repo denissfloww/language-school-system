@@ -41,6 +41,11 @@ export class LanguageTable1650193253770 implements MigrationInterface {
             default: "timezone('utc'::text, now())",
             isNullable: false,
           },
+          {
+            name: 'deleted_at',
+            type: 'timestamp with time zone',
+            isNullable: true,
+          },
         ],
       }),
       true,

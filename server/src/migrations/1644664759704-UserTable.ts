@@ -17,7 +17,8 @@ export class UserTable1644664759704 implements MigrationInterface {
            phone        varchar                 ,
            email        varchar                 ,
            updated_at timestamp with time zone default timezone('utc'::text, now()) not null,
-           created_at timestamp with time zone default timezone('utc'::text, now()) not null
+           created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+           deleted_at timestamp with time zone
        );
       `,
     );

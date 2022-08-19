@@ -32,11 +32,15 @@ export class UsersController {
     private jwtService: JwtService,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
+  @Roles(RolesEnum.Admin)
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.createUser(createUserDto);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Roles(RolesEnum.Admin)
   @Put(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
@@ -52,8 +56,8 @@ export class UsersController {
   }
 
   @Get()
-  // @Roles(RolesEnum.Admin)
-  // @UseGuards(JwtAuthGuard)
+  @Roles(RolesEnum.Admin)
+  @UseGuards(JwtAuthGuard)
   getAllUsers(@Query() pageOptionsDto: PageOptionsDto) {
     try {
       return this.userService.getAllUserDtos(pageOptionsDto);
@@ -71,6 +75,8 @@ export class UsersController {
     await this.userService.changePassword(dto, userId);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Roles(RolesEnum.Admin)
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.userService.getUserDtoById(+id);

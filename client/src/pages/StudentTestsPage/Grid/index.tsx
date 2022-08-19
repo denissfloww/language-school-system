@@ -6,10 +6,10 @@ import StudentTestsService from '../../../services/StudentTestsService';
 import { ITest } from '../../../interfaces/ITest';
 import { Tooltip } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteButton from '../../../components/Buttons/DeleteButton';
 
 const TestsGrid = () => {
     const dispatch = useDispatch();
@@ -18,15 +18,15 @@ const TestsGrid = () => {
     const [page, setPage] = useState(0);
     const [total, setTotal] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-
+    const navigate = useNavigate();
     const changePage = (page: number) => {
         setPage(page);
-        // loadTests(page, rowsPerPage);
+        loadTests(page, rowsPerPage);
     };
 
     const changeRowsPerPage = (rowsPerPage: number) => {
         setRowsPerPage(rowsPerPage);
-        // loadTests(page, rowsPerPage);
+        loadTests(page, rowsPerPage);
     };
 
     const loadTests = (page?: number, rowsPerPage?: number) => {
@@ -44,6 +44,12 @@ const TestsGrid = () => {
             console.log(rows);
             dispatch(setTests(rows));
             setTotal(data.total);
+        });
+    };
+
+    const deleteTest = (testId: number) => {
+        StudentTestsService.deleteTest(testId).then(() => {
+            loadTests(page, rowsPerPage);
         });
     };
 
@@ -84,7 +90,14 @@ const TestsGrid = () => {
                             </Tooltip>
                             <Tooltip title='Удалить'>
                                 <IconButton size='small'>
-                                    <DeleteIcon />
+                                    <DeleteButton
+                                        id={test.id}
+                                        confirmationText='Вы действительно хотите удалить тест? Все связанные отчёты также будут удалены!'
+                                        title='Удалить тест?'
+                                        onDeleteMethod={() => {
+                                            deleteTest(test.id);
+                                        }}
+                                    />
                                 </IconButton>
                             </Tooltip>
                         </>
@@ -102,6 +115,7 @@ const TestsGrid = () => {
         filter: true,
         rowsPerPage: rowsPerPage,
         count: total,
+        selectableRows: false,
         filterType: 'dropdown',
         tableBodyHeight: '100%',
         rowsSelected: selectedRows,

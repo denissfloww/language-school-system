@@ -1,4 +1,9 @@
-import { BaseEntity, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  BaseEntity,
+  CreateDateColumn,
+  DeleteDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 export default abstract class Model extends BaseEntity {
   @CreateDateColumn({ name: 'created_at' })
@@ -6,4 +11,7 @@ export default abstract class Model extends BaseEntity {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  // @DeleteDateColumn({ name: 'deleted_at' })
+  // deletedAt?: Date;
 }

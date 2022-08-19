@@ -3,4 +3,6 @@ export interface ICost {
     name: string;
     description: string;
     lessonPrice: number;
+    createdAt: Date;
+    updatedAt: Date;
 }

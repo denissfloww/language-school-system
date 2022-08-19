@@ -24,7 +24,7 @@ export const getMailConfig = async (
     defaults: {
       from: '"nest-modules" <user@outlook.com>',
     },
-    preview: true,
+    preview: false,
     template: {
       dir: __dirname + '/templates',
       adapter: new HandlebarsAdapter(),

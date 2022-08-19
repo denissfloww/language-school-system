@@ -20,11 +20,11 @@ const TestForm = (props: { testId?: number }) => {
     function _handleSubmit(values: any, actions: any) {
         if (!testId) {
             StudentTestsService.createTest(values).then(() => {
-                navigate(-1);
+                navigate('/dashboard/tests');
             });
         } else {
             StudentTestsService.updateTest(testId, values).then(() => {
-                navigate(-1);
+                navigate('/dashboard/tests');
             });
         }
     }

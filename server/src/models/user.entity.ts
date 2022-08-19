@@ -6,17 +6,15 @@ import {
   JoinTable,
   OneToMany,
   OneToOne,
-  JoinColumn,
 } from 'typeorm';
 import BaseModel from './base';
 import { Role } from './role.entity';
-import { ScheduleEvent } from './schedule-event.entity';
 import { Feed } from './feed.entity';
 import { Student } from './student.entity';
 
 @Entity('users')
 export class User extends BaseModel {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
@@ -28,16 +26,16 @@ export class User extends BaseModel {
   @Column({ name: 'last_name' })
   lastName: string;
 
-  @Column({ name: 'middle_name' })
+  @Column({ name: 'middle_name', nullable: true })
   middleName: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
-  @Column()
+  @Column({ nullable: true })
   phone: string;
 
-  @Column()
+  @Column({ nullable: true })
   email: string;
 
   @Column({ name: 'birth_date' })
@@ -46,11 +44,11 @@ export class User extends BaseModel {
   @OneToOne(() => Student, (student) => student.user)
   student: Student | null;
 
-  @ManyToMany(() => Role)
+  @ManyToMany(() => Role, (r) => r.users)
   @JoinTable({
-    name: 'user_role',
-    joinColumns: [{ name: 'user_id' }],
-    inverseJoinColumns: [{ name: 'role_id' }],
+    name: 'users_roles_roles',
+    joinColumn: { name: 'user_id' },
+    inverseJoinColumn: { name: 'role_id' },
   })
   roles: Role[];
 

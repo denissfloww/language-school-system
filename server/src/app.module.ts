@@ -34,6 +34,7 @@ import { UserProfile } from './users/mappings/user.map';
 import { RoleProfile } from './roles/mappings/role.map';
 import { TestsModule } from './tests/tests.module';
 import { ReportsModule } from './reports/reports.module';
+import { CalculatedPaymentsModule } from './calculated-payments/calculated-payments.module';
 import dbConfiguration from './config/database.config';
 
 export function DatabaseOrmModule(): DynamicModule {
@@ -78,6 +79,7 @@ export function DatabaseOrmModule(): DynamicModule {
     TasksModule,
     TestsModule,
     ReportsModule,
+    CalculatedPaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -7,7 +7,6 @@ import {
   ManyToOne,
   RelationId,
   JoinColumn,
-  OneToOne,
   OneToMany,
 } from 'typeorm';
 import BaseModel from './base';
@@ -15,8 +14,8 @@ import { Student } from './student.entity';
 import { Teacher } from './teacher.entity';
 import { Language } from './language.entity';
 import { ScheduleEvent } from './schedule-event.entity';
-import { Cost } from './cost.entity';
 import { Report } from './report.entity';
+import { CalculatedPayment } from './calculated.payment.entity';
 
 @Entity('groups')
 export class Group extends BaseModel {
@@ -32,11 +31,11 @@ export class Group extends BaseModel {
   @RelationId((group: Group) => group.students)
   studentsIds: number[];
 
-  @ManyToMany((type) => Student)
+  @ManyToMany(() => Student, (s) => s.groups)
   @JoinTable({
-    name: 'student_group',
-    joinColumns: [{ name: 'group_id', referencedColumnName: 'id' }],
-    inverseJoinColumns: [{ name: 'student_id', referencedColumnName: 'id' }],
+    name: 'students_groups_groups',
+    joinColumn: { name: 'group_id' },
+    inverseJoinColumn: { name: 'student_id' },
   })
   students: Student[];
 
@@ -58,20 +57,15 @@ export class Group extends BaseModel {
   @JoinColumn([{ name: 'language_id', referencedColumnName: 'id' }])
   language: Language;
 
-  @Column({ name: 'cost_id' })
-  costId: number;
-
-  @ManyToOne(() => Cost, (cost) => cost.groups, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-    eager: true,
-  })
-  @JoinColumn([{ name: 'cost_id', referencedColumnName: 'id' }])
-  cost: Cost;
-
   @OneToMany(() => ScheduleEvent, (scheduleEvent) => scheduleEvent.group)
   scheduleEvents: ScheduleEvent[];
 
   @OneToMany(() => Report, (report) => report.group)
   reports: Report[];
+
+  @OneToMany(
+    () => CalculatedPayment,
+    (calculatedPayment) => calculatedPayment.group,
+  )
+  calculatedPayments: CalculatedPayment[];
 }

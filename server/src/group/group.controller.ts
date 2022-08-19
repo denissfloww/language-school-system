@@ -62,16 +62,4 @@ export class GroupController {
   async deleteGroup(@Param('id', ParseIntPipe) id: number) {
     await this.groupsService.deleteGroup(id);
   }
-
-  // @UseGuards(JwtAuthGuard)
-  // @Post('/add/student')
-  // addStudentInGroup(@Body() dto: AddStudentInGroupDto) {
-  //   return this.groupsService.addStudentToGroup(dto);
-  // }
-
-  @HttpCode(204)
-  @Delete('/delete/student')
-  deleteStudentFromGroup(@Body() dto: DeleteStudentFromGroup) {
-    return this.groupsService.deleteStudentFromGroup(dto);
-  }
 }

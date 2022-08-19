@@ -9,7 +9,6 @@ import { PageOptionsDto } from '../common/dtos/page-options.dto';
 import { PageDto } from '../common/dtos/page.dto';
 import { GroupDto } from './dto/group.dto';
 import { PageMetaDto } from '../common/dtos/page-meta.dto';
-import { Student } from '../models/student.entity';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { NotFoundException } from '../exceptions/not-found.exception';
 import { AlreadyExistException } from '../exceptions/already-exist.exception';
@@ -18,7 +17,6 @@ import { Mapper } from '@automapper/core';
 import { UsersService } from '../users/users.service';
 import { RolesEnum } from '../auth/roles.enum';
 import { TeacherService } from '../teacher/teacher.service';
-import { StudentGroup } from '../models/student.group.entity';
 import { CalculateService } from '../calculate/calculate.service';
 
 @Injectable()
@@ -26,8 +24,6 @@ export class GroupService {
   constructor(
     @InjectRepository(Group)
     private groupsRepository: Repository<Group>,
-    @InjectRepository(StudentGroup)
-    private studentGroupRepository: Repository<StudentGroup>,
     @Inject(forwardRef(() => StudentsService))
     private studentsService: StudentsService,
     private connection: Connection,
@@ -58,7 +54,6 @@ export class GroupService {
         'teacher.user',
         'students.user',
         'language',
-        'cost',
       ],
       order: {
         createdAt: pageOptionsDto.order,
@@ -85,7 +80,6 @@ export class GroupService {
           'teacher.user',
           'students.user',
           'language',
-          'cost',
         ],
       });
 
@@ -142,7 +136,6 @@ export class GroupService {
         'language',
         'teacher.user',
         'students.user',
-        'cost',
       ],
     });
 
@@ -159,25 +152,29 @@ export class GroupService {
         name: createGroupDto.name,
       },
     });
-    if (!existGroup) {
-      const group = await this.groupsRepository.save({
-        name: createGroupDto.name,
-        description: createGroupDto.description,
-        teacherId: createGroupDto.teacherId,
-        languageId: createGroupDto.languageId,
-        costId: createGroupDto.costId,
-      });
 
-      for (const id of createGroupDto.studentsIds) {
-        await this.studentGroupRepository.save({
-          studentId: id,
-          groupId: group.id,
-        });
-      }
-
-      return group;
+    if (existGroup) {
+      throw new AlreadyExistException();
     }
-    throw new AlreadyExistException();
+
+    const students = await this.studentsService.getStudentsByIds(
+      createGroupDto.studentsIds,
+    );
+
+    const group = await this.groupsRepository.save({
+      name: createGroupDto.name,
+      description: createGroupDto.description,
+      teacherId: createGroupDto.teacherId,
+      languageId: createGroupDto.languageId,
+      students: students,
+    });
+
+    const fullGroup = await this.groupsRepository.findOne({
+      where: { id: group.id },
+      relations: ['students', 'teacher.user'],
+    });
+
+    return this.mapper.map(fullGroup, GroupDto, Group);
   }
 
   async deleteGroup(id: number) {
@@ -192,61 +189,23 @@ export class GroupService {
       relations: ['students'],
     });
 
-    const students = await this.studentsService.getStudentsByIds(
+    group.students = await this.studentsService.getStudentsByIds(
       updateGroupDto.studentsIds,
     );
-
-    group.students = students;
     group.name = updateGroupDto.name;
     group.teacherId = updateGroupDto.teacherId;
     group.description = updateGroupDto.description;
     group.languageId = updateGroupDto.languageId;
-    group.costId = updateGroupDto.costId;
 
-    Logger.debug(group.studentsIds);
-    // return await group.save();
     return await this.groupsRepository.save(group);
-  }
-
-  // async addStudentToGroup(dto: AddStudentInGroupDto) {
-  //   const group = await this.groupsRepository.findOne(dto.groupId, {
-  //     relations: ['students'],
-  //   });
-  //
-  //   const currentStudent = await this.studentsService.getStudentById(
-  //     dto.studentId,
-  //   );
-  //   group.students.map((stud) => {
-  //     if (stud.id == currentStudent.id) {
-  //       throw new HttpException(
-  //         'Ученик уже находится в данной группе!',
-  //         HttpStatus.BAD_REQUEST,
-  //       );
-  //     }
-  //   });
-  //   group.students.push(currentStudent);
-  //   await this.groupsRepository.save(group);
-  // }
-
-  async deleteStudentFromGroup(dto: DeleteStudentFromGroup) {
-    const group = await this.groupsRepository.findOne({
-      where: {
-        id: dto.groupId,
-      },
-      relations: ['students'],
-    });
-    const currentStudent = await this.studentsService.getStudentById(
-      dto.studentId,
-    );
-    await this.connection
-      .createQueryBuilder()
-      .relation(Group, 'students')
-      .of(group)
-      .remove(currentStudent);
   }
 
   async getStudentGroups(studentId: number) {
     const student = await this.studentsService.getStudentById(studentId);
-    return student.groups;
+    Logger.debug(student);
+    if (student?.groups) {
+      return student.groups;
+    }
+    return [];
   }
 }

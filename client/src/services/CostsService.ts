@@ -3,15 +3,15 @@ import { API_URL } from '../constants/urls';
 import { toast } from 'react-toastify';
 import { toastConfig } from '../utils/toastConfig';
 import { getErrorMsg } from '../utils/helperFunc';
-import { IPageDataResponse } from './responses/types';
+import { INewPageDataResponse, IPageDataResponse } from "./responses/types";
 import { ICost } from '../interfaces/ICost';
 
-const getCosts = async (page?: number, rowPerPage?: number) => {
+const getCosts = async (page?: number, limit?: number) => {
     const response = await $api
         .get(`${API_URL}/costs`, {
             params: {
                 page: page ?? null,
-                take: rowPerPage ?? null,
+                limit: limit ?? null,
             },
         })
         .then(data => {
@@ -24,7 +24,7 @@ const getCosts = async (page?: number, rowPerPage?: number) => {
                 toast.error(getErrorMsg(e as any), toastConfig);
             }
         });
-    const data: IPageDataResponse<ICost> = response?.data;
+    const data: INewPageDataResponse<ICost> = response?.data;
     return data;
 };
 

@@ -10,7 +10,6 @@ export interface IGroup {
     students?: IStudent[];
     teacher: ITeacher;
     language: ILanguage;
-    cost: ICost;
     priceNextMonth: number;
     month: number;
 }

@@ -21,7 +21,7 @@ export interface ICreatedUser {
     firstName: string;
     lastName: string;
     middleName?: string;
-    password: string;
+    creditionalsNoteLink: string;
     phone: string;
     email: string;
     roles: RoleTypes[];

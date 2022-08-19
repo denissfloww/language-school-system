@@ -2,19 +2,17 @@ import { useParams } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import DashboardPage from '../../../components/Pages/DashboardPage';
-import { useTheme } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import StudentReportForm from './Form';
 
 const StudentReport = () => {
-    const { studentId } = useParams();
-
+    const { studentId, reportId } = useParams();
     return (
         <>
-            <DashboardPage title='Добавление отчета об успеваемости'>
+            <DashboardPage title={reportId ? 'Изменение отчёта об успеваемости' : 'Добавление отчета об успеваемости'}>
                 <Typography variant='h4' sx={{ mb: 6 }}>
-                    Новый отчет по успеваемости
+                    {reportId ? 'Изменение отчёта об успеваемости' : 'Добавление отчета об успеваемости'}
                 </Typography>
 
                 <Paper
@@ -28,7 +26,7 @@ const StudentReport = () => {
                     }}
                 >
                     <Box>
-                        <StudentReportForm studentId={Number(studentId)} />
+                        <StudentReportForm studentId={Number(studentId)} reportId={reportId ? Number(reportId) : undefined} />
                     </Box>
                 </Paper>
             </DashboardPage>

@@ -17,6 +17,7 @@ import DeleteButton from '../../../components/Buttons/DeleteButton';
 import TableBodySkeleton from '../../../components/Skeletons/TableBodySkeleton';
 import TablePagination from '@mui/material/TablePagination';
 import NumberFormat from 'react-number-format';
+import moment from "moment";
 
 const CostGrid = () => {
     const headerRows: { text: string; align: 'left' | 'center' | 'right' }[] = [
@@ -37,21 +38,29 @@ const CostGrid = () => {
             align: 'center',
         },
         {
+            text: 'Дата создания',
+            align: 'center',
+        },
+        {
+            text: 'Дата изменения',
+            align: 'center',
+        },
+        {
             text: 'Действия',
             align: 'right',
         },
     ];
 
     const dispatch = useDispatch();
-    const { isLoading, costsData, page, rowsPerPage } = useSelector(selectCostsState);
+    const { isLoading, costsData, page, limit } = useSelector(selectCostsState);
 
     const fetchCostsData = () => {
-        dispatch(fetchCostsAction(page, rowsPerPage));
+        dispatch(fetchCostsAction(page, limit));
     };
 
     useEffect(() => {
         fetchCostsData();
-    }, [page, rowsPerPage]);
+    }, [page, limit]);
 
     const handleChangePage = (event: unknown, newPage: number) => {
         dispatch(setPage(newPage));
@@ -108,12 +117,18 @@ const CostGrid = () => {
                                                             <TableCell component='th' scope='row' align='center'>
                                                                 {cost.description}
                                                             </TableCell>
+                                                            <TableCell component='th' scope='row' align='center'>
+                                                                {moment.utc(cost.createdAt).format('DD.MM.YYYY HH:mm')}
+                                                            </TableCell>
+                                                            <TableCell component='th' scope='row' align='center'>
+                                                                {moment.utc(cost.updatedAt).format('DD.MM.YYYY HH:mm')}
+                                                            </TableCell>
                                                             <TableCell component='th' scope='row' align='right'>
                                                                 <UpdateCostButton cost={cost} />
                                                                 <DeleteButton
                                                                     id={cost.id}
                                                                     title='Удалить тариф?'
-                                                                    confirmationText='Вы действительно хотите удалить тариф? Удалятся все группы с данным тарифом'
+                                                                    confirmationText='Вы действительно хотите удалить тариф?'
                                                                     onDeleteMethod={() => {
                                                                         dispatch(deleteCostAction(cost.id));
                                                                     }}
@@ -140,8 +155,8 @@ const CostGrid = () => {
                             <TablePagination
                                 rowsPerPageOptions={[5, 10, 15]}
                                 component='div'
-                                count={costsData?.meta.itemCount}
-                                rowsPerPage={rowsPerPage}
+                                count={costsData?.total}
+                                rowsPerPage={limit}
                                 page={page}
                                 onPageChange={handleChangePage}
                                 onRowsPerPageChange={handleChangeRowsPerPage}

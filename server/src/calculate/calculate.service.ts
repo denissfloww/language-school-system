@@ -1,6 +1,4 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
-import { CreateCalculateDto } from './dto/create-calculate.dto';
-import { UpdateCalculateDto } from './dto/update-calculate.dto';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ScheduleService } from '../schedule/schedule.service';
 import moment from 'moment';
@@ -11,6 +9,10 @@ import { CostsService } from '../costs/costs.service';
 import { StudentsService } from '../students/students.service';
 import { ConfigService } from '@nestjs/config';
 import { CalculateDateAndMonthDto } from './dto/calculate-date-and-month.dto';
+import { StudentAttendanceDto } from '../attendance/dto/student-attendance.dto';
+import StudentPaymentDto from './dto/student-payment.dto';
+import { GroupCalculateDto } from './dto/group-calculate.dto';
+import { Cost } from '../models/cost.entity';
 
 @Injectable()
 export class CalculateService {
@@ -25,15 +27,14 @@ export class CalculateService {
     private readonly studentService: StudentsService,
     private configService: ConfigService,
   ) {}
-  create(createCalculateDto: CreateCalculateDto) {
-    return 'This action adds a new calculate';
-  }
-
   async calculateAllGroupsPayment() {
     const groups = await this.groupService.getGroupIds();
-    const result = [];
+    const result: GroupCalculateDto[] = [];
     for (const group of groups) {
-      const groupCalculate = await this.monthlyGroupCalculate(+group.id);
+      const groupCalculate: GroupCalculateDto = {
+        ...(await this.monthlyGroupCalculate(+group.id)),
+        groupName: group.name,
+      };
       result.push(groupCalculate);
     }
 
@@ -50,7 +51,7 @@ export class CalculateService {
         group.id,
       );
 
-      const calculateDateDto = await this.getCalculateDateAndMonth();
+      const calculateDateDto = await this.getFutureMonthPeriod();
 
       results.push({
         groupId: group.id,
@@ -65,31 +66,82 @@ export class CalculateService {
 
   async monthlyStudentCalculateByGroup(studentId: number, groupId: number) {
     const events = await this.scheduleService.getEventsByGroup(groupId);
-
     const student = await this.studentService.getStudentById(studentId);
-
     const studentAttendance =
       await this.attendanceService.getStudentAttendanceInGroup(
-        {
-          id: Number(student.id),
-          firstName: student.user.firstName,
-          lastName: student.user.lastName,
-        },
+        student,
         groupId,
         events,
       );
 
-    const calculateDateDto = await this.getCalculateDateAndMonth();
+    const calculateDateDto = await this.getFutureMonthPeriod();
     const futureMonthDate = await CalculateService.getDatesArrayForPeriod(
+      calculateDateDto.startDate,
       calculateDateDto.endDate,
-      calculateDateDto.futureMonthDate,
       events,
     );
-    const cost = await this.costService.getGroupCost(groupId);
-    let priceNextMonth = cost.lessonPrice * futureMonthDate.length;
-    for (const attendance of studentAttendance.attendances) {
+
+    const previousDateDto = await this.getPrevMonthPeriod();
+    const previousMonthDates = await CalculateService.getDatesArrayForPeriod(
+      previousDateDto.startDate,
+      previousDateDto.endDate,
+      events,
+    );
+
+    const cost = await this.costService.getCostByStudentAndGroup(
+      groupId,
+      studentId,
+    );
+
+    if (!cost) {
+      return;
+    }
+
+    const currentDateDto = await this.getCurrentMonthPeriod();
+    const currentMonthDates = await CalculateService.getDatesArrayForPeriod(
+      currentDateDto.startDate,
+      currentDateDto.endDate,
+      events,
+    );
+
+    const priceNextMonth = await this.getPriceByStudentAttendance(
+      cost.lessonPrice,
+      futureMonthDate,
+      currentMonthDates,
+      studentAttendance,
+    );
+
+    const priceCurrMonthCalculated = await this.getPriceByStudentAttendance(
+      cost.lessonPrice,
+      currentMonthDates,
+      previousMonthDates,
+      studentAttendance,
+    );
+
+    return {
+      previousMonthDates,
+      priceCurrMonthCalculated,
+      currentMonthDates,
+      priceNextMonth,
+      futureMonthDate,
+      calculateMonth: calculateDateDto.month,
+    };
+  }
+
+  async getPriceByStudentAttendance(
+    lessonPrice: number,
+    futureMonthDates: Date[],
+    currentMonthDates: Date[],
+    studentAttendance: StudentAttendanceDto,
+  ) {
+    let priceNextMonth = lessonPrice * futureMonthDates.length;
+    for (const date of currentMonthDates) {
+      const attendance = studentAttendance.attendances.find((a) => {
+        return moment(a.date).isSame(date);
+      });
+
       if (attendance.result == AttendanceMarkEnum.GoodAbsent) {
-        const calculatedPrice = priceNextMonth - cost.lessonPrice;
+        const calculatedPrice = priceNextMonth - lessonPrice;
         if (calculatedPrice < 0) {
           priceNextMonth = 0;
         } else {
@@ -98,22 +150,58 @@ export class CalculateService {
       }
     }
 
-    return { priceNextMonth, calculateMonth: calculateDateDto.month };
+    return priceNextMonth;
   }
 
-  async getCalculateDateAndMonth() {
+  async getFutureMonthPeriod() {
+    const startDate = moment().date(
+      this.configService.get<number>('MONTH_CALCULATE_DAY'),
+    );
+    startDate.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+
+    const endDate = moment(startDate).add(1, 'months');
+    endDate.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+
+    const month = endDate.format('M');
+
+    const dto: CalculateDateAndMonthDto = {
+      startDate: startDate,
+      month: month,
+      endDate: endDate,
+    };
+    return dto;
+  }
+
+  async getPrevMonthPeriod() {
+    const startDate = moment()
+      .date(this.configService.get<number>('MONTH_CALCULATE_DAY'))
+      .subtract(1, 'months');
+    const endDate = moment(startDate).subtract(1, 'months');
+    startDate.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+    endDate.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+    const month = endDate.format('M');
+
+    const dto: CalculateDateAndMonthDto = {
+      endDate: startDate,
+      month: month,
+      startDate: endDate,
+    };
+    return dto;
+  }
+
+  async getCurrentMonthPeriod() {
     const endDate = moment().date(
       this.configService.get<number>('MONTH_CALCULATE_DAY'),
     );
-
-    const futureMonthDate = moment(endDate).add(1, 'months');
-
-    const month = futureMonthDate.format('M');
+    endDate.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+    const startDate = moment(endDate).subtract(1, 'months');
+    startDate.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+    const month = startDate.format('M');
 
     const dto: CalculateDateAndMonthDto = {
-      endDate: endDate,
+      startDate: startDate,
       month: month,
-      futureMonthDate: futureMonthDate,
+      endDate: endDate,
     };
     return dto;
   }
@@ -124,39 +212,57 @@ export class CalculateService {
       groupId,
     );
 
-    const calculateDateDto = await this.getCalculateDateAndMonth();
+    const calculateDateDto = await this.getFutureMonthPeriod();
 
     const cost = await this.costService.getGroupCost(groupId);
     const lessonPrice = cost.lessonPrice;
 
     const futureMonthDate = await CalculateService.getDatesArrayForPeriod(
+      calculateDateDto.startDate,
       calculateDateDto.endDate,
-      calculateDateDto.futureMonthDate,
       events,
     );
 
-    const studentPrices: { name: string; payment: number }[] = [];
+    const currentDateDto = await this.getCurrentMonthPeriod();
+    const currentMonthDates = await CalculateService.getDatesArrayForPeriod(
+      currentDateDto.startDate,
+      currentDateDto.endDate,
+      events,
+    );
 
+    const studentPrices: StudentPaymentDto[] = [];
     for (const studentAttendance of attendances) {
-      let priceNextMonth = lessonPrice * futureMonthDate.length;
-      for (const attendance of studentAttendance.attendances) {
-        if (attendance.result == AttendanceMarkEnum.GoodAbsent) {
-          const calculatedPrice = priceNextMonth - lessonPrice;
-          if (calculatedPrice < 0) {
-            priceNextMonth = 0;
-          } else {
-            priceNextMonth = calculatedPrice;
-          }
-        }
-      }
+      const priceNextMonth = await this.getPriceByStudentAttendance(
+        lessonPrice,
+        futureMonthDate,
+        currentMonthDates,
+        studentAttendance,
+      );
 
       studentPrices.push({
-        name: studentAttendance.studentName,
+        parentEmail: studentAttendance.parentEmail,
+        parentLastName: studentAttendance.parentLastName,
+        parentMiddleName: studentAttendance.parentMiddleName,
+        parentName: studentAttendance.parentName,
+        parentPhone: studentAttendance.parentPhone,
+        studentLastName: studentAttendance.studentLastName,
+        studentId: Number(studentAttendance.studentId),
+        studentName: studentAttendance.studentName,
         payment: priceNextMonth,
       });
     }
 
-    return { studentPrices, futureMonthDate };
+    return {
+      studentPrices,
+      futureMonthDate,
+      nextMonthPay: moment()
+        .locale('ru')
+        .month(calculateDateDto.month)
+        .subtract(1, 'month')
+        .format('MMMM'),
+      nextMonthPayDigit: Number(calculateDateDto.month),
+      groupId: groupId,
+    };
   }
 
   private static async getDatesArrayForPeriod(
@@ -172,33 +278,5 @@ export class CalculateService {
     }
 
     return periodDates;
-  }
-
-  findAll() {
-    this.mailerService
-      .sendMail({
-        to: 'denbugackoff21@gmail.com',
-        from: 'denisbugackoff@yandex.ru',
-        subject: 'TIGER CLUB',
-        template: 'index',
-      })
-      .then((success) => {
-        console.log(success);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-  findOne(id: number) {
-    return `This action updates a #${id} calculate`;
-  }
-
-  update(id: number, updateCalculateDto: UpdateCalculateDto) {
-    return `This action updates a #${id} calculate`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} calculate`;
   }
 }

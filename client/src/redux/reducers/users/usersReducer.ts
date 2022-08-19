@@ -43,7 +43,7 @@ const usersSlice = createSlice({
     },
 });
 
-export const { setUsers, setCreatedUserData, setValidationSchema, setUser } = usersSlice.actions;
+export const { setUsers, setCreatedUserData, setValidationSchema, setUser, setLoading } = usersSlice.actions;
 
 export const fetchUsers = (): AppThunk => {
     return async dispatch => {
@@ -59,8 +59,10 @@ export const fetchUsers = (): AppThunk => {
 export const createUserAction = (createdUser: ICreateUserData): AppThunk => {
     return async dispatch => {
         try {
+            dispatch(setLoading(true));
             const createdUserData = await UsersService.createUser(createdUser);
             dispatch(setCreatedUserData(createdUserData));
+            dispatch(setLoading(false));
         } catch (e: any) {
             toast.error(getErrorMsg(e));
         }

@@ -35,6 +35,11 @@ export class TeacherTable1647769713076 implements MigrationInterface {
             default: "timezone('utc'::text, now())",
             isNullable: false,
           },
+          {
+            name: 'deleted_at',
+            type: 'timestamp with time zone',
+            isNullable: true,
+          },
         ],
       }),
       true,

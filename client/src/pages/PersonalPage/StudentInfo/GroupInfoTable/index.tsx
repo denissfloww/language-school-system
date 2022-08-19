@@ -14,8 +14,6 @@ import TableBodySkeleton from '../../../../components/Skeletons/TableBodySkeleto
 import { useEffect } from 'react';
 import moment from 'moment';
 import 'moment/locale/ru';
-import { IGroup } from '../../../../interfaces/IGroup';
-import { IStudent } from '../../../../interfaces/IStudent';
 
 const StudentGroupInfoTable = () => {
     const { isGridLoading, studentGroups } = useSelector(selectProfileState);
@@ -95,7 +93,9 @@ const StudentGroupInfoTable = () => {
                                                             suffix='₽'
                                                         />
                                                     </TableCell>
-                                                    <TableCell>{moment().locale('ru').month(group.month).format('MMMM')}</TableCell>
+                                                    <TableCell>
+                                                        {moment().locale('ru').month(group.month).subtract(1, 'month').format('MMMM')}
+                                                    </TableCell>
                                                 </TableRow>
                                             </>
                                         ))}

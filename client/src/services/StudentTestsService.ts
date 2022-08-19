@@ -54,6 +54,23 @@ const createTest = async (values: any) => {
         });
 };
 
+const deleteTest = async (testId: number) => {
+    const response = await $api
+        .delete(`${API_URL}/tests/${testId}`)
+        .then(data => {
+            if (data.status == 200 || data.status == 204 || data.status == 201) {
+                toast.success('Успешно удалено!', toastConfig);
+            }
+        })
+        .catch(e => {
+            if (!e.response) {
+                toast.error('Connection error', toastConfig);
+            } else {
+                toast.error(getErrorMsg(e as any), toastConfig);
+            }
+        });
+};
+
 const updateTest = async (testId: number, values: any) => {
     const response = await $api
         .patch(`${API_URL}/tests/${testId}`, {
@@ -77,6 +94,6 @@ const updateTest = async (testId: number, values: any) => {
     return response?.data;
 };
 
-const StudentTestsService = { getStudentTests, createTest, getTestById, updateTest };
+const StudentTestsService = { getStudentTests, createTest, getTestById, updateTest, deleteTest };
 
 export default StudentTestsService;

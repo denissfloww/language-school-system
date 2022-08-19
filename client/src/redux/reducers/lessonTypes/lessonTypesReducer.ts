@@ -1,4 +1,4 @@
-import { IPageDataResponse } from '../../../services/responses/types';
+import { INewPageDataResponse, IPageDataResponse } from '../../../services/responses/types';
 import { ILessonType } from '../../../interfaces/ILessonType';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from '../../store';
@@ -7,19 +7,17 @@ import { toast } from 'react-toastify';
 import { getErrorMsg } from '../../../utils/helperFunc';
 import { toastConfig } from '../../../utils/toastConfig';
 import LessonTypesService from '../../../services/LessonTypesService';
-import { useSelector } from 'react-redux';
-import GroupsService from '../../../services/GroupsService';
 
 interface InitialState {
-    lessonTypesData?: IPageDataResponse<ILessonType>;
+    lessonTypesData?: INewPageDataResponse<ILessonType>;
     page: number;
-    rowsPerPage: number;
+    limit: number;
     isLoading: boolean;
 }
 
 const initialState: InitialState = {
     page: 0,
-    rowsPerPage: 10,
+    limit: 10,
     isLoading: false,
 };
 
@@ -27,14 +25,14 @@ const lessonTypesSlice = createSlice({
     name: 'lessonTypes',
     initialState,
     reducers: {
-        setLessonTypes: (state, action: PayloadAction<IPageDataResponse<ILessonType> | undefined>) => {
+        setLessonTypes: (state, action: PayloadAction<INewPageDataResponse<ILessonType> | undefined>) => {
             state.lessonTypesData = action.payload;
         },
         setPage: (state, action: PayloadAction<number>) => {
             state.page = action.payload;
         },
-        setRowsPerPage: (state, action: PayloadAction<number>) => {
-            state.rowsPerPage = action.payload;
+        setLimit: (state, action: PayloadAction<number>) => {
+            state.limit = action.payload;
         },
         setLessonTypesLoading: (state, action: PayloadAction<boolean>) => {
             state.isLoading = action.payload;
@@ -42,7 +40,7 @@ const lessonTypesSlice = createSlice({
     },
 });
 
-export const { setLessonTypes, setPage, setLessonTypesLoading, setRowsPerPage } = lessonTypesSlice.actions;
+export const { setLessonTypes, setPage, setLessonTypesLoading, setLimit } = lessonTypesSlice.actions;
 
 export const fetchLessonTypesAction = (page: number, rowPerPage: number): AppThunk => {
     return async dispatch => {
@@ -72,8 +70,8 @@ export const createOrUpdateLessonTypesAction = (values: any): AppThunk => {
                 await LessonTypesService.createLessonType(values);
             }
 
-            const { page, rowsPerPage } = getState().lessonTypes;
-            dispatch(fetchLessonTypesAction(page, rowsPerPage));
+            const { page, limit } = getState().lessonTypes;
+            dispatch(fetchLessonTypesAction(page, limit));
         } catch (e) {
             const err = e as AxiosError;
             if (err.response) {
@@ -88,8 +86,8 @@ export const deleteLessonTypeAction = (id: number): AppThunk => {
     return async (dispatch, getState) => {
         try {
             await LessonTypesService.deleteLessonType(id);
-            const { page, rowsPerPage } = getState().lessonTypes;
-            dispatch(fetchLessonTypesAction(page, rowsPerPage));
+            const { page, limit } = getState().lessonTypes;
+            dispatch(fetchLessonTypesAction(page, limit));
         } catch (e) {
             const err = e as AxiosError;
             if (err.response) {

@@ -1,4 +1,4 @@
-import { IPageDataResponse } from '../../../services/responses/types';
+import { INewPageDataResponse, IPageDataResponse } from '../../../services/responses/types';
 import { ILanguage } from '../../../interfaces/ILanguage';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from '../../store';
@@ -9,15 +9,15 @@ import { toastConfig } from '../../../utils/toastConfig';
 import LanguageService from '../../../services/LanguageService';
 
 interface InitialState {
-    languagesData?: IPageDataResponse<ILanguage>;
+    languagesData?: INewPageDataResponse<ILanguage>;
     page: number;
-    rowsPerPage: number;
+    limit: number;
     isLoading: boolean;
 }
 
 const initialState: InitialState = {
     page: 0,
-    rowsPerPage: 10,
+    limit: 10,
     isLoading: false,
 };
 
@@ -25,14 +25,14 @@ const languageSlice = createSlice({
     name: 'language',
     initialState,
     reducers: {
-        setLanguages: (state, action: PayloadAction<IPageDataResponse<ILanguage> | undefined>) => {
+        setLanguages: (state, action: PayloadAction<INewPageDataResponse<ILanguage> | undefined>) => {
             state.languagesData = action.payload;
         },
         setPage: (state, action: PayloadAction<number>) => {
             state.page = action.payload;
         },
         setRowsPerPage: (state, action: PayloadAction<number>) => {
-            state.rowsPerPage = action.payload;
+            state.limit = action.payload;
         },
         setLanguagesLoading: (state, action: PayloadAction<boolean>) => {
             state.isLoading = action.payload;
@@ -65,8 +65,8 @@ export const deleteLanguageAction = (id: number): AppThunk => {
     return async (dispatch, getState) => {
         try {
             await LanguageService.deleteLanguage(id);
-            const { page, rowsPerPage } = getState().languages;
-            dispatch(fetchLanguagesAction(page, rowsPerPage));
+            const { page, limit } = getState().languages;
+            dispatch(fetchLanguagesAction(page, limit));
         } catch (e) {
             const err = e as AxiosError;
             if (err.response) {
@@ -86,8 +86,8 @@ export const createOrUpdateLanguageAction = (values: any): AppThunk => {
                 await LanguageService.createLanguage(values);
             }
 
-            const { page, rowsPerPage } = getState().languages;
-            dispatch(fetchLanguagesAction(page, rowsPerPage));
+            const { page, limit } = getState().languages;
+            dispatch(fetchLanguagesAction(page, limit));
         } catch (e) {
             const err = e as AxiosError;
             if (err.response) {

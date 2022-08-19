@@ -44,9 +44,6 @@ export const connectionApp: DataSourceOptions = {
   database: data.POSTGRES_DATABASE,
   entities: [__dirname + '/../models/**/*.entity{.ts,.js}'],
   migrations: [__dirname + '/../migrations/**/*{.ts,.js}'],
-  // cli: {
-  //   migrationsDir: 'src/migrations',
-  // },
   synchronize: false,
   logging: true,
 };

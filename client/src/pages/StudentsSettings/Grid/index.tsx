@@ -21,6 +21,7 @@ import { IStudent } from '../../../interfaces/IStudent';
 import moment from 'moment';
 import TableBodySkeleton from '../../../components/Skeletons/TableBodySkeleton';
 import { Link } from 'react-router-dom';
+import HistoryIcon from '@mui/icons-material/History';
 
 const StudentsGrid = () => {
     const dispatch = useDispatch();
@@ -139,7 +140,7 @@ const StudentGroupRow = (props: { student: IStudent }) => {
                 </TableCell>
                 <TableCell component='th' scope='row'>
                     <Tooltip title='Новый отчет по успеваемости'>
-                        <IconButton size='small' to={`/dashboard/students/${student.id}/report/add`} component={Link}>
+                        <IconButton size='small' to={`/dashboard/reports/${student.id}/add`} component={Link}>
                             <AssessmentIcon />
                         </IconButton>
                     </Tooltip>
@@ -159,6 +160,7 @@ const StudentGroupRow = (props: { student: IStudent }) => {
                                         <TableCell>Название группы</TableCell>
                                         <TableCell align='right'>Следующий месяц оплаты</TableCell>
                                         <TableCell align='right'>Сумма оплаты на следующий месяц</TableCell>
+                                        <TableCell align='right'>Действия</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -169,17 +171,35 @@ const StudentGroupRow = (props: { student: IStudent }) => {
                                                     {groupPayment.groupId}
                                                 </TableCell>
                                                 <TableCell>{groupPayment.groupName}</TableCell>
-                                                <TableCell align='right' sx={{ fontWeight: 'bold' }}>
-                                                    {moment().locale('ru').month(groupPayment.price.calculateMonth).format('MMMM')}
-                                                </TableCell>
-                                                <TableCell align='right' sx={{ color: '#a61e1e', fontWeight: 'bold' }}>
-                                                    <NumberFormat
-                                                        value={groupPayment.price.priceNextMonth}
-                                                        displayType={'text'}
-                                                        thousandSeparator={true}
-                                                        suffix='₽'
-                                                    />
-                                                </TableCell>
+                                                {groupPayment.price ? (
+                                                    <>
+                                                        <TableCell align='right' sx={{ fontWeight: 'bold' }}>
+                                                            {moment()
+                                                                .locale('ru')
+                                                                .month(groupPayment.price.calculateMonth)
+                                                                .subtract(1, 'month')
+                                                                .format('MMMM')}
+                                                        </TableCell>
+                                                        <TableCell align='right' sx={{ color: '#a61e1e', fontWeight: 'bold' }}>
+                                                            <NumberFormat
+                                                                value={groupPayment.price.priceNextMonth}
+                                                                displayType={'text'}
+                                                                thousandSeparator={true}
+                                                                suffix='₽'
+                                                            />
+                                                        </TableCell>
+                                                        <TableCell align='right'>
+                                                            <Tooltip title='Просмотреть историю расчётов'>
+                                                                <IconButton
+                                                                    to={`/dashboard/calculations/history/student/${student.id}/group/${groupPayment.groupId}`}
+                                                                    component={Link}
+                                                                >
+                                                                    <HistoryIcon />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                        </TableCell>
+                                                    </>
+                                                ) : null}
                                             </TableRow>
                                         </>
                                     ))}

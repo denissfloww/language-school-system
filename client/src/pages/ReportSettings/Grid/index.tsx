@@ -6,7 +6,7 @@ import { Tooltip } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { Link } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteButton from '../../../components/Buttons/DeleteButton';
 
 interface IReportsGridRow {
     id: number;
@@ -15,6 +15,7 @@ interface IReportsGridRow {
     testScored?: number;
     description: string;
     groupName: string;
+    studentId: number;
     studentName: string;
     testName: string;
 }
@@ -31,6 +32,7 @@ const ReportsGrid = () => {
                     description: r.description,
                     groupName: r.group.name,
                     studentName: `${r.student.user.firstName} ${r.student.user.middleName} ${r.student.user.lastName}`,
+                    studentId: r.student.id,
                     testName: r.test?.name ?? '',
                     id: r.id,
                     reportDate: r.reportDate,
@@ -38,7 +40,6 @@ const ReportsGrid = () => {
                     testScored: r.testScored,
                 });
             });
-            console.log(rows);
             setReports(rows);
         });
     };
@@ -46,6 +47,12 @@ const ReportsGrid = () => {
     useEffect(() => {
         loadReports();
     }, []);
+
+    const deleteReport = (reportId: number) => {
+        ReportService.deleteReport(reportId).then(() => {
+            loadReports();
+        });
+    };
 
     const options: any = {
         search: true,
@@ -55,6 +62,7 @@ const ReportsGrid = () => {
         filter: true,
         filterType: 'dropdown',
         tableBodyHeight: '100%',
+        selectableRows: false,
         rowsSelected: selectedRows,
     };
 
@@ -120,19 +128,24 @@ const ReportsGrid = () => {
                 filter: false,
                 sort: false,
                 customBodyRenderLite: (dataIndex: number, rowIndex: number) => {
-                    const test = reports[dataIndex];
+                    const report = reports[dataIndex];
 
                     return (
                         <>
                             <Tooltip title='Изменить'>
-                                <IconButton size='small'>
+                                <IconButton size='small' to={`/dashboard/reports/${report.studentId}/update/${report.id}`} component={Link}>
                                     <EditIcon />
                                 </IconButton>
                             </Tooltip>
                             <Tooltip title='Удалить'>
-                                <IconButton size='small'>
-                                    <DeleteIcon />
-                                </IconButton>
+                                <DeleteButton
+                                    id={report.id}
+                                    confirmationText='Вы действительно хотите удалить отчёт?'
+                                    title='Удалить отчёт?'
+                                    onDeleteMethod={() => {
+                                        deleteReport(report.id);
+                                    }}
+                                />
                             </Tooltip>
                         </>
                     );

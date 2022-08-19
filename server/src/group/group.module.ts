@@ -11,12 +11,11 @@ import { StudentsModule } from '../students/students.module';
 import { StudentsService } from '../students/students.service';
 import { UsersModule } from '../users/users.module';
 import { TeacherModule } from '../teacher/teacher.module';
-import { StudentGroup } from '../models/student.group.entity';
 import { CalculateModule } from '../calculate/calculate.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Student, Group, Teacher, User, StudentGroup]),
+    TypeOrmModule.forFeature([Student, Group, Teacher, User]),
     RolesModule,
     forwardRef(() => StudentsModule),
     forwardRef(() => UsersModule),

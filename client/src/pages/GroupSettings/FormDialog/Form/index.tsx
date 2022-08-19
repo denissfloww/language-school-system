@@ -15,11 +15,11 @@ interface IGroupFormProps {
 
 const GroupForm = (props: IGroupFormProps) => {
     const {
-        formField: { name, desc, students, id, teacher, language, cost },
+        formField: { name, desc, students, id, teacher, language },
     } = props;
 
     const dispatch = useDispatch();
-    const { studentsAutocompleteValues, teachersValues, languagesValues, costsValues } = useSelector(selectGroupsState);
+    const { studentsAutocompleteValues, teachersValues, languagesValues } = useSelector(selectGroupsState);
 
     useEffect(() => {
         dispatch(fetchFormDataAction());
@@ -55,9 +55,6 @@ const GroupForm = (props: IGroupFormProps) => {
                 </Grid>
                 <Grid item xs={12} sm={12} sx={{ marginTop: 2 }}>
                     <SelectField name={language.name} label={language.label} data={languagesValues} fullWidth />
-                </Grid>
-                <Grid item xs={12} sm={12} sx={{ marginTop: 2 }}>
-                    <SelectField name={cost.name} label={cost.label} data={costsValues} fullWidth />
                 </Grid>
             </Grid>
             <TextField name={id.name} type='hidden' style={{ display: 'none' }} />

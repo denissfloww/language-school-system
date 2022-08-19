@@ -92,7 +92,6 @@ const UserInfoForm = () => {
                                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                                         <DatePicker
                                             onChange={(value: any) => {
-                                                console.log(props);
                                                 props.setFieldValue('birthDate', value);
                                             }}
                                             inputFormat='dd.MM.yyyy'

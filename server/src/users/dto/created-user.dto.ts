@@ -8,7 +8,7 @@ export class CreatedUserDto {
 
   readonly lastName: string;
 
-  readonly password: string;
+  readonly creditionalsNoteLink: string;
 
   readonly roles: RolesEnum[];
   readonly login: string;

@@ -27,7 +27,7 @@ const GroupDialogForm = (props: IGroupDialogFormProps) => {
     const dispatch = useDispatch();
 
     const [initValues, setInitValues] =
-        useState<{ [p: string]: string | number | { label: string; value: number }[] | undefined }>(emptyInitialValues);
+        useState<{ [p: string]: string | number | { label: string; value: string }[] | undefined }>(emptyInitialValues);
 
     function _handleSubmit(values: any, actions: any) {
         dispatch(createOrUpdateGroupAction(values));
@@ -40,7 +40,7 @@ const GroupDialogForm = (props: IGroupDialogFormProps) => {
 
     const setExistInitialValues = () => {
         const studentsViews = group?.students?.map(stud => {
-            return { label: `${stud.lastName} ${stud.firstName}`, value: stud.id };
+            return { label: `${stud.lastName} ${stud.firstName}`, value: String(stud.id) };
         });
 
         setInitValues({
@@ -50,7 +50,6 @@ const GroupDialogForm = (props: IGroupDialogFormProps) => {
             id: group?.id,
             teacher: String(group?.teacher.id),
             language: String(group?.language.id),
-            cost: String(group?.cost.id)
         });
     };
 

@@ -1,4 +1,4 @@
-import { IPageDataResponse } from '../../../services/responses/types';
+import { INewPageDataResponse, IPageDataResponse } from '../../../services/responses/types';
 import { ICost } from '../../../interfaces/ICost';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from '../../store';
@@ -11,15 +11,15 @@ import LanguageService from '../../../services/LanguageService';
 import { fetchLanguagesAction } from '../language/languageReducer';
 
 interface InitialState {
-    costsData?: IPageDataResponse<ICost>;
+    costsData?: INewPageDataResponse<ICost>;
     page: number;
-    rowsPerPage: number;
+    limit: number;
     isLoading: boolean;
 }
 
 const initialState: InitialState = {
     page: 0,
-    rowsPerPage: 10,
+    limit: 10,
     isLoading: false,
 };
 
@@ -27,14 +27,14 @@ const costSlice = createSlice({
     name: 'lessonTypes',
     initialState,
     reducers: {
-        setCosts: (state, action: PayloadAction<IPageDataResponse<ICost> | undefined>) => {
+        setCosts: (state, action: PayloadAction<INewPageDataResponse<ICost> | undefined>) => {
             state.costsData = action.payload;
         },
         setPage: (state, action: PayloadAction<number>) => {
             state.page = action.payload;
         },
         setRowsPerPage: (state, action: PayloadAction<number>) => {
-            state.rowsPerPage = action.payload;
+            state.limit = action.payload;
         },
         setCostsLoading: (state, action: PayloadAction<boolean>) => {
             state.isLoading = action.payload;
@@ -67,8 +67,8 @@ export const deleteCostAction = (id: number): AppThunk => {
     return async (dispatch, getState) => {
         try {
             await CostsService.deleteCost(id);
-            const { page, rowsPerPage } = getState().cost;
-            dispatch(fetchCostsAction(page, rowsPerPage));
+            const { page, limit } = getState().cost;
+            dispatch(fetchCostsAction(page, limit));
         } catch (e) {
             const err = e as AxiosError;
             if (err.response) {
@@ -88,8 +88,8 @@ export const createOrUpdateCostAction = (values: any): AppThunk => {
                 await CostsService.createCost(values);
             }
 
-            const { page, rowsPerPage } = getState().cost;
-            dispatch(fetchCostsAction(page, rowsPerPage));
+            const { page, limit } = getState().cost;
+            dispatch(fetchCostsAction(page, limit));
         } catch (e) {
             const err = e as AxiosError;
             if (err.response) {

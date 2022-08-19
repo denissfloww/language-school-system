@@ -25,7 +25,7 @@ import TableBodySkeleton from "../../../components/Skeletons/TableBodySkeleton";
 
 const LanguageGrid = () => {
     const dispatch = useDispatch();
-    const { isLoading, languagesData, page, rowsPerPage } = useSelector(selectLanguagesState);
+    const { isLoading, languagesData, page, limit } = useSelector(selectLanguagesState);
     const headerRows: { text: string; align: 'left' | 'center' | 'right' }[] = [
         {
             text: 'Код',
@@ -46,12 +46,12 @@ const LanguageGrid = () => {
     ];
 
     const fetchLanguagesData = () => {
-        dispatch(fetchLanguagesAction(page, rowsPerPage));
+        dispatch(fetchLanguagesAction(page, limit));
     };
 
     useEffect(() => {
         fetchLanguagesData();
-    }, [page, rowsPerPage]);
+    }, [page, limit]);
 
     const handleChangePage = (event: unknown, newPage: number) => {
         dispatch(setPage(newPage));
@@ -103,7 +103,7 @@ const LanguageGrid = () => {
                                                             <DeleteButton
                                                                 id={language.id}
                                                                 title='Удалить язык?'
-                                                                confirmationText='Вы действительно хотите удалить язык? Удалятся все группы с данным языком'
+                                                                confirmationText='Вы действительно хотите удалить язык?'
                                                                 onDeleteMethod={() => {
                                                                     dispatch(deleteLanguageAction(language.id));
                                                                 }}
@@ -130,8 +130,8 @@ const LanguageGrid = () => {
                         <TablePagination
                             rowsPerPageOptions={[5, 10, 15]}
                             component='div'
-                            count={languagesData?.meta.itemCount}
-                            rowsPerPage={rowsPerPage}
+                            count={languagesData?.total}
+                            rowsPerPage={limit}
                             page={page}
                             onPageChange={handleChangePage}
                             onRowsPerPageChange={handleChangeRowsPerPage}

@@ -45,6 +45,11 @@ export class ReportTable1653402134500 implements MigrationInterface {
             default: "timezone('utc'::text, now())",
             isNullable: false,
           },
+          {
+            name: 'deleted_at',
+            type: 'timestamp with time zone',
+            isNullable: true,
+          },
         ],
       }),
       true,

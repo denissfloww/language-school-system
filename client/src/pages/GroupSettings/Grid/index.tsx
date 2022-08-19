@@ -65,10 +65,6 @@ const GroupGrid = () => {
             align: 'center',
         },
         {
-            text: 'Тариф',
-            align: 'center',
-        },
-        {
             text: 'Количество учеников',
             align: 'center',
         },
@@ -120,9 +116,6 @@ const GroupGrid = () => {
                                                             </TableCell>
                                                             <TableCell component='th' scope='row' align='center'>
                                                                 {group.language?.name}
-                                                            </TableCell>
-                                                            <TableCell component='th' scope='row' align='center'>
-                                                                {group.cost?.name}
                                                             </TableCell>
                                                             <TableCell component='th' scope='row' align='center'>
                                                                 {group.students?.length}

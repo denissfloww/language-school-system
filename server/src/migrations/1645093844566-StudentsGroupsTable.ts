@@ -1,79 +1,33 @@
-import {
-  MigrationInterface,
-  QueryRunner,
-  Table,
-  TableColumn,
-  TableForeignKey,
-} from 'typeorm';
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class StudentsGroupsTable1645093844566 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.createTable(
-      new Table({
-        name: 'student_group',
-        columns: [
-          {
-            name: 'id',
-            type: 'int',
-            isPrimary: true,
-            isGenerated: true,
-          },
-          {
-            name: 'updated_at',
-            type: 'timestamp with time zone',
-            default: "timezone('utc'::text, now())",
-            isNullable: false,
-          },
-          {
-            name: 'created_at',
-            type: 'timestamp with time zone',
-            default: "timezone('utc'::text, now())",
-            isNullable: false,
-          },
-        ],
-      }),
-      true,
-    );
+    await queryRunner.query(`
+      create table students_groups_groups
+        (
+            "student_id" integer not null
+                constraint "FK_97fb33bee4c990b82cf307f1f6e"
+                    references students
+                    on update cascade on delete cascade,
+            "group_id"   integer not null
+                constraint "FK_c63201d55115ec4f63844060c4d"
+                    references groups
+                    on update cascade on delete cascade,
+            constraint "PK_bd2797817e486d3769f415a7eb1"
+                primary key ("student_id", "group_id")
+        );
 
-    await queryRunner.addColumn(
-      'student_group',
-      new TableColumn({
-        name: 'student_id',
-        type: 'int',
-      }),
-    );
-    await queryRunner.addColumn(
-      'student_group',
-      new TableColumn({
-        name: 'group_id',
-        type: 'int',
-      }),
-    );
 
-    await queryRunner.createForeignKey(
-      'student_group',
-      new TableForeignKey({
-        columnNames: ['student_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'students',
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-      }),
-    );
 
-    await queryRunner.createForeignKey(
-      'student_group',
-      new TableForeignKey({
-        columnNames: ['group_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'groups',
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-      }),
-    );
+        create index "IDX_97fb33bee4c990b82cf307f1f6"
+            on students_groups_groups ("student_id");
+        
+        create index "IDX_c63201d55115ec4f63844060c4"
+            on students_groups_groups ("group_id");
+    `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('student_group');
+    await queryRunner.dropTable('students_groups_groups');
   }
 }

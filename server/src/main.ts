@@ -4,6 +4,7 @@ import { ValidationPipe } from './pipes/validation.pipe';
 import * as path from 'path';
 import * as dotenv from 'dotenv';
 import { json, urlencoded } from 'express';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 const env = process.env.NODE_ENV;
 const p = path.join(process.cwd(), `.${env}.env`);
@@ -24,6 +25,16 @@ async function bootstrap() {
   app.enableCors();
   app.setGlobalPrefix('api/v1');
   app.useGlobalPipes(new ValidationPipe());
+
+  const config = new DocumentBuilder()
+    .setTitle('Language-school system API')
+    .setDescription('')
+    .setVersion('1.0')
+    .addTag('cats')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api/v1', app, document);
+
   await app.listen(PORT, () => {
     console.log(`Server started. Port: ${PORT}`);
   });

@@ -410,8 +410,7 @@ export class SchedulerComponent extends SampleBase {
                                 id='schedule'
                                 cssClass='quick-info-template'
                                 ref={(schedule: any) => (this.scheduleObj = schedule)}
-                                //убрать потом!!!!!
-                                selectedDate={moment('2022-02-28T08:00:00').toDate()}
+                                selectedDate={moment().toDate()}
                                 eventSettings={{
                                     dataSource: this.dataManager,
                                     enableTooltip: true,
@@ -423,9 +422,6 @@ export class SchedulerComponent extends SampleBase {
                                     footer: this.footerTemplate.bind(this) as any,
                                 }}
                                 actionBegin={this.onActionBegin.bind(this)}
-                                // dataBinding={args => {
-                                //     console.log(args);
-                                // }}
                                 renderCell={this.onRenderCell.bind(this)}
                                 height='100%'
                                 timeFormat='HH:mm'

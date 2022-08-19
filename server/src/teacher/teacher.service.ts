@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Teacher } from '../models/teacher.entity';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { PageOptionsDto } from '../common/dtos/page-options.dto';
 import { PageMetaDto } from '../common/dtos/page-meta.dto';
 import { PageDto } from '../common/dtos/page.dto';
 import { TeacherDto } from './dtos/teacher.dto';
+import { Student } from '../models/student.entity';
 
 @Injectable()
 export class TeacherService {
@@ -14,8 +15,8 @@ export class TeacherService {
     private teacherRepository: Repository<Teacher>,
   ) {}
 
-  async createTeacher(userId: number) {
-    await this.teacherRepository.save({
+  async createTeacherWithManager(userId: number, manager: EntityManager) {
+    return await manager.getRepository(Teacher).save({
       userId: userId,
     });
   }

@@ -16,11 +16,12 @@ import FeedsPage from './pages/FeedsSettings/FeedsPage';
 import UpdateFeedPage from './pages/FeedsSettings/UpdateFeedPage';
 import FeedBoardPage from './pages/FeedBoard';
 import UpdateUserPage from './pages/UsersSettings/UpdateUserPage';
-import StudentReport from './pages/StudentsSettings/StudentReport';
 import StudentTestsPage from './pages/StudentTestsPage';
 import CreateTestPage from './pages/StudentTestsPage/CreateTestPage';
 import UpdateTestPage from './pages/StudentTestsPage/UpdateTestPage';
 import ReportSettingsPage from './pages/ReportSettings';
+import StudentReport from './pages/ReportSettings/StudentReport';
+import StudentCalculatedPaymentsHistoryPage from './pages/StudentCalculatedPaymentsHistory';
 
 // @ts-ignore
 // eslint-disable-next-line react/display-name
@@ -52,10 +53,16 @@ const Router = () => {
                     </Route>
                     <Route path='reports'>
                         <Route index element={<ReportSettingsPage />} />
+                        <Route path=':studentId/add' element={<StudentReport />} />
+                        <Route path=':studentId/update/:reportId' element={<StudentReport />} />
                     </Route>
                     <Route path='students'>
                         <Route index element={<StudentsSettings />} />
-                        <Route path=':studentId/report/add' element={<StudentReport />} />
+                    </Route>
+                    <Route path='calculations'>
+                        <Route path='history'>
+                            <Route path='student/:studentId/group/:groupId' element={<StudentCalculatedPaymentsHistoryPage />} />
+                        </Route>
                     </Route>
                     <Route path='settings'>
                         <Route path='groups' element={<GroupSettings />} />

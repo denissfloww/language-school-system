@@ -22,6 +22,7 @@ const CheckBoxField = (props: any) => {
         ...rest,
         onChange: _onChange,
     };
+
     return (
         <FormControl component='fieldset' {...configFormControl} error={Boolean(isError)}>
             <FormControlLabel
@@ -29,13 +30,7 @@ const CheckBoxField = (props: any) => {
                 checked={field.checked}
                 label={label}
                 onChange={_onChange}
-                control={
-                    <Checkbox
-                        {...configFormControl}
-                        // checked={field.checked}
-                        color='primary'
-                    />
-                }
+                control={<Checkbox {...configFormControl} checked={field.value} color='primary' />}
                 color='primary'
             />
             {__renderHelperText()}

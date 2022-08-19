@@ -13,7 +13,7 @@ import {
     fetchLessonTypesAction,
     selectLessonTypesState,
     setPage,
-    setRowsPerPage,
+    setLimit,
 } from '../../../redux/reducers/lessonTypes/lessonTypesReducer';
 import TableBody from '@mui/material/TableBody';
 import TableBodySkeleton from '../../../components/Skeletons/TableBodySkeleton';
@@ -25,15 +25,15 @@ import UpdateLessonTypeButton from './Buttons/UpdateLessonTypeButton';
 
 const LessonTypeGrid = () => {
     const dispatch = useDispatch();
-    const { isLoading, lessonTypesData, page, rowsPerPage } = useSelector(selectLessonTypesState);
+    const { isLoading, lessonTypesData, page, limit } = useSelector(selectLessonTypesState);
 
     const fetchLessonTypesData = () => {
-        dispatch(fetchLessonTypesAction(page, rowsPerPage));
+        dispatch(fetchLessonTypesAction(page, limit));
     };
 
     useEffect(() => {
         fetchLessonTypesData();
-    }, [page, rowsPerPage]);
+    }, [page, limit]);
 
     const handleChangePage = (event: unknown, newPage: number) => {
         dispatch(setPage(newPage));
@@ -41,7 +41,7 @@ const LessonTypeGrid = () => {
     };
 
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch(setRowsPerPage(parseInt(event.target.value, 10)));
+        dispatch(setLimit(parseInt(event.target.value, 10)));
         dispatch(setPage(0));
         fetchLessonTypesData();
     };
@@ -146,8 +146,8 @@ const LessonTypeGrid = () => {
                             <TablePagination
                                 rowsPerPageOptions={[5, 10, 15]}
                                 component='div'
-                                count={lessonTypesData?.meta.itemCount}
-                                rowsPerPage={rowsPerPage}
+                                count={lessonTypesData?.total}
+                                rowsPerPage={limit}
                                 page={page}
                                 onPageChange={handleChangePage}
                                 onRowsPerPageChange={handleChangeRowsPerPage}

@@ -1,79 +1,30 @@
-import {
-  MigrationInterface,
-  QueryRunner,
-  Table,
-  TableColumn,
-  TableForeignKey,
-} from 'typeorm';
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class UserRoleTable1644750641109 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.createTable(
-      new Table({
-        name: 'user_role',
-        columns: [
-          {
-            name: 'id',
-            type: 'int',
-            isPrimary: true,
-            isGenerated: true,
-          },
-          {
-            name: 'updated_at',
-            type: 'timestamp with time zone',
-            default: "timezone('utc'::text, now())",
-            isNullable: false,
-          },
-          {
-            name: 'created_at',
-            type: 'timestamp with time zone',
-            default: "timezone('utc'::text, now())",
-            isNullable: false,
-          },
-        ],
-      }),
-      true,
+    await queryRunner.query(`create table users_roles_roles
+    (
+    role_id integer not null
+        constraint "FK_38703d4da3789a6ad8552ba783e"
+            references roles
+            on update cascade on delete cascade,
+    user_id integer not null
+        constraint "FK_32e5adf0a2e33e130de343c6ee8"
+            references users
+            on update cascade on delete cascade,
+    constraint "PK_4f5382a23fff88b69c0767b700d"
+        primary key (role_id, user_id)
     );
 
-    await queryRunner.addColumn(
-      'user_role',
-      new TableColumn({
-        name: 'user_id',
-        type: 'int',
-      }),
-    );
-    await queryRunner.addColumn(
-      'user_role',
-      new TableColumn({
-        name: 'role_id',
-        type: 'int',
-      }),
-    );
-
-    await queryRunner.createForeignKey(
-      'user_role',
-      new TableForeignKey({
-        columnNames: ['user_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'users',
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-      }),
-    );
-
-    await queryRunner.createForeignKey(
-      'user_role',
-      new TableForeignKey({
-        columnNames: ['role_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'roles',
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-      }),
-    );
+    create index "IDX_38703d4da3789a6ad8552ba783"
+        on users_roles_roles (role_id);
+    
+    create index "IDX_32e5adf0a2e33e130de343c6ee"
+        on users_roles_roles (user_id);
+    `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('user_role');
+    await queryRunner.dropTable('users_roles_roles');
   }
 }

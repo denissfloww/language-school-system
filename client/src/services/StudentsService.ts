@@ -30,6 +30,25 @@ const getStudents = async (page?: number, rowPerPage?: number) => {
     return data.data;
 };
 
+const getAllStudentsLight = async () => {
+    const response = await $api
+        .get(`${API_URL}/students/light`)
+        .catch(e => {
+            if (!e.response) {
+                toast.error('Connection error', toastConfig);
+            } else {
+                toast.error(getErrorMsg(e as any), toastConfig);
+            }
+        })
+        .then(data => {
+            return data;
+        });
+
+    const data: IPageDataResponse<IStudent> = response?.data;
+
+    return data.data;
+};
+
 const getStudentByUserId = async (userId: number) => {
     const response = await $api.get(`${API_URL}/students/user/${userId}`).catch(e => {
         if (!e.response) {
@@ -58,5 +77,6 @@ const StudentsService = {
     getStudents,
     getStudentByUserId,
     getStudentById,
+    getAllStudentsLight,
 };
 export default StudentsService;
