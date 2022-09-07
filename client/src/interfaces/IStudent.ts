@@ -1,4 +1,5 @@
 import { IUser } from './IUser';
+import { ICost } from './ICost';
 
 export interface IStudent {
     id: number;
@@ -20,5 +21,7 @@ export interface IStudent {
             calculateMonth: string;
         };
         month: string;
+        cost: ICost;
+        costStudentGroupId: number;
     }[];
 }

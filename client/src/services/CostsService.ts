@@ -3,8 +3,8 @@ import { API_URL } from '../constants/urls';
 import { toast } from 'react-toastify';
 import { toastConfig } from '../utils/toastConfig';
 import { getErrorMsg } from '../utils/helperFunc';
-import { INewPageDataResponse, IPageDataResponse } from "./responses/types";
-import { ICost } from '../interfaces/ICost';
+import { INewPageDataResponse, IPageDataResponse } from './responses/types';
+import { ICost, ICostStudentGroupId } from '../interfaces/ICost';
 
 const getCosts = async (page?: number, limit?: number) => {
     const response = await $api
@@ -26,6 +26,23 @@ const getCosts = async (page?: number, limit?: number) => {
         });
     const data: INewPageDataResponse<ICost> = response?.data;
     return data;
+};
+
+const getCostStudentGroup = async (id: number) => {
+    const response = await $api
+        .get(`${API_URL}/costs/student/group/${id}`)
+        .then(data => {
+            return data;
+        })
+        .catch(e => {
+            if (!e.response) {
+                toast.error('Connection error', toastConfig);
+            } else {
+                toast.error(getErrorMsg(e as any), toastConfig);
+            }
+        });
+
+    return response?.data as ICostStudentGroupId;
 };
 
 const deleteCost = async (id: number) => {
@@ -63,6 +80,47 @@ const updateCost = async (values: any) => {
         });
 };
 
+const saveCostStudentGroup = async (values: any) => {
+    const response = await $api
+        .post(`${API_URL}/costs/student/group/create`, {
+            groupId: Number(values.groupId),
+            costId: Number(values.costId),
+            studentId: Number(values.studentId),
+        })
+        .then(data => {
+            if (data.status == 200 || data.status == 204 || data.status == 201) {
+                toast.success('Успешно добавлено!', toastConfig);
+            }
+        })
+        .catch(e => {
+            if (!e.response) {
+                toast.error('Connection error', toastConfig);
+            } else {
+                toast.error(getErrorMsg(e as any), toastConfig);
+            }
+        });
+};
+
+const updateCostStudentGroup = async (values: any) => {
+    const response = await $api
+        .post(`${API_URL}/costs/student/group/update`, {
+            costStudentGroupId: values.costStudentGroupId,
+            costId: Number(values.costId),
+        })
+        .then(data => {
+            if (data.status == 200 || data.status == 204 || data.status == 201) {
+                toast.success('Успешно добавлено!', toastConfig);
+            }
+        })
+        .catch(e => {
+            if (!e.response) {
+                toast.error('Connection error', toastConfig);
+            } else {
+                toast.error(getErrorMsg(e as any), toastConfig);
+            }
+        });
+};
+
 const createCost = async (values: any) => {
     const response = await $api
         .post(`${API_URL}/costs`, {
@@ -89,5 +147,8 @@ const CostsService = {
     createCost,
     updateCost,
     deleteCost,
+    getCostStudentGroup,
+    saveCostStudentGroup,
+    updateCostStudentGroup,
 };
 export default CostsService;

@@ -13,7 +13,7 @@ import { Cost } from './cost.entity';
 @Entity('costs_students_groups')
 export class CostStudentGroup extends BaseModel {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column({ name: 'group_id' })
   groupId: number;

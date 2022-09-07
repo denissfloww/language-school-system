@@ -100,7 +100,6 @@ const StudentReportForm = (props: { reportId?: number; studentId: number }) => {
             });
 
             setTests(tests.data);
-            console.log(tests.data);
             setTestsValues(testsValues);
         });
         setLoading(false);

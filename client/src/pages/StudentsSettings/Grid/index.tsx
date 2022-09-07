@@ -22,6 +22,7 @@ import moment from 'moment';
 import TableBodySkeleton from '../../../components/Skeletons/TableBodySkeleton';
 import { Link } from 'react-router-dom';
 import HistoryIcon from '@mui/icons-material/History';
+import AddCardIcon from '@mui/icons-material/AddCard';
 
 const StudentsGrid = () => {
     const dispatch = useDispatch();
@@ -160,6 +161,7 @@ const StudentGroupRow = (props: { student: IStudent }) => {
                                         <TableCell>Название группы</TableCell>
                                         <TableCell align='right'>Следующий месяц оплаты</TableCell>
                                         <TableCell align='right'>Сумма оплаты на следующий месяц</TableCell>
+                                        <TableCell align='right'>Тариф</TableCell>
                                         <TableCell align='right'>Действия</TableCell>
                                     </TableRow>
                                 </TableHead>
@@ -188,6 +190,9 @@ const StudentGroupRow = (props: { student: IStudent }) => {
                                                                 suffix='₽'
                                                             />
                                                         </TableCell>
+                                                        <TableCell align='right' sx={{ fontWeight: 'bold' }}>
+                                                            {groupPayment.cost.name}
+                                                        </TableCell>
                                                         <TableCell align='right'>
                                                             <Tooltip title='Просмотреть историю расчётов'>
                                                                 <IconButton
@@ -197,9 +202,33 @@ const StudentGroupRow = (props: { student: IStudent }) => {
                                                                     <HistoryIcon />
                                                                 </IconButton>
                                                             </Tooltip>
+                                                            <Tooltip title='Изменить тариф'>
+                                                                <IconButton
+                                                                    to={`/dashboard/students/${student.id}/cost/update/${groupPayment.groupId}/${groupPayment.costStudentGroupId}`}
+                                                                    component={Link}
+                                                                >
+                                                                    <AddCardIcon />
+                                                                </IconButton>
+                                                            </Tooltip>
                                                         </TableCell>
                                                     </>
-                                                ) : null}
+                                                ) : (
+                                                    <>
+                                                        <TableCell align='right' />
+                                                        <TableCell align='right' />
+                                                        <TableCell align='right' />
+                                                        <TableCell align='right'>
+                                                            <Tooltip title='Добавить тариф'>
+                                                                <IconButton
+                                                                    to={`/dashboard/students/${student.id}/cost/add/${groupPayment.groupId}`}
+                                                                    component={Link}
+                                                                >
+                                                                    <AddCardIcon />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                        </TableCell>
+                                                    </>
+                                                )}
                                             </TableRow>
                                         </>
                                     ))}

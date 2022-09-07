@@ -1,7 +1,6 @@
 import MUIDataTable from 'mui-datatables';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectTestsState, setTests } from '../../../redux/reducers/tests/testsReducer';
 import StudentTestsService from '../../../services/StudentTestsService';
 import { ITest } from '../../../interfaces/ITest';
 import { Tooltip } from '@mui/material';
@@ -14,7 +13,8 @@ import DeleteButton from '../../../components/Buttons/DeleteButton';
 const TestsGrid = () => {
     const dispatch = useDispatch();
     const [selectedRows, setSelectedRows] = useState([]);
-    const { tests } = useSelector(selectTestsState);
+    const [tests, setTests] = useState<ITest[]>([]);
+    const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(0);
     const [total, setTotal] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -30,7 +30,8 @@ const TestsGrid = () => {
     };
 
     const loadTests = (page?: number, rowsPerPage?: number) => {
-        const data = StudentTestsService.getStudentTests(Number(page) + 1, rowsPerPage).then(data => {
+        const data = StudentTestsService.getStudentTests().then(data => {
+            setLoading(true);
             const rows: ITest[] = [];
             data.data.forEach((t: ITest) => {
                 rows.push({
@@ -41,9 +42,9 @@ const TestsGrid = () => {
                 });
             });
 
-            console.log(rows);
-            dispatch(setTests(rows));
+            setTests(rows);
             setTotal(data.total);
+            setLoading(false);
         });
     };
 
@@ -113,14 +114,12 @@ const TestsGrid = () => {
         print: false,
         viewColumns: true,
         filter: true,
-        rowsPerPage: rowsPerPage,
         count: total,
         selectableRows: false,
         filterType: 'dropdown',
         tableBodyHeight: '100%',
         rowsSelected: selectedRows,
         onTableChange: (action: any, state: any) => {
-            // console.log(action);
             if (action === 'changePage') {
                 changePage(state.page);
             }

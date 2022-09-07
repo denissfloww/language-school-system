@@ -24,12 +24,45 @@ export class CostsService extends TypeOrmCrudService<Cost> {
     return group.cost;
   }
 
-  async getCostByStudentAndGroup(groupId: number, studentId: number) {
+  async getCost(groupId: number, studentId: number) {
     const costStudentGroup = await this.costStudentGroupRepository.findOne({
       where: { groupId: groupId, studentId: studentId },
       relations: ['cost'],
     });
 
     return costStudentGroup?.cost;
+  }
+
+  async getCostStudentGroup(groupId: number, studentId: number) {
+    return await this.costStudentGroupRepository.findOne({
+      where: { groupId: groupId, studentId: studentId },
+      relations: ['cost'],
+    });
+  }
+
+  async getCostStudentGroupById(id: number) {
+    return await this.costStudentGroupRepository.findOne({
+      where: { id: id },
+      relations: ['cost'],
+    });
+  }
+
+  async saveCostStudentGroup(
+    groupId: number,
+    studentId: number,
+    costId: number,
+  ) {
+    await this.costStudentGroupRepository.save({
+      groupId: groupId,
+      studentId: studentId,
+      costId: costId,
+    });
+  }
+
+  async updateCostStudentGroup(studentGroupCostId: number, costId: number) {
+    await this.costStudentGroupRepository.save({
+      id: studentGroupCostId,
+      costId: costId,
+    });
   }
 }

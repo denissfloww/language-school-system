@@ -22,6 +22,7 @@ import UpdateTestPage from './pages/StudentTestsPage/UpdateTestPage';
 import ReportSettingsPage from './pages/ReportSettings';
 import StudentReport from './pages/ReportSettings/StudentReport';
 import StudentCalculatedPaymentsHistoryPage from './pages/StudentCalculatedPaymentsHistory';
+import AppendCost from "./pages/StudentsSettings/AppendCost";
 
 // @ts-ignore
 // eslint-disable-next-line react/display-name
@@ -58,6 +59,8 @@ const Router = () => {
                     </Route>
                     <Route path='students'>
                         <Route index element={<StudentsSettings />} />
+                        <Route path=':studentId/cost/update/:groupId/:costStudentGroupId' element={<AppendCost />}/>
+                        <Route path=':studentId/cost/add/:groupId' element={<AppendCost />}/>
                     </Route>
                     <Route path='calculations'>
                         <Route path='history'>

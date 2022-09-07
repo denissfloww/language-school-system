@@ -6,3 +6,9 @@ export interface ICost {
     createdAt: Date;
     updatedAt: Date;
 }
+
+export interface ICostStudentGroupId {
+    id: number;
+    costId: number;
+    cost: ICost;
+}

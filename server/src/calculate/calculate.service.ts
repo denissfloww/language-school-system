@@ -51,6 +51,11 @@ export class CalculateService {
         group.id,
       );
 
+      const costStudentGroup = await this.costService.getCostStudentGroup(
+        group.id,
+        studentId,
+      );
+
       const calculateDateDto = await this.getFutureMonthPeriod();
 
       results.push({
@@ -58,6 +63,8 @@ export class CalculateService {
         groupName: group.name,
         price: price,
         month: calculateDateDto.month,
+        cost: costStudentGroup?.cost,
+        costStudentGroupId: costStudentGroup?.id,
       });
     }
 
@@ -88,10 +95,7 @@ export class CalculateService {
       events,
     );
 
-    const cost = await this.costService.getCostByStudentAndGroup(
-      groupId,
-      studentId,
-    );
+    const cost = await this.costService.getCost(groupId, studentId);
 
     if (!cost) {
       return;
