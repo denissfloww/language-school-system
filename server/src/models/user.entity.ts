@@ -29,7 +29,7 @@ export class User extends BaseModel {
   @Column({ name: 'middle_name', nullable: true })
   middleName: string;
 
-  @Column({ select: false })
+  @Column()
   password: string;
 
   @Column({ nullable: true })
