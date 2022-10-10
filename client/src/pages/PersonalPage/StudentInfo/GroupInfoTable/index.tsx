@@ -52,61 +52,63 @@ const StudentGroupInfoTable = () => {
         <>
             <Typography variant='h6'>Мои группы</Typography>
             <TableContainer component={Paper}>
-                <Table aria-label='simple table'>
-                    <TableHead>
-                        <TableRow>
-                            {headerRows.map(value => (
-                                <>
-                                    <TableCell align={value.align}>
-                                        <b>{value.text}</b>
-                                    </TableCell>
-                                </>
-                            ))}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {!isGridLoading ? (
-                            <>
-                                {studentGroups.length ? (
+                {studentGroups ? (
+                    <Table aria-label='simple table'>
+                        <TableHead>
+                            <TableRow>
+                                {headerRows.map(value => (
                                     <>
-                                        {studentGroups.map(group => (
-                                            <>
-                                                {' '}
-                                                <TableRow>
-                                                    <TableCell>{group.id}</TableCell>
-                                                    <TableCell>{group.name}</TableCell>
-                                                    <TableCell>
-                                                        {group.teacher.lastName} {group.teacher.middleName} {group.teacher.firstName}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <NumberFormat
-                                                            value={group.teacher.phone}
-                                                            displayType={'text'}
-                                                            format='+ 7 (###) ### ##-##'
-                                                        />
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <NumberFormat
-                                                            value={group.priceNextMonth}
-                                                            displayType={'text'}
-                                                            thousandSeparator={true}
-                                                            suffix='₽'
-                                                        />
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {moment().locale('ru').month(group.month).subtract(1, 'month').format('MMMM')}
-                                                    </TableCell>
-                                                </TableRow>
-                                            </>
-                                        ))}
+                                        <TableCell align={value.align}>
+                                            <b>{value.text}</b>
+                                        </TableCell>
                                     </>
-                                ) : null}
-                            </>
-                        ) : (
-                            <TableBodySkeleton columnsCount={headerRows.length} />
-                        )}
-                    </TableBody>
-                </Table>
+                                ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {!isGridLoading ? (
+                                <>
+                                    {studentGroups?.length ? (
+                                        <>
+                                            {studentGroups.map(group => (
+                                                <>
+                                                    {' '}
+                                                    <TableRow>
+                                                        <TableCell>{group.id}</TableCell>
+                                                        <TableCell>{group.name}</TableCell>
+                                                        <TableCell>
+                                                            {group.teacher.lastName} {group.teacher.middleName} {group.teacher.firstName}
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <NumberFormat
+                                                                value={group.teacher.phone}
+                                                                displayType={'text'}
+                                                                format='+ 7 (###) ### ##-##'
+                                                            />
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <NumberFormat
+                                                                value={group.priceNextMonth}
+                                                                displayType={'text'}
+                                                                thousandSeparator={true}
+                                                                suffix='₽'
+                                                            />
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            {moment().locale('ru').month(group.month).subtract(1, 'month').format('MMMM')}
+                                                        </TableCell>
+                                                    </TableRow>
+                                                </>
+                                            ))}
+                                        </>
+                                    ) : null}
+                                </>
+                            ) : (
+                                <TableBodySkeleton columnsCount={headerRows.length} />
+                            )}
+                        </TableBody>
+                    </Table>
+                ) : null}
             </TableContainer>
         </>
     );

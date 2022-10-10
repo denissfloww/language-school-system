@@ -39,7 +39,7 @@ const UsersGrid = () => {
                                     <TableCell align='center'>Отчество</TableCell>
                                     <TableCell align='center'>Фамилия</TableCell>
                                     <TableCell align='center'>Роли</TableCell>
-                                    <TableCell align='right'>Действия</TableCell>
+                                    {/*<TableCell align='right'>Действия</TableCell>*/}
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -67,19 +67,19 @@ const UsersGrid = () => {
                                                             ))}
                                                             {/*{RoleTypesDisplay[user.role]}*/}
                                                         </TableCell>
-                                                        <TableCell component='th' scope='row' align='right'>
-                                                            <IconButton to={`/dashboard/settings/users/update/${user.id}`} component={Link}>
-                                                                <EditIcon />
-                                                            </IconButton>
-                                                            <DeleteButton
-                                                                id={user.id}
-                                                                confirmationText='Вы действительно хотите удалить пользователя?'
-                                                                title='Удалить пользователя?'
-                                                                onDeleteMethod={() => {
-                                                                    console.log('делете');
-                                                                }}
-                                                            />
-                                                        </TableCell>
+                                                        {/*<TableCell component='th' scope='row' align='right'>*/}
+                                                        {/*    <IconButton to={`/dashboard/settings/users/update/${user.id}`} component={Link}>*/}
+                                                        {/*        <EditIcon />*/}
+                                                        {/*    </IconButton>*/}
+                                                        {/*    <DeleteButton*/}
+                                                        {/*        id={user.id}*/}
+                                                        {/*        confirmationText='Вы действительно хотите удалить пользователя?'*/}
+                                                        {/*        title='Удалить пользователя?'*/}
+                                                        {/*        onDeleteMethod={() => {*/}
+                                                        {/*            console.log('делете');*/}
+                                                        {/*        }}*/}
+                                                        {/*    />*/}
+                                                        {/*</TableCell>*/}
                                                     </TableRow>
                                                 ))}
                                             </>
